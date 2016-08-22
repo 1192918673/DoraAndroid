@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="30dp">
+
+        <ImageButton
+            android:id="@+id/ib_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:background="@mipmap/back_blue" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="硬件信息"
+            android:textSize="22dp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CPU"
+        android:layout_margin="10dp"
+        android:textColor="#FF50525C"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/dr_cpu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#00A0E8"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:text="--"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFDDDDDD"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RAM"
+        android:layout_margin="10dp"
+        android:textColor="#FF50525C"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/dr_ram"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#00A0E8"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:text="--"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFDDDDDD"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ROM"
+        android:layout_margin="10dp"
+        android:textColor="#FF50525C"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/dr_rom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#00A0E8"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:text="--"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFDDDDDD"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Battery"
+        android:layout_margin="10dp"
+        android:textColor="#FF50525C"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/dr_battery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#00A0E8"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:text="--"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFDDDDDD"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ID"
+        android:layout_margin="10dp"
+        android:textColor="#FF50525C"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/dr_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#00A0E8"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:text="--"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFDDDDDD"
+        android:layout_margin="10dp" />
+
+
+</LinearLayout>

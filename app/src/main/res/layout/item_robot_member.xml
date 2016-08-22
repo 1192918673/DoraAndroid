@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/ic_member_bg">
+
+    <RelativeLayout
+        android:id="@+id/mem_poi"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:background="@mipmap/avatar_oval"
+        android:layout_centerVertical="true">
+
+        <coms.geeknewbee.doraemon.UI.CircleImageView
+            android:id="@+id/mem_portrait"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/avatar" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_toRightOf="@id/mem_poi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/mem_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:textColor="#FF50525C"
+            android:textSize="16sp"
+            android:drawableRight="@mipmap/female"
+            android:text="昵称  " />
+
+        <TextView
+            android:id="@+id/mem_role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/mem_name"
+            android:layout_marginTop="3dp"
+            android:textColor="#FF50525C"
+            android:textSize="12sp"
+            android:text="管理员" />
+
+        <TextView
+            android:id="@+id/mem_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:textColor="#FF00A0E8"
+            android:textSize="12sp"
+            android:text="设为管理员" />
+
+        <TextView
+            android:id="@+id/mem_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/mem_option"
+            android:layout_marginTop="8dp"
+            android:textColor="#FF50525C"
+            android:textSize="12sp"
+            android:gravity="center_vertical"
+            android:drawableLeft="@mipmap/ic_mem_remove"
+            android:text=" 移除" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

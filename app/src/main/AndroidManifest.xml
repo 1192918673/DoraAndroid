@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="coms.geeknewbee.doraemon"> <!-- 解决Android L上通知显示异常问题，targetSdkVersion需要设置成22 -->
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="23" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- 环信SDK权限配置开始 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" /> -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- 环信SDK权限配置结束 -->
+
+
+    <!-- 个推SDK权限配置开始 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- ibeancon 需要蓝牙权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 支持个推3.0 电子围栏功能 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 浮动通知权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- 自定义权限 -->
+    <uses-permission android:name="getui.permission.GetuiService.doraemon.geeknewbee.com.doraemon" />
+    <!-- 替换为第三方应用的包名 -->
+    <permission
+        android:name="getui.permission.GetuiService.coms.geeknewbee.doraemon"
+        android:protectionLevel="normal" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+
+    <!-- 接收短信的权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
+    <!-- 替换为第三方应用的包名 -->
+    <!-- 个推SDK权限配置结束 -->
+    <application
+        android:name=".global.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- 配置sugarORM -->
+        <meta-data
+            android:name="DATABASE"
+            android:value="dora.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="1" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.doraemon" />
+
+        <activity
+            android:name=".register_login.SplashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".index.IndexActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".register_login.UserRegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".register_login.UserLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".register_login.UserNextStepActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.BoxActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BoxStyle" />
+        <activity
+            android:name=".box.sendvoice.SendVoiceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.custom_answers.AddTalkActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.custom_answers.CusAnswersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".register_login.Splash2Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".register_login.UserResetPwd"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".register_login.UserResetPwd2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".index.center.CenterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".index.center.UserUpdatePwd"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".index.center.UserUpdatePwd2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.alarm_clock.AlarmsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.alarm_clock.AddAlarmsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".index.center.EditProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".index.center.EditMobileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".index.center.SuggestionsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.storeroom.StoreRoomActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.learnen.LearnEnActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.storeroom.AddGoodsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.time_machine.TimeMachineActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.facetime.FaceTimeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".box.time_machine.ShowImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <!-- 机器人管理界面 -->
+        <activity
+            android:name=".robot.RobotActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".robot.MessageNotifyActivity"
+            android:screenOrientation="portrait" />
+        <!-- 机器人管理界面 -->
+        <activity
+            android:name=".robot.RobotManagerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 机器人硬件信息 -->
+        <activity
+            android:name=".robot.RobotHardInfoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 成员管理界面 -->
+        <activity
+            android:name=".robot.RobotMemberActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 机器人Wifi设置界面 -->
+        <activity
+            android:name=".robot.RobotWifiActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 机器人离线控制界面 -->
+        <activity
+            android:name=".robot.RobotOfflineActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 机器人语音控制界面 -->
+        <activity
+            android:name=".robot.RobotVoiceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 扫描二维码界面 -->
+        <activity
+            android:name=".robot.RobotZxingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity android:name=".box.smart_home.SmartHomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- 电视遥控器设置界面 -->
+        <activity
+            android:name=".box.smart_home.SmartTVActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- 智能家居Wifi设置界面 -->
+        <activity
+            android:name=".box.smart_home.SmartTVWifiActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- 电视遥控器学习界面 -->
+        <activity
+            android:name=".box.smart_home.SmartTVStudyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- 净化器界面 -->
+        <activity
+            android:name=".box.smart_home.SmartPurifierActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- 净化器扫描界面 -->
+        <activity
+            android:name=".box.smart_home.SmartPurifierCodeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- 净化器连接结果界面 -->
+        <activity
+            android:name=".box.smart_home.SmartPurifierSuccessActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- 智能插座界面 -->
+        <activity
+            android:name=".box.smart_home.SmartPlugActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- 智能插座配置WIFI界面 -->
+        <activity
+            android:name=".box.smart_home.SmartPlugWifiActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- 电影搜索界面 -->
+        <activity
+            android:name=".box.movie.MoviesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <receiver
+            android:name=".robot.utils.NetworkStateReceiver"
+            android:exported="false">
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 个推SDK配置开始 -->
+
+
+        <!-- 配置自定义Receiver -->
+        <receiver
+            android:name=".index.PushReceiver"
+            android:exported="false">
+            <intent-filter>
+
+                <!-- 正式版：jUbgDpdDhm9YvYCrRyln9   测试版：J6iAtrATax55u94agoKbn5 -->
+                <action android:name="com.igexin.sdk.action.jUbgDpdDhm9YvYCrRyln9" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 配置的第三方参数属性 -->
+        <!-- 正式版：jUbgDpdDhm9YvYCrRyln9   测试版：J6iAtrATax55u94agoKbn5 -->
+        <meta-data
+            android:name="PUSH_APPID"
+            android:value="jUbgDpdDhm9YvYCrRyln9" />
+        <!-- 替换为第三方应用的APPID -->
+        <!-- 正式版：CcD1ZeJPlbAg9RAjBJIvD8   测试版：pHREimrwkv5U7gbVc7CGY -->
+        <meta-data
+            android:name="PUSH_APPKEY"
+            android:value="CcD1ZeJPlbAg9RAjBJIvD8" />
+        <!-- 替换为第三方应用的APPKEY -->
+        <!-- 正式版：1nofGj3OqJ91uvg3yrWlc7   测试版：QaKXw3xjZ66H0t5EPF3eX9 -->
+        <meta-data
+            android:name="PUSH_APPSECRET"
+            android:value="1nofGj3OqJ91uvg3yrWlc7" />
+        <!-- 替换为第三方应用的APPSECRET -->
+        <!-- 配置SDK核心服务 -->
+        <service
+            android:name="com.igexin.sdk.PushService"
+            android:exported="true"
+            android:label="NotificationCenter"
+            android:process=":pushservice" />
+        <service
+            android:name="com.igexin.sdk.PushServiceUser"
+            android:exported="true"
+            android:label="NotificationCenterUser" />
+
+        <receiver android:name="com.igexin.sdk.PushReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.igexin.sdk.action.refreshls" />
+                <!-- 以下三项为可选的action声明，可大大提高service存活率和消息到达速度 -->
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.igexin.sdk.PushManagerReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.igexin.sdk.action.pushmanager" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.igexin.sdk.PushActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:process=":pushservice"
+            android:taskAffinity="com.igexin.sdk.PushActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.igexin.sdk.GActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:process=":pushservice"
+            android:taskAffinity="com.igexin.sdk.PushActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <service
+            android:name="com.igexin.download.DownloadService"
+            android:process=":pushservice" />
+
+        <receiver android:name="com.igexin.download.DownloadReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="com.igexin.download.DownloadProvider"
+            android:authorities="downloads.coms.geeknewbee.doraemon"
+            android:exported="true"
+            android:process=":pushservice" />
+        <!-- 替换为第三方应用的包名 -->
+
+        <activity
+            android:name="com.igexin.getuiext.activity.GetuiExtActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:process=":pushservice"
+            android:taskAffinity="android.task.myServicetask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <receiver
+            android:name="com.igexin.getuiext.service.PayloadReceiver"
+            android:exported="false">
+            <intent-filter>
+
+                <!-- 正式版：jUbgDpdDhm9YvYCrRyln9   测试版：J6iAtrATax55u94agoKbn5 -->
+                <action android:name="com.igexin.sdk.action.7fjUl2Z3LH6xYy7NQK4ni4" />
+                <action android:name="com.igexin.sdk.action.jUbgDpdDhm9YvYCrRyln9" />
+                <!-- 替换为第三方应用的APPID -->
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.igexin.getuiext.service.GetuiExtService"
+            android:process=":pushservice" />
+        <!-- 个推SDK配置结束 -->
+
+
+        <!-- 环信IM即时通讯SDK配置开始 -->
+        <!-- 设置环信应用的appkey -->
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="sangebaba#doraemon" />
+        <!-- 声明sdk所需的service SDK核心功能 -->
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
+            android:exported="true" />
+        <!-- 声明sdk所需的receiver -->
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+            <!-- 可选filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        <!-- 环信IM即时通讯SDK配置结束 -->
+
+        <receiver android:name=".register_login.SmsReciver">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

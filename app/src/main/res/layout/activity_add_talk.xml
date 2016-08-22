@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EBEFF2">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:text="学说话"
+        android:textColor="#000000"
+        android:textSize="22dp" />
+
+    <ImageButton
+        android:id="@+id/ib_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@mipmap/back_blue"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/tv_insert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:text="完成"
+        android:textColor="#00A0E8"
+        android:textSize="22dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="100dp"
+        android:text="当哆啦听到对应的语音时，会给出响应的回答"
+        android:textColor="#ADB0B6" />
+
+
+    <RelativeLayout
+
+        android:background="@drawable/content_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="130dp">
+
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/que"
+                android:padding="5dp"
+                android:textColor="#FFFFFF"
+                android:textSize="22dp"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/et_que"
+                android:singleLine="true"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:maxLines="1"
+                android:hint="输入哆啦听到的" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll1"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/ans"
+                android:padding="5dp"
+                android:textColor="#00A0E8"
+                android:textSize="22dp" />
+
+            <EditText
+                android:id="@+id/et_ans"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_listen"
+                android:minLines="5"
+                android:maxLines="5"
+                android:scrollHorizontally="false"
+                android:background="@null"
+                android:ellipsize="none"
+                android:gravity="top"
+                android:hint="输入哆啦回答的" />
+        </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_rest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="还可以输入30字"
+                android:layout_below="@+id/ll2"
+                android:layout_alignParentRight="true"
+                android:textColor="#9FA0A0" />
+
+    </RelativeLayout>
+</RelativeLayout>

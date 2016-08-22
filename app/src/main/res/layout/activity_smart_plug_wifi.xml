@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffebeff2">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <ImageButton
+            android:id="@+id/ib_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:background="@mipmap/back_blue" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="配网"
+            android:textSize="22dp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dip"
+        android:src="@mipmap/ic_robot_wifi"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="输入当前WIFI网络的密码"
+        android:layout_marginTop="10dp"
+        android:textColor="#FF7C7E88"
+        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="当前网络"
+            android:textColor="#FF50525C"
+            android:textSize="14sp"/>
+
+        <EditText
+            android:id="@+id/wifi_ssid"
+            android:enabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:maxLines="1"
+            android:textColor="#00A0E8"
+            android:textColorHint="#00A0E8"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/tvv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请输入WIFI密码"
+            android:textSize="14sp"
+            android:textColor="#FF50525C" />
+
+
+        <EditText
+            android:id="@+id/wifi_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:maxLines="1"
+            android:inputType="textPassword"
+            android:textColor="#00A0E8"
+            android:textColorHint="#00A0E8"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/tv_warming"
+            android:layout_width="120dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="200dp"
+            android:layout_marginTop="15dp"
+            android:text=""
+            android:textColor="#ff0000"
+            android:textSize="12dp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/wifi_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="40dp"
+        android:background="#00A0E8"
+        android:gravity="center"
+        android:text="开始配置"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp" />
+
+
+</LinearLayout>

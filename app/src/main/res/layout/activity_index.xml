@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_blue">
+
+    <ImageButton
+        android:id="@+id/ib_center"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="18dp"
+        android:background="#00000000"
+        android:scaleType="centerInside"
+        android:src="@mipmap/center" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <ImageButton
+            android:id="@+id/ib_settings"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="18dp"
+            android:background="#00000000"
+            android:src="@mipmap/settings" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:gravity="center"
+            android:text="当前控制"
+            android:textColor="#7C7E88"
+            android:textSize="14dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/dr_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="--"
+            android:textColor="#7C7E88"
+            android:textSize="28dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/dr_panel"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/rl1"
+        android:layout_marginTop="20dp"
+        android:visibility="invisible"
+        android:gravity="center_horizontal">
+
+        <coms.geeknewbee.doraemon.widget.CircleView
+            android:id="@+id/dr_safe"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
+            android:visibility="gone"/>
+
+        <coms.geeknewbee.doraemon.widget.CircleView
+            android:id="@+id/dr_electric"
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
+
+        <coms.geeknewbee.doraemon.widget.CircleView
+            android:id="@+id/dr_vol"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@id/dr_electric"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/dr_talk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/dora"
+        android:layout_centerHorizontal="true"
+        android:background="@mipmap/rectangle"
+        android:gravity="center"
+        android:paddingBottom="7dp"
+        android:text="有什么需要我帮忙的么？"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/dora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
+        android:background="@mipmap/dora"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:id="@+id/dr_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF00A0E8"
+            android:textSize="14sp"
+            android:text="尚未绑定机器人"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dip"
+            android:src="@mipmap/ic_index_add"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF7C7E88"
+            android:textSize="12sp"
+            android:text="点击添加"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:background="@mipmap/menu"
+        android:minHeight="0dp"
+        android:minWidth="0dp" />
+
+</RelativeLayout>
