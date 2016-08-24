@@ -11,10 +11,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+
+import com.google.gson.Gson;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -28,6 +31,7 @@ import coms.geeknewbee.doraemon.box.movie.bean.MovieBean;
 import coms.geeknewbee.doraemon.box.movie.view.IMovieView;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
+import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.widget.PanelView;
 
@@ -310,7 +314,6 @@ public class RobotOfflineActivity extends BaseActivity {
     public void write(byte[] bytes) throws IOException {
         if (outputStream == null)
             throw new IllegalStateException("Wait connection to be opened");
-
         outputStream.write(bytes);
         outputStream.flush();
     }
@@ -440,7 +443,17 @@ public class RobotOfflineActivity extends BaseActivity {
                 ILog.e("outputStream : " + outputStream);
 
                 ILog.e("向蓝牙设备发送数据：" + linkDevice.getName() + "[" + cmd[index] + "]");
-                write(cmd[index].getBytes());
+                //
+                Gson gson=new Gson();
+                BluetoothCommand bluetoothCommand = new BluetoothCommand();
+                bluetoothCommand.action=cmd[index];
+                String json = gson.toJson(bluetoothCommand.action);
+                String jsonCommand="COMMAND_ROBOT"+json+"COMMAND_ROBOT_SUFFIX";
+                //bluetoothCommand.toGson;
+                Log.d("BluetoothCommand", "jsonCommand----: "+jsonCommand);
+
+                write(jsonCommand.getBytes());
+//                write(cmd[index].getBytes());
                 status = 2;
                 asyncTask = null;
                 if(index == ACT_DISCONNECT || stop){

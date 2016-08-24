@@ -22,6 +22,6 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //数据库版本升级是调用
+        //数据库版本升级时调用
     }
 }

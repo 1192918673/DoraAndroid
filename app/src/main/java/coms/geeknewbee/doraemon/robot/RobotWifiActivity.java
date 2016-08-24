@@ -13,10 +13,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
+import com.google.gson.Gson;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -30,6 +33,7 @@ import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
 import coms.geeknewbee.doraemon.robot.presenter.IRobotBindPresenter;
+import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.robot.utils.NetworkStateReceiver;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.Session;
@@ -183,6 +187,7 @@ public class RobotWifiActivity extends BaseActivity {
 
     public static String strPsw = "0000";
 
+    //蓝牙设备
     private BluetoothSocket socket;
     private BroadcastReceiver searchDevices = new BroadcastReceiver() {
 
@@ -382,7 +387,18 @@ public class RobotWifiActivity extends BaseActivity {
                 ILog.e("outputStream : " + outputStream);
 
                 ILog.e("向蓝牙设备发送数据：" + linkDevice.getName() + "[" + SSID + "|" + pwd + "|3EOM]");
-                String sendData = SSID + "|" + pwd + "|3EOM";
+//                String sendData = SSID + "|" + pwd + "|3EOM";
+
+                Gson gson=new Gson();
+                BluetoothCommand bluetoothCommand=new BluetoothCommand();
+                bluetoothCommand.mWifiInfo.type=3;
+                bluetoothCommand.mWifiInfo.SSID=SSID;
+                bluetoothCommand.mWifiInfo.pwd=pwd;
+
+                String send = gson.toJson(bluetoothCommand);
+                String sendData = "COMMAND_ROBOT"+send+"COMMAND_ROBOT_SUFFIX";
+                Log.d("BluetoothCommand", "sendData--json: "+sendData);
+
                 write(sendData.getBytes());
                 byte[] data = new byte[40];
                 int dataSize = 0;

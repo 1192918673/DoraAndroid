@@ -101,7 +101,6 @@ public abstract class ClipPicture {
 								IMAGE_REQUEST_CODE);
 					break;
 				case 1:
-
 					FileHandler fh = new FileHandler(activity);
 					String path = fh.SDPATH + fh.Path + "cache/20130201ll254558658.jpg";
 					Intent intentFromCapture = new Intent(
