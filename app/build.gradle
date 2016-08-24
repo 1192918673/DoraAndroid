@@ -10,7 +10,7 @@ android {
     defaultConfig {
         //应用的包名
         applicationId 'com.geeknewbee.doraemon'
-        minSdkVersion 11
+        minSdkVersion 18
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"

@@ -148,6 +148,7 @@ public class RobotWifiActivity extends BaseActivity {
             intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
             startActivity(intent);
         }
+        //查找已配对的蓝牙设备
         Set<BluetoothDevice> devices = adapter.getBondedDevices();
         for (int i = 0; i < devices.size(); i++) {
             BluetoothDevice device = (BluetoothDevice) devices.iterator().next();
@@ -204,18 +205,24 @@ public class RobotWifiActivity extends BaseActivity {
                 String str = "未配对|" + device.getName() + "|" + device.getAddress();
                 ILog.e(str);
                 if (ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
-                    //&& device.getBondState() == BluetoothDevice.BOND_NONE
-                    ILog.e(device.getName() + "|" + ROBOT_BT_NAME);
-                    linkDevice = device;
-                    wifi_password.requestFocus();//输入焦点放在此控件上
-                    unregisterReceiver(searchDevices);
-                    adapter.cancelDiscovery();
-                    if(reLink){
-                        connect();
-                    } else {
-                        handler.removeCallbacks(finish);
-                        hideDialog();
-                        tt.showMessage("检测到设备，请为它设置WIFI", tt.SHORT);
+                    //蓝牙类型
+                    int type = device.getType();
+                    if (type==BluetoothDevice.DEVICE_TYPE_CLASSIC){
+                        //&& device.getBondState() == BluetoothDevice.BOND_NONE
+                        ILog.e(device.getName() + "|" + ROBOT_BT_NAME);
+                        linkDevice = device;
+                        wifi_password.requestFocus();//输入焦点放在此控件上
+                        unregisterReceiver(searchDevices);
+                        adapter.cancelDiscovery();
+                        if(reLink){
+                            connect();
+                        } else {
+                            handler.removeCallbacks(finish);
+                            hideDialog();
+                            tt.showMessage("检测到设备，请为它设置WIFI", tt.SHORT);
+                        }
+                    }else{
+                        tt.showMessage("蓝牙类型不匹配",tt.SHORT);
                     }
                 }
             } else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
