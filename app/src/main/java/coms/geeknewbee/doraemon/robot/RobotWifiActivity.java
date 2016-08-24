@@ -391,9 +391,9 @@ public class RobotWifiActivity extends BaseActivity {
 
                 Gson gson=new Gson();
                 BluetoothCommand bluetoothCommand=new BluetoothCommand();
-                bluetoothCommand.mWifiInfo.type=3;
-                bluetoothCommand.mWifiInfo.SSID=SSID;
-                bluetoothCommand.mWifiInfo.pwd=pwd;
+                bluetoothCommand.wifiInfo.type=3;
+                bluetoothCommand.wifiInfo.SSID=SSID;
+                bluetoothCommand.wifiInfo.pwd=pwd;
 
                 String send = gson.toJson(bluetoothCommand);
                 String sendData = "COMMAND_ROBOT"+send+"COMMAND_ROBOT_SUFFIX";
