@@ -281,14 +281,20 @@ public class RobotOfflineActivity extends BaseActivity {
                 String str = "未配对|" + device.getName() + "|" + device.getAddress();
                 ILog.e(str);
                 if (ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
-                    //&& device.getBondState() == BluetoothDevice.BOND_NONE
-                    ILog.e(device.getName() + "|" + ROBOT_BT_NAME);
-                    linkDevice = device;
-                    unregisterReceiver(searchDevices);
-                    adapter.cancelDiscovery();
-                    handler.removeCallbacks(finish);
-                    hideDialog();
-                    tt.showMessage("检测到设备，可以进行控制", tt.SHORT);
+                    //蓝牙类型
+                    int type = device.getType();
+                    if (type == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+                        //&& device.getBondState() == BluetoothDevice.BOND_NONE
+                        ILog.e(device.getName() + "|" + ROBOT_BT_NAME);
+                        linkDevice = device;
+                        unregisterReceiver(searchDevices);
+                        adapter.cancelDiscovery();
+                        handler.removeCallbacks(finish);
+                        hideDialog();
+                        tt.showMessage("检测到设备，可以进行控制", tt.SHORT);
+                    }
+                }else{
+                    tt.showMessage("蓝牙类型不匹配",tt.SHORT);
                 }
             } else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
                 device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
