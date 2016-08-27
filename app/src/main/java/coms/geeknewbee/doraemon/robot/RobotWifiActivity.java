@@ -53,9 +53,9 @@ public class RobotWifiActivity extends BaseActivity {
     ImageButton ibBack;
 
     /**-----------------------数据----------------------**/
-    private static final UUID ROBOT_UUID = UUID.fromString("b5b59b9c-18de-11e6-9409-20c9d0499603");
+    private static final UUID ROBOT_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");//b5b59b9c-18de-11e6-9409-20c9d0499603
     private BluetoothAdapter adapter;
-    private String ROBOT_BT_NAME = "geeknewbee-robot";
+    private String ROBOT_BT_NAME = "sangeyeye";//geeknewbee-robot
     private OutputStream outputStream;
     private String SSID;
 
@@ -202,14 +202,15 @@ public class RobotWifiActivity extends BaseActivity {
             // 搜索设备时，取得设备的MAC地址
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String str = "未配对|" + device.getName() + "|" + device.getAddress();
+                String str = "未配对|" + device.getName() + "|" + device.getAddress()+"---"+device.getType();
                 ILog.e(str);
                 if (ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
+                    //&& device.getBondState() == BluetoothDevice.BOND_NONE
                     //蓝牙类型
                     int type = device.getType();
+                    ILog.e(device.getName() + "---" + ROBOT_BT_NAME+"----"+type);
                     if (type==BluetoothDevice.DEVICE_TYPE_CLASSIC){
-                        //&& device.getBondState() == BluetoothDevice.BOND_NONE
-                        ILog.e(device.getName() + "|" + ROBOT_BT_NAME);
+
                         linkDevice = device;
                         wifi_password.requestFocus();//输入焦点放在此控件上
                         unregisterReceiver(searchDevices);
@@ -397,14 +398,14 @@ public class RobotWifiActivity extends BaseActivity {
 //                String sendData = SSID + "|" + pwd + "|3EOM";
 
                 Gson gson=new Gson();
-                BluetoothCommand bluetoothCommand=new BluetoothCommand();
-                bluetoothCommand.wifiInfo.type=3;
+                BluetoothCommand bluetoothCommand=new BluetoothCommand(new BluetoothCommand.WifiInfo(3,SSID,pwd));
+                /*bluetoothCommand.wifiInfo.type=3;
                 bluetoothCommand.wifiInfo.SSID=SSID;
-                bluetoothCommand.wifiInfo.pwd=pwd;
+                bluetoothCommand.wifiInfo.pwd=pwd;*/
 
                 String send = gson.toJson(bluetoothCommand);
                 String sendData = "COMMAND_ROBOT"+send+"COMMAND_ROBOT_SUFFIX";
-                Log.d("BluetoothCommand", "sendData--json: "+sendData);
+                ILog.e("BluetoothCommand", "sendData--json: "+sendData);
 
                 write(sendData.getBytes());
                 byte[] data = new byte[40];
@@ -435,8 +436,10 @@ public class RobotWifiActivity extends BaseActivity {
                 } catch (Exception e) {
 
                 }
+
                 ILog.e("断开蓝牙设备……");
             } catch (IOException e) {
+                Log.e("连接异常", e.getStackTrace().toString());
                 ILog.e(e);
                 if(status == 0){
                     try {

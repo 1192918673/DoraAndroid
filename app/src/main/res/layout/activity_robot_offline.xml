@@ -71,6 +71,7 @@
             android:background="#00A0E8"
             android:gravity="center"
             android:text="放电影"
+            android:visibility="gone"
             android:textColor="#FFFFFF"
             android:textSize="15dp" />
 

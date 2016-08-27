@@ -11,12 +11,12 @@ public class GlobalContants {
 
 
 
-    public static final String APP_URL = "http://doraemon.microfastup.com:80/app";//app前缀
+    public static final String APP_URL = "http://doraemon.babadeyan.com:80/app";//app前缀
     public static final String SEND_SUGGESTION = APP_URL+"/feedback";
 
     //------------------------------------------------------------------------------------------
 
-    public static final String AUTH_URL = "http://doraemon.microfastup.com:80/auth/";//auth前缀
+    public static final String AUTH_URL = "http://doraemon.babadeyan.com:80/auth/";//auth前缀
     public static final String GET_CODE = AUTH_URL + "/sms";
     public static final String GET_TOKEN = AUTH_URL + "/token";
     public static final String CREATE_PWD = AUTH_URL + "/password";
@@ -25,7 +25,7 @@ public class GlobalContants {
     //------------------------------------------------------------------------------------------
 
 
-    public static final String ROBOTS_URL = "http://doraemon.microfastup.com:80/robots/";//robots前缀
+    public static final String ROBOTS_URL = "http://doraemon.babadeyan.com:80/robots/";//robots前缀
     public static final String CUSTOM_ANSWERS = ROBOTS_URL;//自定义问答
     //http://doraemon.microfastup.com:80/robots/3/alarms?token=adfc494d0a716dc1d784b6f4a19fd7a3b67d2de2&page=1
     public static final String GET_ALARMS = ROBOTS_URL;//提醒
@@ -37,7 +37,7 @@ public class GlobalContants {
 
 
     //http://doraemon.microfastup.com:80/robots/1/voice
-    public static final String TALKING_URL = "http://doraemon.microfastup.com:80/robots/";//talking前缀
+    public static final String TALKING_URL = "http://doraemon.babadeyan.com:80/robots/";//talking前缀
 
     public static final String SEND_VOICE = TALKING_URL;//对话地址
 

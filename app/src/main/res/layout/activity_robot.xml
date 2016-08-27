@@ -168,6 +168,7 @@
         <RelativeLayout
             android:id="@+id/actVoice"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="56dp">
 
             <ImageView

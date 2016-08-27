@@ -38,12 +38,14 @@ import coms.geeknewbee.doraemon.index.IndexActivity;
 public class BoxActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     // 图片封装为一个数组
-    private int[] icon = {R.mipmap.conversation, R.mipmap.learntalk, R.mipmap.english,
-            R.mipmap.clock, R.mipmap.smarthome, R.mipmap.facetime, R.mipmap.storeroom,
-            R.mipmap.ic_movie, R.mipmap.time};
+//    private int[] icon = {R.mipmap.conversation, R.mipmap.learntalk, R.mipmap.english,
+//            R.mipmap.clock, R.mipmap.smarthome, R.mipmap.facetime, R.mipmap.storeroom,
+//            R.mipmap.ic_movie, R.mipmap.time};
+    private int[] icon = {R.mipmap.conversation, R.mipmap.learntalk, R.mipmap.clock,R.mipmap.facetime, R.mipmap.storeroom};
     //文字介绍
-    private String[] iconName = {"说话", "学对话", "学英语", "小闹钟", "智能家居", "视频通话", "储物间",
-            "查电影", "时光机"};
+    private String[] iconName = {"说话", "学对话", "小闹钟", "视频通话", "储物间"};
+//    private String[] iconName = {"说话", "学对话", "学英语", "小闹钟", "智能家居", "视频通话", "储物间",
+//            "查电影", "时光机"};
     private GridView gv;
     private Button bt_Back;
     private List<ItemGvBox> data_list;
@@ -130,47 +132,65 @@ public class BoxActivity extends Activity implements View.OnClickListener, Adapt
                 startActivity(intentCa);
                 finish();
                 break;
+//            case 2:
+//                Intent intentEn = new Intent(BoxActivity.this, LearnEnActivity.class);
+//                intentEn.putExtra("robotPk", robotPk);
+//                startActivity(intentEn);
+//                finish();
+//                break;
+//            case 3:
+//                Intent intentAl = new Intent(BoxActivity.this, AlarmsActivity.class);
+//                intentAl.putExtra("robotPk", robotPk);
+//                startActivity(intentAl);
+//                finish();
+//                break;
+//            case 4:
+//                Intent intentSmart = new Intent(BoxActivity.this, SmartHomeActivity.class);
+//                intentSmart.putExtra("robotPk", robotPk);
+//                startActivity(intentSmart);
+//                finish();
+//                break;
+//            case 5:
+//                Intent intentLogin = new Intent(BoxActivity.this, FaceTimeActivity.class);
+//                intentLogin.putExtra("robotPk", robotPk);
+//                startActivity(intentLogin);
+//                finish();
+//                break;
+//            case 6:
+//                Intent intentStore = new Intent(BoxActivity.this, StoreRoomActivity.class);
+//                intentStore.putExtra("robotPk", robotPk);
+//                startActivity(intentStore);
+//                finish();
+//                break;
+//            case 7:
+//                Intent intentMovie = new Intent(BoxActivity.this, MoviesActivity.class);
+//                intentMovie.putExtra("robotPk", robotPk);
+//                startActivity(intentMovie);
+//                finish();
+//                break;
+//            case 8:
+//                //测试TagFlowLayout
+//                Intent intentTest = new Intent(BoxActivity.this, TimeMachineActivity.class);
+//                intentTest.putExtra("robotPk", robotPk);
+//                startActivity(intentTest);
+//                finish();
+//                break;
             case 2:
-                Intent intentEn = new Intent(BoxActivity.this, LearnEnActivity.class);
-                intentEn.putExtra("robotPk", robotPk);
-                startActivity(intentEn);
-                finish();
-                break;
-            case 3:
                 Intent intentAl = new Intent(BoxActivity.this, AlarmsActivity.class);
                 intentAl.putExtra("robotPk", robotPk);
                 startActivity(intentAl);
                 finish();
                 break;
-            case 4:
-                Intent intentSmart = new Intent(BoxActivity.this, SmartHomeActivity.class);
-                intentSmart.putExtra("robotPk", robotPk);
-                startActivity(intentSmart);
-                finish();
-                break;
-            case 5:
+            case 3:
                 Intent intentLogin = new Intent(BoxActivity.this, FaceTimeActivity.class);
                 intentLogin.putExtra("robotPk", robotPk);
                 startActivity(intentLogin);
                 finish();
                 break;
-            case 6:
+            case 4:
                 Intent intentStore = new Intent(BoxActivity.this, StoreRoomActivity.class);
                 intentStore.putExtra("robotPk", robotPk);
                 startActivity(intentStore);
-                finish();
-                break;
-            case 7:
-                Intent intentMovie = new Intent(BoxActivity.this, MoviesActivity.class);
-                intentMovie.putExtra("robotPk", robotPk);
-                startActivity(intentMovie);
-                finish();
-                break;
-            case 8:
-                //测试TagFlowLayout
-                Intent intentTest = new Intent(BoxActivity.this, TimeMachineActivity.class);
-                intentTest.putExtra("robotPk", robotPk);
-                startActivity(intentTest);
                 finish();
                 break;
             default:

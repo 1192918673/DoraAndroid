@@ -184,6 +184,7 @@ public class EditProfileActivity extends BaseActivity implements IEditProfileVie
             @Override
             public void onClick(View v) {
                 presenter.createUser();
+                finish();
             }
         });
 
