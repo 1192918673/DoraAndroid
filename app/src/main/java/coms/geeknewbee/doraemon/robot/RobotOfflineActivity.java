@@ -35,8 +35,9 @@ import coms.geeknewbee.doraemon.global.SptConfig;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.widget.PanelView;
+import coms.geeknewbee.doraemon.widget.Rudder;
 
-public class RobotOfflineActivity extends BaseActivity {
+public class RobotOfflineActivity extends BaseActivity implements Runnable{
 
     private static final int ACT_MOVE = 0;
 
@@ -108,7 +109,7 @@ public class RobotOfflineActivity extends BaseActivity {
 
     PanelView pvRarm;
 
-    PanelView pvFoot;
+    Rudder pvFoot;
 
     /**
      * -----------------------数据----------------------
@@ -186,7 +187,7 @@ public class RobotOfflineActivity extends BaseActivity {
         pvHead = (PanelView) findViewById(R.id.pvHead);
         pvLarm = (PanelView) findViewById(R.id.pvLarm);
         pvRarm = (PanelView) findViewById(R.id.pvRarm);
-        pvFoot = (PanelView) findViewById(R.id.pvFoot);
+        pvFoot = (Rudder) findViewById(R.id.pvFoot);
 
         ibBack.setOnClickListener(clickListener);
         olInfo.setOnClickListener(clickListener);
@@ -199,7 +200,8 @@ public class RobotOfflineActivity extends BaseActivity {
         pvHead.setOnClickListener(clickListener);
         pvLarm.setOnClickListener(clickListener);
         pvRarm.setOnClickListener(clickListener);
-        pvFoot.setOnClickListener(clickListener);
+        // pvFoot.setOnClickListener(clickListener);
+        pvFoot.setRudderListener(rudderListener);
 
         pvHead.setName("头");
         pvHead.setBtn("上", "下", "左", "右");
@@ -216,10 +218,10 @@ public class RobotOfflineActivity extends BaseActivity {
         pvRarm.setHandler(handler);
         pvRarm.setIndex(ACT_ARM_RUP, ACT_ARM_RDOWN, ACT_ARM_RFRONT, ACT_ARM_REND);
 
-        pvFoot.setName("脚");
+        /*pvFoot.setName("脚");
         pvFoot.setBtn("前", "后", "左", "右");
         pvFoot.setHandler(handler);
-        pvFoot.setIndex(ACT_FORWARD, ACT_BACKWARD, ACT_LEFT, ACT_RIGHT);
+        pvFoot.setIndex(ACT_FORWARD, ACT_BACKWARD, ACT_LEFT, ACT_RIGHT);*/
     }
 
     View.OnClickListener clickListener = new View.OnClickListener() {
@@ -247,16 +249,20 @@ public class RobotOfflineActivity extends BaseActivity {
                     handler.sendEmptyMessage(ACT_STOP);
                     break;
 
-                case R.id.rlAct:
-                    rlAct.setVisibility(View.GONE);
+                case R.id.rlAct:// 控制界面
+                    // rlAct.setVisibility(View.GONE);
                     break;
 
-                case R.id.olAct:
+                case R.id.olAct:// 动作控制按钮
                     rlAct.setVisibility(View.VISIBLE);
+                    pvFoot.setVisibility(View.VISIBLE);
+                    new Thread(RobotOfflineActivity.this).start();
                     break;
             }
         }
     };
+
+
 
     private void bluetoothInit() {
         // 检查设备是否支持蓝牙
@@ -382,8 +388,8 @@ public class RobotOfflineActivity extends BaseActivity {
             rlAct.setVisibility(View.GONE);
             return;
         }
-        index = ACT_DISCONNECT;
-        sendCMD();
+        // index = ACT_DISCONNECT;
+        // sendCMD();
     }
 
     public void cancel() {
@@ -512,7 +518,91 @@ public class RobotOfflineActivity extends BaseActivity {
             }
             return "1";
         }
-    }
+    };
 
-    ;
+    private boolean isRudderUse;
+    private float mSpeedV;
+    private float mSpeedW;
+    Rudder.RudderListener rudderListener = new Rudder.RudderListener() {
+
+        BluetoothCommand command = new BluetoothCommand();
+        BluetoothCommand.LimbCommand limbCommand = new BluetoothCommand.LimbCommand();
+
+        @Override
+        public void onSteeringWheelChanged(int action, float radius, float radian) {
+            isRudderUse = true;
+            float tv = (float) (radius * Math.cos(radian));
+            float av = (float) (radius * Math.sin(radian));
+
+            mSpeedV = tv * 3;
+            mSpeedW = -av * 10;
+            Log.d("RobotFoot", "onSteeringWheelChanged:" + tv + "  " + av);
+        }
+
+        @Override
+        public void onTouchUp() {
+            isRudderUse = false;
+            mSpeedV = 0;
+            mSpeedW = 0;
+            Log.d("RobotFoot", "onTouchUp");
+
+            limbCommand.setFootCommand(new BluetoothCommand.LimbCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
+            command.setLimbCommand(limbCommand);
+            try {
+                if (outputStream != null) {
+                    String message = new Gson().toJson(command);
+                    message = "COMMAND_ROBOT" + message + "COMMAND_ROBOT_SUFFIX";
+                    write(message.getBytes());
+                } else {
+                    Log.d("Bluetooth_Control", "无连接");
+                }
+                // mBluetoothUtils.sendMessage(new Gson().toJson(command));
+                try {
+                    Thread.sleep(30);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (outputStream != null) {
+                    String message = new Gson().toJson(command);
+                    message = "COMMAND_ROBOT" + message + "COMMAND_ROBOT_SUFFIX";
+                    write(message.getBytes());
+                } else {
+                    Log.d("Bluetooth_Control", "无连接");
+                }
+                // mBluetoothUtils.sendMessage(new Gson().toJson(command)); //有时候一次停止失败,这里发两次
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    @Override
+    public void run() {
+        BluetoothCommand command = new BluetoothCommand();
+        BluetoothCommand.LimbCommand limbCommand = new BluetoothCommand.LimbCommand();
+        while (true) {
+            if (isRudderUse) {
+                limbCommand.setFootCommand(new BluetoothCommand.LimbCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
+                command.setLimbCommand(limbCommand);
+                try {
+                    if (outputStream != null) {
+                        String message = new Gson().toJson(command);
+                        message = "COMMAND_ROBOT" + message + "COMMAND_ROBOT_SUFFIX";
+                        write(message.getBytes());
+                    } else {
+                        Log.d("Bluetooth_Control", "无连接");
+                    }
+                    // mBluetoothUtils.sendMessage(new Gson().toJson(command));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

@@ -113,7 +113,7 @@
         android:layout_height="match_parent"
         android:background="#99000000"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <coms.geeknewbee.doraemon.widget.PanelView
             android:id="@+id/pvHead"
@@ -144,12 +144,20 @@
 
         </LinearLayout>
 
-        <coms.geeknewbee.doraemon.widget.PanelView
+        <!--<coms.geeknewbee.doraemon.widget.PanelView
             android:id="@+id/pvFoot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="8dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"/>-->
+
+        <coms.geeknewbee.doraemon.widget.Rudder
+            android:id="@+id/pvFoot"
+            android:layout_width="208dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:alpha="0.9" />
 
     </LinearLayout>
 

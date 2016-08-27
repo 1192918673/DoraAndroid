@@ -9,4 +9,8 @@
 
     <color name="black_overlay">#66000000</color>
 
+    <color name="rudder_color">#787B7E</color>
+    <color name="rudder_selected">#EBE08E</color>
+    <color name="button_background">#333333</color>
+    <color name="button_pressed_background">#222222</color>
 </resources>
