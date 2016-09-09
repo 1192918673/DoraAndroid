@@ -18,6 +18,9 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.ImageButton;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.mining.app.zxing.camera.CameraManager;
@@ -53,6 +56,8 @@ public class RobotZxingActivity extends BaseActivity
 
     private ViewfinderView viewFinder;
 
+    private ImageButton ib_back;
+
     /**-------------------二维码扫描需要的模块-----------------**/
     private CaptureActivityHandler handler;
 
@@ -79,7 +84,16 @@ public class RobotZxingActivity extends BaseActivity
     private void assignViews() {
         previewView = (SurfaceView) findViewById(R.id.preview_view);
         viewFinder = (ViewfinderView) findViewById(R.id.viewfinder_view);
+        ib_back = (ImageButton) findViewById(R.id.ib_back);
         bindPresenter = new IRobotBindPresenter(this);
+
+        //点击回退按钮关闭当前页
+        ib_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -139,6 +153,8 @@ public class RobotZxingActivity extends BaseActivity
         String resultString = result.getText();
         if (resultString.equals("")) {
             tt.showMessage("Scan failed!", tt.SHORT);
+            //扫描失败，关闭当前界面
+            finish();
         }else {
             String code = resultString.substring(resultString.indexOf("qr/") + 3);
             Log.e("test", "result : " + code);

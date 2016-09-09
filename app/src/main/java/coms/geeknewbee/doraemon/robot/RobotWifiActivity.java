@@ -1,10 +1,12 @@
 package coms.geeknewbee.doraemon.robot;
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiInfo;
@@ -13,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +34,9 @@ import java.util.UUID;
 
 import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.global.BaseActivity;
+import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.global.SptConfig;
+import coms.geeknewbee.doraemon.index.IndexActivity;
 import coms.geeknewbee.doraemon.robot.presenter.IRobotBindPresenter;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.robot.utils.NetworkStateReceiver;
@@ -55,7 +60,7 @@ public class RobotWifiActivity extends BaseActivity {
     /**-----------------------数据----------------------**/
     private static final UUID ROBOT_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");//b5b59b9c-18de-11e6-9409-20c9d0499603
     private BluetoothAdapter adapter;
-    private String ROBOT_BT_NAME = "sangeyeye";//geeknewbee-robot
+//    private String ROBOT_BT_NAME = "DoraemonTest";//geeknewbee-robot //sangeyeye
     private OutputStream outputStream;
     private String SSID;
 
@@ -160,6 +165,7 @@ public class RobotWifiActivity extends BaseActivity {
         intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         intentFilter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
         intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+//        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         // 注册广播接收器，接收并处理搜索结果
         registerReceiver(searchDevices, intentFilter);
         // 寻找蓝牙设备，android会将查找到的设备以广播形式发出去
@@ -204,13 +210,22 @@ public class RobotWifiActivity extends BaseActivity {
                 device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String str = "未配对|" + device.getName() + "|" + device.getAddress()+"---"+device.getType();
                 ILog.e(str);
-                if (ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
+                if (GlobalContants.ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
                     //&& device.getBondState() == BluetoothDevice.BOND_NONE
                     //蓝牙类型
                     int type = device.getType();
-                    ILog.e(device.getName() + "---" + ROBOT_BT_NAME+"----"+type);
-                    if (type==BluetoothDevice.DEVICE_TYPE_CLASSIC){
+                    ILog.e(device.getName() + "---" + GlobalContants.ROBOT_BT_NAME+"----"+type);
 
+//                    boolean isRightUuid = false;
+//                    //空指针了
+//                    for (ParcelUuid uuid : device.getUuids()) {
+//                        if(uuid.getUuid().equals(ROBOT_UUID)) {
+//                            isRightUuid = true;
+//                            break;
+//                        }
+//                    }
+
+                    if (type==BluetoothDevice.DEVICE_TYPE_CLASSIC /*&& device.getUuids()!=null && isRightUuid*/){
                         linkDevice = device;
                         wifi_password.requestFocus();//输入焦点放在此控件上
                         unregisterReceiver(searchDevices);
@@ -226,6 +241,7 @@ public class RobotWifiActivity extends BaseActivity {
                         tt.showMessage("蓝牙类型不匹配",tt.SHORT);
                     }
                 }
+                //如果远程设备的连接状态发生改变
             } else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
                 device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String str = device.getName() + "|" + device.getAddress();

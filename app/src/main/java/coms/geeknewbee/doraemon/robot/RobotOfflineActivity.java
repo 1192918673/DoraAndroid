@@ -31,6 +31,7 @@ import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.box.movie.bean.MovieBean;
 import coms.geeknewbee.doraemon.box.movie.view.IMovieView;
 import coms.geeknewbee.doraemon.global.BaseActivity;
+import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.global.SptConfig;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
@@ -116,7 +117,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable{
      **/
     private static final UUID ROBOT_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
     private BluetoothAdapter adapter;
-    private String ROBOT_BT_NAME = "sangeyeye";//"geeknewbee-robot";
+//    private String ROBOT_BT_NAME = "DoraemonTest";//"geeknewbee-robot";
     private OutputStream outputStream;
 
     /**
@@ -321,9 +322,9 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable{
                 String str = "未配对|" + device.getName() + "|" + device.getAddress();
                 ILog.e(str);
                 Log.e("device_name", device.getName());
-                if (ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
+                if (GlobalContants.ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
                     //&& device.getBondState() == BluetoothDevice.BOND_NONE
-                    ILog.e(device.getName() + "|" + ROBOT_BT_NAME);
+                    ILog.e(device.getName() + "|" + GlobalContants.ROBOT_BT_NAME);
                     //蓝牙类型
                     int type = device.getType();
                     if (type == BluetoothDevice.DEVICE_TYPE_CLASSIC) {

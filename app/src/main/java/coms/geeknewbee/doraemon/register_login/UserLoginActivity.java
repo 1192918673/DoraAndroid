@@ -2,7 +2,9 @@ package coms.geeknewbee.doraemon.register_login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +50,24 @@ public class UserLoginActivity extends BaseActivity implements IUserLoginView {
 
 
     private void initListener() {
+        //设置手机号输入监听
+        etMobile.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int length = etMobile.getText().toString().trim().length();
+                if(length == 11) {
+                    etPassword.setFocusable(true);
+                    etPassword.setFocusableInTouchMode(true);
+                    etPassword.requestFocus();
+                }
+            }
+        });
         //登录按钮的事件
         btLogin.setOnClickListener(new View.OnClickListener() {
             @Override
