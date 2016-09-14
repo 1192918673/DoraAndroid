@@ -141,6 +141,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             "movie", "stop", "head_left", "head_right", "head_up", "head_down", "l_arm_front",
             "l_arm_end", "l_arm_up", "l_arm_down", "r_arm_front", "r_arm_end", "r_arm_up",
             "r_arm_down", "head_front"};
+    private boolean isExit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,6 +238,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
                 case R.id.olAct:// 动作控制按钮
                     rlAct.setVisibility(View.VISIBLE);
                     pvFoot.setVisibility(View.VISIBLE);
+                    isExit = false;
                     new Thread(RobotOfflineActivity.this).start();
                     break;
             }
@@ -322,7 +324,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     //  发送命令
     private void sendCMD() {
         showDialog("正在发送控制命令……");
-        handler.postDelayed(finish, 10000);
+        handler.postDelayed(finish, 30000);
         //  第一次发送命令，首先进行设备连接
         if (!hasConnect) {
             ILog.e("第一次发送命令，首先进行设备连接");
@@ -422,6 +424,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     @Override
     protected void onDestroy() {
+        isExit = true;
         ILog.e("onDestory:断开蓝牙连接");
         hideDialog();
         cancel();
@@ -440,7 +443,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
             mSpeedV = tv * 3;
             mSpeedW = -av * 10;
-            Log.d("RobotFoot", "onSteeringWheelChanged:" + tv + "  " + av);
+            Log.e("RobotFoot", "onSteeringWheelChanged:" + tv + "  " + av);
         }
 
         @Override
@@ -448,7 +451,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             isRudderUse = false;
             mSpeedV = 0;
             mSpeedW = 0;
-            Log.d("RobotFoot", "onTouchUp");
+            Log.e("RobotFoot", "onTouchUp");
 
             BluetoothCommand command = new BluetoothCommand();
             command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
@@ -465,16 +468,22 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     @Override
     public void run() {
         BluetoothCommand command = new BluetoothCommand();
-        while (true) {
+        while (!isExit) {
             if (isRudderUse) {
-                command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
                 if (hasService) {
+                    command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
                     String message = new Gson().toJson(command);
                     message = "DRC" + message + "DRC_SUFFIX";
                     bleManager.writeInfo(message, characWriteUuid);
                 } else {
                     ILog.e("无连接");
                 }
+            }
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

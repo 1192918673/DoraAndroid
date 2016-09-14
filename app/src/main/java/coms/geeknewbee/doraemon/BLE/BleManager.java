@@ -15,7 +15,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -132,7 +131,7 @@ public class BleManager {
         public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
             Message msg = Message.obtain();
 
-            String str = "未配对|" + device.getName() + "|" + device.getAddress() + "---" + device.getType();
+            String str = "rssi:" + rssi + "|未配对|" + device.getName() + "|" + device.getAddress() + "---" + device.getType();
             ILog.e(str);
 
             //  如果扫描到的设备名字和给定的机器猫名一致，将设备返回
@@ -155,7 +154,7 @@ public class BleManager {
     public void connect(final BluetoothDevice device) {
         if (mBluetoothAdapter != null) {
             //  获取BluetoothGatt，连接设备，设为了自动连接，可能会存在问题，
-            mBluetoothGatt = device.connectGatt(context, true, callback);
+            mBluetoothGatt = device.connectGatt(context, false, callback);
         } else {
             initBluetooth(handler, context);
         }
@@ -173,13 +172,13 @@ public class BleManager {
                 ILog.e("Connected to GATT server.");
                 // Attempts to discover services after successful connection.
                 bleRead.clearData();
+                bleSender.init(mBluetoothGatt);
                 boolean discover = mBluetoothGatt.discoverServices();
                 ILog.e("Attempting to start service discovery:" + discover);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 ILog.e("Disconnected from GATT server.status:" + status);
 //                msg.what = MSG_DIS_CONNET;
 //                handler.sendMessage(msg);
-                bleRead.clearData();
             }
         }
 
@@ -245,13 +244,12 @@ public class BleManager {
     }
 
     //  向蓝牙设备写信息
-    public void writeInfo(String info, UUID characWriteUuid) {
+    public synchronized void writeInfo(String info, UUID characWriteUuid) {
         //  获取我们需要的服务
         BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
         //  我需要得到的应该是一个特定的BluetoothGattCharacteristic,根据uuid获取
         BluetoothGattCharacteristic characteristic = service.getCharacteristic(characWriteUuid);
         ILog.e("----------向设备写信息：" + info + "-----------");
-        bleSender.init(mBluetoothGatt);
         bleSender.addData(characteristic, info);
     }
 
@@ -264,6 +262,7 @@ public class BleManager {
     //  关闭通信 BluetoothGatt
     public void close() {
         if (mBluetoothGatt != null) {
+            ILog.e("onDestory:断开蓝牙连接");
             mBluetoothGatt.close();
             mBluetoothGatt = null;
         }

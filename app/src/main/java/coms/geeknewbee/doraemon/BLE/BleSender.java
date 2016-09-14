@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
+import coms.geeknewbee.doraemon.utils.ILog;
+
 /**
  * BLE数据发送对象
  */
@@ -36,6 +38,8 @@ public class BleSender {
 
         //当前队列是空的时候，在添加完队列后需要发送一次数据。否则由onCharacteristicWrite 触发发送
         boolean needSendDataAfterAddData = queue.size() == 0;
+
+        ILog.e(" queue.size:" + queue.size());
         //分包
         byte[] bytes = data.getBytes();
         int length = bytes.length;
