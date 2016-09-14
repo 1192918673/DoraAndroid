@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="coms.geeknewbee.doraemon"> <!-- 解决Android L上通知显示异常问题，targetSdkVersion需要设置成22 -->
-    <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="23" />
+    <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="coms.geeknewbee.doraemon"> <!-- 解决Android L上通知显示异常问题，targetSdkVersion需要设置成22 -->
+        <uses-sdk
+            android:minSdkVersion="18"
+            android:targetSdkVersion="23" />
+
+    <!-- Declare this required feature if you want to make the app available to BLE-capable
+    devices only.  If you want to make your app available to devices that don't support BLE,
+    you should omit this in the manifest.  Instead, determine BLE capability by using
+    PackageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE) -->
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />

@@ -29,7 +29,8 @@ public class BluetoothCommand {
      * wifi信息
      */
     public WifiInfo wifiInfo;
-    public static class WifiInfo{
+
+    public static class WifiInfo {
         public WifiInfo(int type, String SSID, String pwd) {
             this.type = type;
             this.SSID = SSID;
@@ -39,6 +40,15 @@ public class BluetoothCommand {
         public int type;
         public String SSID;
         public String pwd;
+    }
+
+    /**
+     * 手动控制脚步
+     */
+    private FootCommand bluetoothFootCommand;
+
+    public void setBluetoothFootCommand(FootCommand bluetoothFootCommand) {
+        this.bluetoothFootCommand = bluetoothFootCommand;
     }
 
     public static class LimbCommand {
@@ -52,26 +62,28 @@ public class BluetoothCommand {
             this.footCommand = footCommand;
         }
 
-        public static class FootCommand {
 
-            public FootCommand(int v, int w) {
-                this.v = v;
-                this.w = w;
-            }
+    }
 
-            public FootCommand(int v, int w, int duration) {
-                this.v = v;
-                this.w = w;
-                this.duration = duration;
-            }
+    public static class FootCommand {
 
-
-            public int v;
-            public int w;
-            /**
-             * 持续时间 ms
-             */
-            public int duration = 0;
+        public FootCommand(int v, int w) {
+            this.v = v;
+            this.w = w;
         }
+
+        public FootCommand(int v, int w, int duration) {
+            this.v = v;
+            this.w = w;
+            this.duration = duration;
+        }
+
+
+        public int v;
+        public int w;
+        /**
+         * 持续时间 ms
+         */
+        public int duration = 0;
     }
 }

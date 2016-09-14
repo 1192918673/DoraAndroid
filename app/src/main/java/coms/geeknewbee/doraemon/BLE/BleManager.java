@@ -1,0 +1,271 @@
+package coms.geeknewbee.doraemon.BLE;
+
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import coms.geeknewbee.doraemon.global.GlobalContants;
+import coms.geeknewbee.doraemon.utils.ILog;
+
+/**
+ * Created by GYY on 2016/9/9.
+ */
+public class BleManager {
+    public static final int MAX_LENGTH = 18;
+    private static BleManager bleManager = new BleManager();
+
+    private BleRead bleRead = new BleRead();
+    private BleSender bleSender = new BleSender();
+
+    private static Handler handler;
+    private static Context context;
+
+    private static BluetoothAdapter mBluetoothAdapter;
+    private static BluetoothGatt mBluetoothGatt;
+    private static List<BluetoothGattService> services;
+
+    // Stops scanning after 30 seconds.
+    private static final long SCAN_PERIOD = 10000;
+
+    //  固定的
+    private static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
+
+    //  服务的uuid
+    private static UUID SERVICE_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
+    //  读charac的uuid
+    private static UUID CHARAC_READ_UUID = UUID.fromString("00002a31-0000-1000-8000-00805f9b34fb");
+    //  写charac的uuid
+    private static UUID CHARAC_WRITE_UUID = UUID.fromString("00002a30-0000-1000-8000-00805f9b34fb");
+
+    private static final UUID[] ROBOT_UUID = new UUID[]{SERVICE_UUID};
+
+
+    /**
+     * -----------------------使用蓝牙返回的信息----------------------
+     **/
+    private static final int MSG_WHAT_NO_SUPPORT_BLE = 100;
+    private static final int MSG_WHAT_NO_SUPPORT_BL = 200;
+    private static final int MSG_WHAT_OPEN_BL = 300;
+    private static final int MSG_WHAT_FOUND_DEVICE = 400;
+    private static final int MSG_WHAT_NO_FOUND_DEVICE = 500;
+    private static final int MSG_WHAT_GET_INFO = 600;
+    private static final int MSG_HAS_SERVICE = 700;
+    private static final int MSG_DIS_CONNET = 800;
+
+    private BleManager() {
+
+    }
+
+    public static BleManager getInstance() {
+        return bleManager;
+    }
+
+    public boolean initBluetooth(Handler handler, Context context) {
+
+        this.handler = handler;
+        this.context = context;
+
+        //  判断当前手机是否支持BLE
+        if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Message msg = Message.obtain();
+            msg.what = MSG_WHAT_NO_SUPPORT_BLE;
+            handler.sendMessage(msg);
+            return false;
+        }
+
+        // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        // 判断是否支持蓝牙
+        if (mBluetoothAdapter == null) {
+            Message msg = Message.obtain();
+            msg.what = MSG_WHAT_NO_SUPPORT_BL;
+            handler.sendMessage(msg);
+            return false;
+        }
+
+        //打开蓝牙
+        if (!mBluetoothAdapter.isEnabled()) {
+            ILog.e("蓝牙未打开");
+            Message msg = Message.obtain();
+            msg.what = MSG_WHAT_OPEN_BL;
+            handler.sendMessage(msg);
+            return false;
+        }
+        return true;
+    }
+
+    //  开始扫描蓝牙设备
+    public void startScan() {
+        ILog.e("---------开始扫描-----------");
+        mBluetoothAdapter.startLeScan(ROBOT_UUID, mLeScanCallback);
+    }
+
+    //  停止扫描蓝牙设备
+    public void stopScan() {
+        ILog.e("---------停止扫描-----------");
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+    }
+
+    // Device scan callback.
+    BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+
+        // 开始扫描和停止扫描都会调用此方法
+        @Override
+        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+            Message msg = Message.obtain();
+
+            String str = "未配对|" + device.getName() + "|" + device.getAddress() + "---" + device.getType();
+            ILog.e(str);
+
+            //  如果扫描到的设备名字和给定的机器猫名一致，将设备返回
+            if (GlobalContants.ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
+                //蓝牙类型
+                int type = device.getType();
+                ILog.e(device.getName() + "---" + GlobalContants.ROBOT_BT_NAME + "----" + type);
+                if (type == BluetoothDevice.DEVICE_TYPE_LE) {
+                    msg.what = MSG_WHAT_FOUND_DEVICE;
+                    msg.obj = device;
+                } else {
+                    msg.what = MSG_WHAT_NO_FOUND_DEVICE;
+                }
+                handler.sendMessage(msg);
+            }
+        }
+    };
+
+    //  连接设备
+    public void connect(final BluetoothDevice device) {
+        if (mBluetoothAdapter != null) {
+            //  获取BluetoothGatt，连接设备，设为了自动连接，可能会存在问题，
+            mBluetoothGatt = device.connectGatt(context, true, callback);
+        } else {
+            initBluetooth(handler, context);
+        }
+    }
+
+    //  连接设备的回调接口
+    final BluetoothGattCallback callback = new BluetoothGattCallback() {
+
+        // 若连接状态发生改变
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            //  status 表示相应的连接或断开操作是否完成，而不是指连接状态
+            Message msg = Message.obtain();
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                ILog.e("Connected to GATT server.");
+                // Attempts to discover services after successful connection.
+                bleRead.clearData();
+                boolean discover = mBluetoothGatt.discoverServices();
+                ILog.e("Attempting to start service discovery:" + discover);
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                ILog.e("Disconnected from GATT server.status:" + status);
+//                msg.what = MSG_DIS_CONNET;
+//                handler.sendMessage(msg);
+                bleRead.clearData();
+            }
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            Message msg = Message.obtain();
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                ILog.e("扫描到服务");
+                //  获取我们需要的服务
+                BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
+                //  我需要得到的应该是一个特定的BluetoothGattCharacteristic,根据uuid获取
+                BluetoothGattCharacteristic mCharacteristic = service.getCharacteristic(CHARAC_READ_UUID);
+                //  给设备设置notifity功能
+                // 如果设备主动给手机发信息，则可以通过notification的方式，这种方式不用手机去轮询地读设备上的数据
+                mBluetoothGatt.setCharacteristicNotification(mCharacteristic, true);
+                BluetoothGattDescriptor descripter = mCharacteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
+                if (descripter != null) {
+                    descripter.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    mBluetoothGatt.writeDescriptor(descripter);
+                }
+                msg.what = MSG_HAS_SERVICE;
+                msg.obj = true;
+            } else {
+                ILog.e("onServicesDiscovered received: " + status);
+                msg.obj = false;
+            }
+            ILog.e("发送是否扫描到服务的消息");
+            handler.sendMessage(msg);
+        }
+
+        //  接收到信息
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            ILog.e("收到信息");
+            readInfo(characteristic);
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                ILog.e("回调：信息写入成功");
+                bleSender.sendNextPackage(characteristic);
+            } else {
+                ILog.e("回调：信息写入失败");
+            }
+        }
+
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            super.onCharacteristicRead(gatt, characteristic, status);
+        }
+    };
+
+    // 读取设备信息
+    private void readInfo(BluetoothGattCharacteristic characteristic) {
+        String result = bleRead.read(characteristic);
+        if (!TextUtils.isEmpty(result)) {
+            Message msg = Message.obtain();
+            msg.what = MSG_WHAT_GET_INFO;
+            msg.obj = result;
+            handler.sendMessage(msg);
+        }
+    }
+
+    //  向蓝牙设备写信息
+    public void writeInfo(String info, UUID characWriteUuid) {
+        //  获取我们需要的服务
+        BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
+        //  我需要得到的应该是一个特定的BluetoothGattCharacteristic,根据uuid获取
+        BluetoothGattCharacteristic characteristic = service.getCharacteristic(characWriteUuid);
+        ILog.e("----------向设备写信息：" + info + "-----------");
+        bleSender.init(mBluetoothGatt);
+        bleSender.addData(characteristic, info);
+    }
+
+    //  取消连接设备
+    public void cancle() {
+        if (mBluetoothGatt != null)
+            mBluetoothGatt.disconnect();
+    }
+
+    //  关闭通信 BluetoothGatt
+    public void close() {
+        if (mBluetoothGatt != null) {
+            mBluetoothGatt.close();
+            mBluetoothGatt = null;
+        }
+    }
+}

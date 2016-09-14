@@ -1,22 +1,17 @@
 package coms.geeknewbee.doraemon.robot;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.ParcelUuid;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,30 +19,31 @@ import android.widget.ImageButton;
 
 import com.google.gson.Gson;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Objects;
-import java.util.Set;
+import java.security.cert.TrustAnchor;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.global.BaseActivity;
-import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.global.SptConfig;
-import coms.geeknewbee.doraemon.index.IndexActivity;
+import coms.geeknewbee.doraemon.robot.bean.BTPostBackCommand;
+import coms.geeknewbee.doraemon.robot.bean.RobotBean;
 import coms.geeknewbee.doraemon.robot.presenter.IRobotBindPresenter;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.robot.utils.NetworkStateReceiver;
+import coms.geeknewbee.doraemon.robot.view.IBindView;
+import coms.geeknewbee.doraemon.BLE.BleManager;
 import coms.geeknewbee.doraemon.utils.ILog;
-import coms.geeknewbee.doraemon.utils.Session;
 import coms.geeknewbee.doraemon.utils.SoftKeyboardManager;
 import coms.geeknewbee.doraemon.utils.StringHandler;
 
-public class RobotWifiActivity extends BaseActivity {
+public class RobotWifiActivity extends BaseActivity
+        implements IBindView {
 
-    /**-----------------------组件----------------------**/
+    /**
+     * -----------------------组件----------------------
+     **/
 
     EditText wifi_ssid;
 
@@ -57,23 +53,55 @@ public class RobotWifiActivity extends BaseActivity {
 
     ImageButton ibBack;
 
-    /**-----------------------数据----------------------**/
-    private static final UUID ROBOT_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");//b5b59b9c-18de-11e6-9409-20c9d0499603
-    private BluetoothAdapter adapter;
-//    private String ROBOT_BT_NAME = "DoraemonTest";//geeknewbee-robot //sangeyeye
-    private OutputStream outputStream;
+
+    IRobotBindPresenter bindPresenter;
+    BleManager bleManager;
+
     private String SSID;
+    private String serialNo;
 
     String type;
 
-    /** 可连接设备 **/
+    public static String strPsw = "0000";
+
+
+    /**
+     * 可连接设备
+     **/
     private BluetoothDevice linkDevice;
 
-    AsyncTask asyncTask;
+    boolean hasService = false;
 
-    private boolean reLink = false;
+    private static final int REQUEST_ENABLE_BT = 1000;
 
-    boolean stop = false;
+    //  是否进行过连接
+    public boolean hasConnect = false;
+
+//    //  网络连接是否超时
+//    private boolean isMuchTime;
+
+    /**
+     * -----------------------使用蓝牙返回的信息----------------------
+     **/
+
+    private static final int MSG_WHAT_NO_SUPPORT_BLE = 100;
+    private static final int MSG_WHAT_NO_SUPPORT_BL = 200;
+    private static final int MSG_WHAT_OPEN_BL = 300;
+    private static final int MSG_WHAT_FOUND_DEVICE = 400;
+    private static final int MSG_WHAT_NO_FOUND_DEVICE = 500;
+    private static final int MSG_WHAT_GET_INFO = 600;
+    private static final int MSG_HAS_SERVICE = 700;
+    private static final int MSG_DIS_CONNET = 800;
+
+    // Stops scanning after 30 seconds.
+    private static final long SCAN_PERIOD = 10000;
+
+    //  写charac的uuid
+    private static UUID CHARAC_WRITE_UUID = UUID.fromString("00002a30-0000-1000-8000-00805f9b34fb");
+
+    Gson gson = new Gson();
+    private String send;
+    private String pwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +115,8 @@ public class RobotWifiActivity extends BaseActivity {
             finish();
         } else {
             showDialog("正在检测可以连接的设备……");
-            handler.postDelayed(finish, 20000);
-            bluetoothInit();
+            if (bluetoothInit())
+                startDiscoveryDevice();
         }
     }
 
@@ -98,6 +126,8 @@ public class RobotWifiActivity extends BaseActivity {
         wifi_ok = (Button) findViewById(R.id.wifi_ok);
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         skm = new SoftKeyboardManager(wifi_ssid);
+        bleManager = BleManager.getInstance();
+        bindPresenter = new IRobotBindPresenter(this);
 
         wifi_ok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,20 +144,19 @@ public class RobotWifiActivity extends BaseActivity {
             }
         });
         type = getIntent().getStringExtra("type");
-        reLink = false;
         wifi_password.setOnFocusChangeListener(focusChangeListener);
     }
 
     View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if(hasFocus){
+            if (hasFocus) {
                 skm.show();
             }
         }
     };
 
-    private void bluetoothInit() {
+    private boolean bluetoothInit() {
         if (!NetworkStateReceiver.isConnected) {
             tt.showMessage("请先配置好您手机的WIFI网络", tt.LONG);
             finish();
@@ -138,162 +167,158 @@ public class RobotWifiActivity extends BaseActivity {
         ILog.e("SSID", wifiInfo.getSSID());
 
         SSID = wifiInfo.getSSID().replaceAll("\\\"", "");
-        wifi_ssid.setText(""+SSID);
-        // 检查设备是否支持蓝牙
-        adapter = BluetoothAdapter.getDefaultAdapter();
-        if (adapter == null) {
-            // 设备不支持蓝牙
-            tt.showMessage("您的手机不支持蓝牙连接", tt.LONG);
-            finish();
-        }
-        // 打开蓝牙
-        if (!adapter.isEnabled()) {
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            // 设置蓝牙可见性，最多300秒
-            intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            startActivity(intent);
-        }
-        //查找已配对的蓝牙设备
-        Set<BluetoothDevice> devices = adapter.getBondedDevices();
-        for (int i = 0; i < devices.size(); i++) {
-            BluetoothDevice device = (BluetoothDevice) devices.iterator().next();
-            ILog.e("" + device.getName());
-        }
-        // 设置广播信息过滤
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        intentFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-        intentFilter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
-        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-//        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        // 注册广播接收器，接收并处理搜索结果
-        registerReceiver(searchDevices, intentFilter);
-        // 寻找蓝牙设备，android会将查找到的设备以广播形式发出去
-        ILog.e("蓝牙搜索广播开始");
-        adapter.startDiscovery();
+        wifi_ssid.setText("" + SSID);
+
+        //调用蓝牙管理功能初始化蓝牙设备
+        boolean isSuccess = bleManager.initBluetooth(handler, this);
+        return isSuccess;
     }
 
-    private void linkDevice(){
-        if(StringHandler.isEmpty(wifi_password.getText().toString())){
+    private void startDiscoveryDevice() {
+        handler.postDelayed(finish, SCAN_PERIOD);
+        //  初始化成功，开始扫描
+        bleManager.startScan();
+    }
+
+    //蓝牙调用的结果处理
+    public Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MSG_WHAT_NO_SUPPORT_BLE:   //不支持BLE
+                    tt.showMessage("您的手机不支持蓝牙BLE连接", tt.LONG);
+                    finish();
+                    break;
+
+                case MSG_WHAT_NO_SUPPORT_BL:    //不支持bl
+                    tt.showMessage("您的手机不支持蓝牙连接", tt.LONG);
+                    finish();
+                    break;
+
+                case MSG_WHAT_OPEN_BL:  //打开蓝牙
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                    break;
+
+                case MSG_WHAT_FOUND_DEVICE: //发现蓝牙设备
+                    //停止扫描
+                    bleManager.stopScan();
+                    handler.removeCallbacks(finish);
+                    linkDevice = (BluetoothDevice) msg.obj;
+                    wifi_password.requestFocus();//输入焦点放在此控件上
+                    hideDialog();
+                    tt.showMessage("检测到设备，请为它设置WIFI", tt.SHORT);
+                    break;
+
+                case MSG_WHAT_NO_FOUND_DEVICE:  //没有发现需要的蓝牙设备
+                    tt.showMessage("蓝牙类型不匹配", tt.SHORT);
+                    break;
+
+//                case MSG_DIS_CONNET:    //连接已断开
+//                    if (!isMuchTime) {
+//                        hideDialog();
+//                        removeCallbacks(finish);
+//                        tt.showMessage("连接已断开，请重新连接", tt.LONG);
+//                    }
+//                    break;
+
+                case MSG_HAS_SERVICE:  //是否扫描到设备的服务
+                    hasService = (Boolean) msg.obj;
+                    if (hasService) {
+                        //  将对象转换为json类型的字符串进行发送
+                        BluetoothCommand bluetoothCommand = new BluetoothCommand(new BluetoothCommand.WifiInfo(3, SSID, pwd));
+                        //  字符串是否为空可以作为是否进行过设备连接的依据
+                        send = gson.toJson(bluetoothCommand);
+                        String sendData = "DRC" + send + "DRC_SUFFIX";
+                        ILog.e("发送消息：" + sendData);
+                        bleManager.writeInfo(sendData, CHARAC_WRITE_UUID);
+                    } else {
+                        tt.showMessage("未扫描到服务", tt.SHORT);
+                    }
+                    break;
+
+                case MSG_WHAT_GET_INFO:  //从设备获取到信息
+                    handler.removeCallbacks(finish);
+                    hideDialog();
+                    String info = (String) msg.obj;
+                    //  获取到的是JSON字符串，需要将其转换为对象BTPostBackCommand
+                    BTPostBackCommand command = gson.fromJson(info, BTPostBackCommand.class);
+                    BTPostBackCommand.SetWIFICallBack back = command.getWifiCallBack();
+                    boolean isSuccess = back.isSuccess;
+                    boolean hadBind = back.hadBound;
+                    //  返回的信息
+                    String content = back.content;
+                    if (isSuccess) {
+                        if (type != null && type.equals("reLink")) {
+                            ILog.e("WIFI设置成功");
+                            tt.showMessage("Wifi设置成功", tt.LONG);
+                            getIntent().putExtra("ssid", SSID);
+                            setResult(0, getIntent());
+                            finish();
+                            return;
+                        }
+
+                        if (hadBind) {
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(RobotWifiActivity.this)
+                                    .setTitle("系统提示").setMessage("该机器猫已经被绑定，请联系管理员添加您为该机器猫用户！")
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    });
+                            dialog.show();
+                            return;
+                        }
+                        ILog.e("WIFI设置成功");
+                        tt.showMessage("Wifi设置成功", tt.LONG);
+                        // 绑定机器人
+                        String code = content.substring(content.indexOf("qr/") + 3);
+                        serialNo = code;
+                        bindPresenter.bindRobot();
+                        showDialog("正在绑定机器人……");
+
+                    } else {
+                        showMsg("系统提示", "Wifi设置失败");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    //  连接设备
+    private void linkDevice() {
+        pwd = wifi_password.getText().toString();
+        if (StringHandler.isEmpty(pwd)) {
             showMsg("系统提示", "WIFI密码不能为空");
             return;
         }
         showDialog("正在设置网络……");
         handler.postDelayed(finish, 35000);
-        if(reLink){
-            bluetoothInit();
-        } else {
-            connect();
-        }
+        // 连接设备
+        hasConnect = true;
+        bleManager.connect(linkDevice);
     }
 
-    private void bindRobot(){
-        Intent intent = new Intent(RobotWifiActivity.this, RobotZxingActivity.class);
-        startActivity(intent);
-    }
-
-    public static String strPsw = "0000";
-
-    //蓝牙设备
-    private BluetoothSocket socket;
-    private BroadcastReceiver searchDevices = new BroadcastReceiver() {
-
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Bundle b = intent.getExtras();
-            Object[] lstName = b.keySet().toArray();
-
-            ILog.e("--------------------------");
-            BluetoothDevice device = null;
-            // 搜索设备时，取得设备的MAC地址
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String str = "未配对|" + device.getName() + "|" + device.getAddress()+"---"+device.getType();
-                ILog.e(str);
-                if (GlobalContants.ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
-                    //&& device.getBondState() == BluetoothDevice.BOND_NONE
-                    //蓝牙类型
-                    int type = device.getType();
-                    ILog.e(device.getName() + "---" + GlobalContants.ROBOT_BT_NAME+"----"+type);
-
-//                    boolean isRightUuid = false;
-//                    //空指针了
-//                    for (ParcelUuid uuid : device.getUuids()) {
-//                        if(uuid.getUuid().equals(ROBOT_UUID)) {
-//                            isRightUuid = true;
-//                            break;
-//                        }
-//                    }
-
-                    if (type==BluetoothDevice.DEVICE_TYPE_CLASSIC /*&& device.getUuids()!=null && isRightUuid*/){
-                        linkDevice = device;
-                        wifi_password.requestFocus();//输入焦点放在此控件上
-                        unregisterReceiver(searchDevices);
-                        adapter.cancelDiscovery();
-                        if(reLink){
-                            connect();
-                        } else {
-                            handler.removeCallbacks(finish);
-                            hideDialog();
-                            tt.showMessage("检测到设备，请为它设置WIFI", tt.SHORT);
-                        }
-                    }else{
-                        tt.showMessage("蓝牙类型不匹配",tt.SHORT);
-                    }
-                }
-                //如果远程设备的连接状态发生改变
-            } else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
-                device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String str = device.getName() + "|" + device.getAddress();
-                ILog.e(str);
-                switch (device.getBondState()) {
-                    case BluetoothDevice.BOND_BONDING:
-                        ILog.e("BlueToothTestActivity", "正在配对......");
-                        break;
-                    case BluetoothDevice.BOND_BONDED:
-                        ILog.e("BlueToothTestActivity", "完成配对");
-                        break;
-                    case BluetoothDevice.BOND_NONE:
-                        ILog.e("BlueToothTestActivity", "取消配对");
-                    default:
-                        break;
-                }
-            }
-        }
-    };
-
-    /* Call this from the main Activity to send data to the remote device */
-    public void write(byte[] bytes) throws IOException {
-        if (outputStream == null)
-            throw new IllegalStateException("Wait connection to be opened");
-        outputStream.write(bytes);
-        outputStream.flush();
-    }
-
-    public void connect() {
-        ILog.e("------------------"+reLink+"--------------------");
-        asyncTask = new ConnectTask();
-        asyncTask.execute();
-    };
-
+    //  超时操作
     Runnable finish = new Runnable() {
         @Override
         public void run() {
             hideDialog();
-            if(linkDevice == null){
-                try {
-                    unregisterReceiver(searchDevices);
-                    adapter.cancelDiscovery();
-                } catch (Exception e){}
-                if(reLink){
-                    tt.showMessage("连接到设备失败，请重新连接", tt.SHORT);
-                } else {
-                    tt.showMessage("未检测到可连接设备", tt.SHORT);
-                }
+            // 未扫描到可连接设备，停止扫描
+            if (linkDevice == null) {
+                bleManager.stopScan();
+                tt.showMessage("未检测到可连接设备", tt.SHORT);
                 finish();
-            } else if(asyncTask != null) {
+                //  wifi设置超时处理
+            } else if (hasConnect) {
+                hasConnect = false;
+//                isMuchTime = true;
                 tt.showMessage("连接超时……", tt.SHORT);
-                asyncTask.cancel(true);
+                bleManager.cancle();
                 cancel();
                 finish();
             }
@@ -308,18 +333,14 @@ public class RobotWifiActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    public void cancel(){
+    public void cancel() {
         try {
-            stop = true;
-            socket.close();
-            if(asyncTask != null){
-                asyncTask.cancel(true);
-            }
+            bleManager.close();
         } catch (Exception e) {
             ILog.e(e);
         } finally {
             linkDevice = null;
-            socket = null;
+            send = null;
         }
     }
 
@@ -329,154 +350,46 @@ public class RobotWifiActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            String response = (String)msg.obj;
-            hideDialog();
-            if ("1".equals(response)) {//WIFI设置成功
-                tt.showMessage("Wifi设置成功", tt.LONG);
-                if(type == null){
-                    bindRobot();
-                    finish();
-                } else if(type.equals("reLink")){
-                    getIntent().putExtra("ssid", SSID);
-                    setResult(0, getIntent());
-                    finish();
-                }
-            } else if ("0".equals(response)) {//WIFI设置失败
-                showMsg("系统提示", "Wifi设置失败");
-                reLink = true;
-            } else {
-                showMsg("系统提示", "机器人返回未知数据：" + response);
-                reLink = true;
-            }
-            asyncTask = null;
-            handler.removeCallbacks(finish);
+    @Override
+    public String getToken() {
+        return spt.getString(SptConfig.LOGIN_TOKEN, null);
+    }
+
+    @Override
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    @Override
+    public void bindSuccess(RobotBean robotBean) {
+        List<RobotBean> robotBeans = new ArrayList<RobotBean>();
+        robotBeans.add(robotBean);
+        session.put("robotBeans", robotBeans);
+        session.remove("index_refresh");
+        showMessage("绑定成功！");
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        hideDialog();
+        tt.showMessage("" + msg, tt.LONG);
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
+            // 允许打开蓝牙后就进行扫描
+            startDiscoveryDevice();
+            return;
         }
-    };
-
-    public class ConnectTask extends AsyncTask<Object, Object, String>{
-        java.lang.String pwd;
-
-        @Override
-        protected void onPreExecute() {
-            pwd = wifi_password.getText().toString();
-            super.onPreExecute();
+        // User chose not to enable Bluetooth.
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            finish();
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
-        @Override
-        protected void onPostExecute(String response) {
-            hideDialog();
-            if ("1".equals(response)) {//WIFI设置成功
-                tt.showMessage("Wifi设置成功", tt.LONG);
-                if(type == null){
-                    bindRobot();
-                    finish();
-                } else if(type.equals("reLink")){
-                    getIntent().putExtra("ssid", SSID);
-                    setResult(0, getIntent());
-                    finish();
-                }
-            } else if ("0".equals(response)) {//WIFI设置失败
-                showMsg("系统提示", "Wifi设置失败");
-                reLink = true;
-            } else {
-                showMsg("系统提示", "机器人返回未知数据：" + response);
-                reLink = true;
-            }
-            handler.removeCallbacks(finish);
-            super.onPostExecute(response);
-        }
-
-        @Override
-        protected String doInBackground(Object... params) {
-
-            String response = null;
-            int status = 0;
-            try {
-                stop = false;
-                socket = linkDevice.createInsecureRfcommSocketToServiceRecord(ROBOT_UUID);
-
-                // 固定的UUID
-                ILog.e("连接蓝牙设备：" + linkDevice.getName());
-                socket.connect();
-                status = 1;
-                ILog.e("-----------------连接成功----------------");
-
-                InputStream inputStream = socket.getInputStream();
-                ILog.e("inputStream : " + inputStream);
-                outputStream = new BufferedOutputStream(socket.getOutputStream());
-                ILog.e("outputStream : " + outputStream);
-
-                ILog.e("向蓝牙设备发送数据：" + linkDevice.getName() + "[" + SSID + "|" + pwd + "|3EOM]");
-//                String sendData = SSID + "|" + pwd + "|3EOM";
-
-                Gson gson=new Gson();
-                BluetoothCommand bluetoothCommand=new BluetoothCommand(new BluetoothCommand.WifiInfo(3,SSID,pwd));
-                /*bluetoothCommand.wifiInfo.type=3;
-                bluetoothCommand.wifiInfo.SSID=SSID;
-                bluetoothCommand.wifiInfo.pwd=pwd;*/
-
-                String send = gson.toJson(bluetoothCommand);
-                String sendData = "COMMAND_ROBOT"+send+"COMMAND_ROBOT_SUFFIX";
-                ILog.e("BluetoothCommand", "sendData--json: "+sendData);
-
-                write(sendData.getBytes());
-                byte[] data = new byte[40];
-                int dataSize = 0;
-                while (true) {
-                    try {
-                        dataSize = inputStream.read(data);
-                        if (dataSize > 0) {
-                            response = new java.lang.String(data, 0, dataSize);
-                            ILog.e("读取到数据：" + response);
-                            break;
-                        }
-                        if(socket == null || linkDevice == null || stop){
-                            break;
-                        }
-                    } catch (Exception e) {
-                        dataSize = 0;
-                        ILog.e(e);
-                        break;
-                    }
-                }
-                status = 2;
-                asyncTask = null;
-                try {
-                    RobotWifiActivity.this.cancel();
-                    outputStream.close();
-                    inputStream.close();
-                } catch (Exception e) {
-
-                }
-
-                ILog.e("断开蓝牙设备……");
-            } catch (IOException e) {
-                Log.e("连接异常", e.getStackTrace().toString());
-                ILog.e(e);
-                if(status == 0){
-                    try {
-                        RobotWifiActivity.this.cancel();
-                    } catch (Exception e2) {
-                        ILog.e(e2);
-                    }
-                    reLink = true;
-                    bluetoothInit();
-                } else if(status == 1){
-                    try {
-                        outputStream.close();
-                        RobotWifiActivity.this.cancel();
-                    } catch (Exception e2) {
-                        ILog.e(e2);
-                    }
-                    reLink = true;
-                    bluetoothInit();
-                }
-            }
-            return response;
-        }
-    };
 }
+

@@ -1,16 +1,11 @@
 package coms.geeknewbee.doraemon.robot;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -20,25 +15,17 @@ import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
+import coms.geeknewbee.doraemon.BLE.BleManager;
 import coms.geeknewbee.doraemon.R;
-import coms.geeknewbee.doraemon.box.movie.bean.MovieBean;
-import coms.geeknewbee.doraemon.box.movie.view.IMovieView;
 import coms.geeknewbee.doraemon.global.BaseActivity;
-import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.SptConfig;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.widget.PanelView;
 import coms.geeknewbee.doraemon.widget.Rudder;
 
-public class RobotOfflineActivity extends BaseActivity implements Runnable{
+public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     private static final int ACT_MOVE = 0;
 
@@ -113,22 +100,40 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable{
     Rudder pvFoot;
 
     /**
-     * -----------------------数据----------------------
-     **/
-    private static final UUID ROBOT_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
-    private BluetoothAdapter adapter;
-//    private String ROBOT_BT_NAME = "DoraemonTest";//"geeknewbee-robot";
-    private OutputStream outputStream;
-
-    /**
      * 可连接设备
      **/
     private BluetoothDevice linkDevice;
 
-    AsyncTask asyncTask;
+    //  是否进行过连接
+    public boolean hasConnect = false;
 
-    boolean stop = false;
-    public boolean isConnect = false;
+//    //  网络连接是否超时
+//    private boolean isMuchTime;
+
+    //  是否扫描到服务
+    private Boolean hasService = false;
+
+    private BleManager bleManager;
+
+    private static final int REQUEST_ENABLE_BT = 1000;
+
+    //  向设备发送命令的UUID
+    private UUID characWriteUuid = UUID.fromString("00002a32-0000-1000-8000-00805f9b34fb");
+
+    /**
+     * -----------------------使用蓝牙返回的信息----------------------
+     **/
+    private static final int MSG_WHAT_NO_SUPPORT_BLE = 100;
+    private static final int MSG_WHAT_NO_SUPPORT_BL = 200;
+    private static final int MSG_WHAT_OPEN_BL = 300;
+    private static final int MSG_WHAT_FOUND_DEVICE = 400;
+    private static final int MSG_WHAT_NO_FOUND_DEVICE = 500;
+    private static final int MSG_WHAT_GET_INFO = 600;
+    private static final int MSG_HAS_SERVICE = 700;
+    private static final int MSG_DIS_CONNET = 800;
+
+    // Stops scanning after 30 seconds.
+    private static final long SCAN_PERIOD = 10000;
 
     int index = 0;
 
@@ -144,37 +149,10 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable{
         assignViews();
 
         showDialog("正在连接蓝牙。。。。");
-//        handler.postDelayed(finish, 20000);
-        bluetoothInit();
-//        handler.postDelayed(bluetoothConnect,10000);
-    }
-
-    Runnable bluetoothConnect = new Runnable() {
-        @Override
-        public void run() {
-            Looper.prepare();
-            if (socket == null) {
-                try {
-                    socket = linkDevice.createInsecureRfcommSocketToServiceRecord(ROBOT_UUID);
-
-                    socket.connect();
-                    outputStream = new BufferedOutputStream(socket.getOutputStream());
-                    ILog.e("outputStream : " + outputStream);
-
-                    hideDialog();
-                    tt.showMessage("检测到设备，可以进行控制",tt.SHORT);
-                    Log.d("bluetoothConnect", "检测到设备，可以进行控制");
-
-                } catch (Exception e) {
-                    Log.d("蓝牙连接异常", "bluetoothConnect---" + e.getStackTrace().toString());
-                    hideDialog();
-                    tt.showMessage("蓝牙连接失败",tt.SHORT);
-                    RobotOfflineActivity.this.finish();
-                }
-            }
-            Looper.loop();
+        if (bluetoothInit()) {
+            startDiscoverDevice();
         }
-    };
+    }
 
     private void assignViews() {
         ibBack = (ImageButton) findViewById(R.id.ibBack);
@@ -203,6 +181,8 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable{
         pvRarm.setOnClickListener(clickListener);
         // pvFoot.setOnClickListener(clickListener);
         pvFoot.setRudderListener(rudderListener);
+
+        bleManager = BleManager.getInstance();
 
         pvHead.setName("头");
         pvHead.setBtn("上", "下", "左", "右");
@@ -263,120 +243,144 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable{
         }
     };
 
-
-
-    private void bluetoothInit() {
-        // 检查设备是否支持蓝牙
-        adapter = BluetoothAdapter.getDefaultAdapter();
-        if (adapter == null) {
-            // 设备不支持蓝牙
-            tt.showMessage("您的手机不支持蓝牙连接", tt.LONG);
-            finish();
-        }
-
-        // 设置广播信息过滤
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        intentFilter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
-        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        // 注册广播接收器，接收并处理搜索结果
-        registerReceiver(searchDevices, intentFilter);
-        // 寻找蓝牙设备，android会将查找到的设备以广播形式发出去
-        ILog.e("蓝牙搜索广播开始");
-
-        // 打开蓝牙
-        if (!adapter.isEnabled()) {
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            // 设置蓝牙可见性，最多300秒
-            intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            startActivity(intent);
-        } else
-            adapter.startDiscovery();
+    //  调用蓝牙管理功能初始化蓝牙设备
+    private boolean bluetoothInit() {
+        return bleManager.initBluetooth(handler, this);
     }
 
-    private void sendCMD() {
-        showDialog("正在发送控制命令……");
-        handler.postDelayed(finish,10000);
-        connect();
+    //  开始扫描设备
+    private void startDiscoverDevice() {
+        handler.postDelayed(finish, SCAN_PERIOD);
+        bleManager.startScan();
     }
 
-    private void bindRobot() {
-        Intent intent = new Intent(RobotOfflineActivity.this, RobotZxingActivity.class);
-        startActivity(intent);
-    }
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what >= 100) {
+                switch (msg.what) {
+                    case MSG_WHAT_NO_SUPPORT_BLE:   //不支持BLE
+                        tt.showMessage("您的手机不支持蓝牙BLE连接", tt.LONG);
+                        finish();
+                        break;
 
-    private BluetoothSocket socket;
-    private BroadcastReceiver searchDevices = new BroadcastReceiver() {
+                    case MSG_WHAT_NO_SUPPORT_BL:    //不支持bl
+                        tt.showMessage("您的手机不支持蓝牙连接", tt.LONG);
+                        finish();
+                        break;
 
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Bundle b = intent.getExtras();
-            Object[] lstName = b.keySet().toArray();
+                    case MSG_WHAT_OPEN_BL:  //打开蓝牙
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                        break;
 
-            ILog.e("--------------------------");
-            BluetoothDevice device = null;
-            // 搜索设备时，取得设备的MAC地址
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String str = "未配对|" + device.getName() + "|" + device.getAddress();
-                ILog.e(str);
-                Log.e("device_name", device.getName());
-                if (GlobalContants.ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
-                    //&& device.getBondState() == BluetoothDevice.BOND_NONE
-                    ILog.e(device.getName() + "|" + GlobalContants.ROBOT_BT_NAME);
-                    //蓝牙类型
-                    int type = device.getType();
-                    if (type == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
-                        linkDevice = device;
-                        unregisterReceiver(searchDevices);
-                        adapter.cancelDiscovery();
+                    case MSG_WHAT_FOUND_DEVICE: //发现蓝牙设备
                         handler.removeCallbacks(finish);
-                        new Thread(bluetoothConnect).start();
-                    }
+                        hideDialog();
+                        //停止扫描
+                        bleManager.stopScan();
+                        linkDevice = (BluetoothDevice) msg.obj;
+                        tt.showMessage("检测到设备，可以进行控制", tt.SHORT);
+                        break;
+
+                    case MSG_WHAT_NO_FOUND_DEVICE:  //没有发现需要的蓝牙设备
+                        tt.showMessage("蓝牙类型不匹配", tt.SHORT);
+                        break;
+
+                    case MSG_HAS_SERVICE:  //是否扫描到设备的服务
+                        removeCallbacks(finish);
+                        hasService = (Boolean) msg.obj;
+                        if (hasService) {
+                            //  扫描到服务可以进行命令的发送
+                            sendInfo();
+                        } else {
+                            tt.showMessage("发送命令失败，请重新发送", tt.SHORT);
+                        }
+                        break;
+
+//                    case MSG_DIS_CONNET:    //连接已断开
+//                        if (!isMuchTime) {
+//                            ILog.e("连接已断开");
+//                            hideDialog();
+//                            removeCallbacks(finish);
+//                            tt.showMessage("连接已断开，请重新连接", tt.LONG);
+//                        }
+//                        break;
+                    default:
+                        break;
                 }
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                //当扫描结束的时候判断 如果还没有设置 就提示没有发现nsheb
-                // TODO:扫描完成
-                if (linkDevice == null) {
-                    hideDialog();
-                    tt.showMessage("未发现可用设备",tt.SHORT);
-                    finish();
-                }
+            } else if (msg.what == 0 && msg.obj == null) {
+                rlAct.setVisibility(View.GONE);
+            } else if (msg.obj == null) {
+                index = msg.what;
+                sendCMD();
             }
         }
     };
 
-    /* Call this from the main Activity to send data to the remote device */
-    public void write(byte[] bytes) throws IOException {
-        if (outputStream == null)
-            throw new IllegalStateException("Wait connection to be opened");
-        outputStream.write(bytes);
-        outputStream.flush();
+    //  发送命令
+    private void sendCMD() {
+        showDialog("正在发送控制命令……");
+        handler.postDelayed(finish, 10000);
+        //  第一次发送命令，首先进行设备连接
+        if (!hasConnect) {
+            ILog.e("第一次发送命令，首先进行设备连接");
+            connect();
+        } else if (hasService) {
+            //  如果已经连接过，直接发送命令
+            ILog.e("已经连接过gatt并已扫描到服务，直接发送命令");
+            sendInfo();
+        } else {
+            ILog.e("没有获取到服务");
+            tt.showMessage("没有获取到服务", tt.SHORT);
+        }
     }
 
+    //  连接设备
     public void connect() {
-        asyncTask = new ConnectTask();
-        asyncTask.execute();
+        hasConnect = true;
+        bleManager.connect(linkDevice);
     }
 
-    ;
+    //  向设备发送信息
+    private void sendInfo() {
+        if (linkDevice == null) {
+            if (index == ACT_DISCONNECT) {
+                RobotOfflineActivity.this.cancel();
+                finish();
+            }
+            return;
+        }
+        Gson gson = new Gson();
+        BluetoothCommand bluetoothCommand = new BluetoothCommand();
+        bluetoothCommand.action = cmd[index];
+        String json = gson.toJson(bluetoothCommand);
+        String jsonCommand = "DRC" + json + "DRC_SUFFIX";
+        ILog.e("向蓝牙设备发送数据：" + jsonCommand);
+        bleManager.writeInfo(jsonCommand, characWriteUuid);
+        hideDialog();
+        handler.removeCallbacks(finish);
+        if (index == ACT_DISCONNECT) {
+            RobotOfflineActivity.this.cancel();
+            ILog.e("断开蓝牙设备……");
+        }
+    }
 
+    //  超时处理
     Runnable finish = new Runnable() {
         @Override
         public void run() {
             hideDialog();
             if (linkDevice == null) {
-                try {
-                    unregisterReceiver(searchDevices);
-                    adapter.cancelDiscovery();
-                } catch (Exception e) {
-                }
-                tt.showMessage("未检测到可连接设备", tt.SHORT);
+                bleManager.stopScan();
+                tt.showMessage("未检测到可控制设备", tt.SHORT);
                 finish();
-            } else if (asyncTask != null) {
+            } else if (hasConnect) {
+//                isMuchTime = true;
+                hasConnect = false;
                 tt.showMessage("连接超时……", tt.SHORT);
-                asyncTask.cancel(true);
+                bleManager.cancle();
                 cancel();
                 finish();
             }
@@ -384,151 +388,50 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable{
     };
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
+            // 允许打开蓝牙后就进行扫描
+            startDiscoverDevice();
+            return;
+        }
+        // User chose not to enable Bluetooth.
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            finish();
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onBackPressed() {
         if (rlAct.getVisibility() == View.VISIBLE) {
             rlAct.setVisibility(View.GONE);
             return;
         }
-        // index = ACT_DISCONNECT;
-        // sendCMD();
     }
 
     public void cancel() {
         try {
-            stop = true;
-            socket.close();
-            socket = null;
-            if (asyncTask != null) {
-                asyncTask.cancel(true);
-            }
+            bleManager.close();
         } catch (Exception e) {
             ILog.e(e);
         } finally {
             linkDevice = null;
-            socket = null;
         }
     }
 
     @Override
     protected void onDestroy() {
+        ILog.e("onDestory:断开蓝牙连接");
         hideDialog();
         cancel();
         super.onDestroy();
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.obj == null) {
-                if (msg.what == 0) {
-                    rlAct.setVisibility(View.GONE);
-                } else {
-                    index = msg.what;
-                    sendCMD();
-                }
-                return;
-            }
-        }
-    };
-
-    public class ConnectTask extends AsyncTask<Object, Object, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(String response) {
-            hideDialog();
-            handler.removeCallbacks(finish);
-            if ("1".equals(response)) {
-                tt.showMessage("控制命令发送成功", tt.SHORT);
-            } else if ("0".equals(response)) {
-                finish();
-            } else {
-                tt.showMessage("机器人返回未知数据：" + response, tt.SHORT);
-            }
-            super.onPostExecute(response);
-        }
-
-        @Override
-        protected String doInBackground(Object... params) {
-
-            if (linkDevice == null) {
-                if (index == ACT_DISCONNECT || stop) {
-                    try {
-                        RobotOfflineActivity.this.cancel();
-                        finish();
-                    } catch (Exception e) {
-
-                    }
-                }
-                return null;
-            }
-            int status = 0;
-            try {
-
-                ILog.e("向蓝牙设备发送数据：" + linkDevice.getName() + "[" + cmd[index] + "]");
-                //u
-                if (outputStream == null) {
-                    Log.d("outputStream", "doInBackground: ----"+outputStream);
-                    return "0";
-                }
-                Gson gson = new Gson();
-                BluetoothCommand bluetoothCommand = new BluetoothCommand();
-                bluetoothCommand.action = cmd[index];
-                String json = gson.toJson(bluetoothCommand);
-                String jsonCommand = "COMMAND_ROBOT" + json + "COMMAND_ROBOT_SUFFIX";
-                Log.d("BluetoothCommand", "jsonCommand----: " + jsonCommand);
-
-                write(jsonCommand.getBytes());
-
-//                write(cmd[index].getBytes());
-                status = 2;
-                asyncTask = null;
-                if (index == ACT_DISCONNECT || stop) {
-                    try {
-                        RobotOfflineActivity.this.cancel();
-                        outputStream.close();
-                        finish();
-                    } catch (Exception e) {
-
-                    }
-                    ILog.e("断开蓝牙设备……");
-                    return "0";
-                }
-            } catch (IOException e) {
-                ILog.e(e);
-                if (index == ACT_DISCONNECT || stop) {
-                    try {
-                        finish();
-                        RobotOfflineActivity.this.cancel();
-                        outputStream.close();
-                    } catch (Exception ex) {
-
-                    }
-                    ILog.e("断开蓝牙设备……");
-                    return "0";
-                }
-                if (status == 0) {
-                    return null;
-                } else if (status == 1) {
-                }
-            }
-            return "1";
-        }
-    };
-
     private boolean isRudderUse;
     private float mSpeedV;
     private float mSpeedW;
     Rudder.RudderListener rudderListener = new Rudder.RudderListener() {
-
-        BluetoothCommand command = new BluetoothCommand();
-        BluetoothCommand.LimbCommand limbCommand = new BluetoothCommand.LimbCommand();
-
         @Override
         public void onSteeringWheelChanged(int action, float radius, float radian) {
             isRudderUse = true;
@@ -547,62 +450,31 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable{
             mSpeedW = 0;
             Log.d("RobotFoot", "onTouchUp");
 
-            limbCommand.setFootCommand(new BluetoothCommand.LimbCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
-            command.setLimbCommand(limbCommand);
-            try {
-                if (outputStream != null) {
-                    String message = new Gson().toJson(command);
-                    message = "COMMAND_ROBOT" + message + "COMMAND_ROBOT_SUFFIX";
-                    write(message.getBytes());
-                } else {
-                    Log.d("Bluetooth_Control", "无连接");
-                }
-                // mBluetoothUtils.sendMessage(new Gson().toJson(command));
-                try {
-                    Thread.sleep(30);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (outputStream != null) {
-                    String message = new Gson().toJson(command);
-                    message = "COMMAND_ROBOT" + message + "COMMAND_ROBOT_SUFFIX";
-                    write(message.getBytes());
-                } else {
-                    Log.d("Bluetooth_Control", "无连接");
-                }
-                // mBluetoothUtils.sendMessage(new Gson().toJson(command)); //有时候一次停止失败,这里发两次
-            } catch (IOException e) {
-                e.printStackTrace();
+            BluetoothCommand command = new BluetoothCommand();
+            command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
+            if (hasService) {
+                String message = new Gson().toJson(command);
+                message = "DRC" + message + "DRC_SUFFIX";
+                bleManager.writeInfo(message, characWriteUuid);
+            } else {
+                ILog.e("无连接");
             }
         }
     };
 
-
     @Override
     public void run() {
         BluetoothCommand command = new BluetoothCommand();
-        BluetoothCommand.LimbCommand limbCommand = new BluetoothCommand.LimbCommand();
         while (true) {
             if (isRudderUse) {
-                limbCommand.setFootCommand(new BluetoothCommand.LimbCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
-                command.setLimbCommand(limbCommand);
-                try {
-                    if (outputStream != null) {
-                        String message = new Gson().toJson(command);
-                        message = "COMMAND_ROBOT" + message + "COMMAND_ROBOT_SUFFIX";
-                        write(message.getBytes());
-                    } else {
-                        Log.d("Bluetooth_Control", "无连接");
-                    }
-                    // mBluetoothUtils.sendMessage(new Gson().toJson(command));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
+                if (hasService) {
+                    String message = new Gson().toJson(command);
+                    message = "DRC" + message + "DRC_SUFFIX";
+                    bleManager.writeInfo(message, characWriteUuid);
+                } else {
+                    ILog.e("无连接");
                 }
-            }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }

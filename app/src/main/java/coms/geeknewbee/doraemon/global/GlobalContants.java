@@ -10,7 +10,7 @@ import coms.geeknewbee.doraemon.utils.StringHandler;
 public class GlobalContants {
 
     //蓝牙名
-    public static final String ROBOT_BT_NAME = "Doraemon";
+    public static final String ROBOT_BT_NAME = "DoraemonTest";
 
     public static final String APP_URL = "http://doraemon.babadeyan.com:80/app";//app前缀
     public static final String SEND_SUGGESTION = APP_URL+"/feedback";
