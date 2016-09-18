@@ -41,10 +41,10 @@ public class BoxActivity extends Activity implements View.OnClickListener, Adapt
 //    private int[] icon = {R.mipmap.conversation, R.mipmap.learntalk, R.mipmap.english,
 //            R.mipmap.clock, R.mipmap.smarthome, R.mipmap.facetime, R.mipmap.storeroom,
 //            R.mipmap.ic_movie, R.mipmap.time};
-    private int[] icon = {R.mipmap.conversation, R.mipmap.learntalk, R.mipmap.clock, R.mipmap.smarthome, R.mipmap.facetime, R.mipmap.storeroom, R.mipmap.time};
+    private int[] icon = {R.mipmap.conversation, R.mipmap.learntalk, R.mipmap.clock, R.mipmap.smarthome, R.mipmap.storeroom, R.mipmap.ic_movie, R.mipmap.time};
     //文字介绍
-    private String[] iconName = {"说话", "学对话", "小闹钟", "智能家居", "视频通话", "储物间", "时光机"};
-//    private String[] iconName = {"说话", "学对话", "学英语", "小闹钟", "智能家居", "视频通话", "储物间",
+    private String[] iconName = {"说话", "学对话", "小闹钟", "智能家居", "储物间", "查电影", "时光机"};
+    //    private String[] iconName = {"说话", "学对话", "学英语", "小闹钟", "智能家居", "视频通话", "储物间",
 //            "查电影", "时光机"};
     private GridView gv;
     private Button bt_Back;

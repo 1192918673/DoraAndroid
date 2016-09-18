@@ -257,17 +257,12 @@ public class BleManager {
         bleSender.addData(characteristic, info);
     }
 
-    //  取消连接设备
-    public void cancle() {
-        if (mBluetoothGatt != null)
-            mBluetoothGatt.disconnect();
-    }
-
     //  关闭通信 BluetoothGatt
     public void close() {
         bleSender.stopSend();
         if (mBluetoothGatt != null) {
             ILog.e("onDestory:断开蓝牙连接");
+            mBluetoothGatt.disconnect();
             mBluetoothGatt.close();
             mBluetoothGatt = null;
         }

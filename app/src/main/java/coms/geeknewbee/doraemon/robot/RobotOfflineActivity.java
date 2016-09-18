@@ -132,8 +132,8 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     private static final int MSG_HAS_SERVICE = 700;
     private static final int MSG_DIS_CONNET = 800;
 
-    // Stops scanning after 30 seconds.
-    private static final long SCAN_PERIOD = 10000;
+    // Stops scanning and connect after 20 seconds.
+    private static final long SCAN_PERIOD = 20000;
 
     int index = 0;
 
@@ -273,16 +273,15 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
                         break;
 
                     case MSG_WHAT_OPEN_BL:  //打开蓝牙
+                        hideDialog();
                         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
                         break;
 
                     case MSG_WHAT_FOUND_DEVICE: //发现蓝牙设备
-                        handler.removeCallbacks(finish);
                         //停止扫描
                         bleManager.stopScan();
                         linkDevice = (BluetoothDevice) msg.obj;
-                        tt.showMessage("检测到设备，可以进行控制", tt.SHORT);
                         connect();
                         break;
 
@@ -291,21 +290,21 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
                         break;
 
                     case MSG_HAS_SERVICE:  //是否扫描到设备的服务
+                        hasService = (Boolean) msg.obj;
                         hideDialog();
-                        removeCallbacks(finish);
-//                        hasService = (Boolean) msg.obj;
-//                        if (hasService) {
-//                            //  扫描到服务可以进行命令的发送
-//                            sendInfo();
-//                        } else {
-//                            tt.showMessage("发送命令失败，请重新发送", tt.SHORT);
-//                        }
+                        handler.removeCallbacks(finish);
+                        if (hasService) {
+                            tt.showMessage("检测并连接到设备，可以进行控制", tt.SHORT);
+                        } else {
+                            tt.showMessage("没有扫描到服务", tt.SHORT);
+                            finish();
+                        }
                         break;
 
                     case MSG_DIS_CONNET:    //连接已断开
                         ILog.e("连接已断开");
                         hideDialog();
-                        removeCallbacks(finish);
+                        handler.removeCallbacks(finish);
                         tt.showMessage("连接已断开，请重新连接", tt.LONG);
                         finish();
                         break;
@@ -321,53 +320,33 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
         }
     };
 
-    //  发送命令
-    private void sendCMD() {
-        showDialog("正在发送控制命令……");
-        handler.postDelayed(finish, 30000);
-        sendInfo();
-        //  第一次发送命令，首先进行设备连接
-//        if (bleManager.isConnect && hasConnect && hasService) {
-//            //  如果已经连接过，直接发送命令
-//            ILog.e("已经连接过gatt并已扫描到服务，直接发送命令");
-//            sendInfo();
-//        } else if (!hasService){
-//            ILog.e("没有获取到服务");
-//            tt.showMessage("没有获取到服务", tt.SHORT);
-//        } else if (!hasConnect){
-//            ILog.e("当前是未连接状态，首先进行设备连接");
-//            connect();
-//        }
-    }
-
     //  连接设备
     public void connect() {
         hasConnect = true;
         bleManager.connect(linkDevice);
     }
 
+    //  发送命令
+    private void sendCMD() {
+        showDialog("正在发送控制命令……");
+        handler.postDelayed(finish, 30000);
+        BluetoothCommand command = new BluetoothCommand();
+        command.action = cmd[index];
+        sendInfo(command);
+    }
+
     //  向设备发送信息
-    private void sendInfo() {
+    private void sendInfo(BluetoothCommand command) {
         if (linkDevice == null) {
-//            if (index == ACT_DISCONNECT) {
-//                RobotOfflineActivity.this.cancel();
-//                finish();
-//            }
             return;
         }
         Gson gson = new Gson();
-        BluetoothCommand bluetoothCommand = new BluetoothCommand();
-        bluetoothCommand.action = cmd[index];
-        String json = gson.toJson(bluetoothCommand);
+        String json = gson.toJson(command);
         String jsonCommand = "DRC" + json + "DRC_SUFFIX";
         ILog.e("向蓝牙设备发送数据：" + jsonCommand);
         bleManager.writeInfo(jsonCommand, characWriteUuid);
         hideDialog();
         handler.removeCallbacks(finish);
-//        if (index == ACT_DISCONNECT) {
-//            RobotOfflineActivity.this.cancel();
-//            ILog.e("断开蓝牙设备……");
-//        }
     }
 
     //  超时处理
@@ -383,7 +362,6 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 //                isMuchTime = true;
                 hasConnect = false;
                 tt.showMessage("连接超时……", tt.SHORT);
-                bleManager.cancle();
                 cancel();
                 finish();
             }
@@ -393,12 +371,14 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
+            showDialog("正在连接蓝牙。。。。");
             // 允许打开蓝牙后就进行扫描
             startDiscoverDevice();
             return;
         }
         // User chose not to enable Bluetooth.
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            hideDialog();
             finish();
             return;
         }
@@ -407,6 +387,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     @Override
     public void onBackPressed() {
+        hideDialog();
         if (rlAct.getVisibility() == View.VISIBLE) {
             rlAct.setVisibility(View.GONE);
             return;
@@ -456,20 +437,10 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
             BluetoothCommand command = new BluetoothCommand();
             command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
-            String message = new Gson().toJson(command);
-            message = "DRC" + message + "DRC_SUFFIX";
-            bleManager.writeInfo(message, characWriteUuid);
-//            //  当前是未连接状态，首先进行设备连接
-//            if (!bleManager.isConnect && !hasConnect) {
-//                ILog.e("当前是未连接状态，首先进行设备连接");
-//                connect();
-//            } else if (hasService) {
-//                String message = new Gson().toJson(command);
-//                message = "DRC" + message + "DRC_SUFFIX";
-//                bleManager.writeInfo(message, characWriteUuid);
-//            } else {
-//                ILog.e("无连接");
-//            }
+            sendInfo(command);
+//            String message = new Gson().toJson(command);
+//            message = "DRC" + message + "DRC_SUFFIX";
+//            bleManager.writeInfo(message, characWriteUuid);
         }
     };
 
@@ -479,21 +450,10 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
         while (!isExit) {
             if (isRudderUse) {
                 command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
-                String message = new Gson().toJson(command);
-                message = "DRC" + message + "DRC_SUFFIX";
-                bleManager.writeInfo(message, characWriteUuid);
-//                //  当前是未连接状态，首先进行设备连接
-//                if (!bleManager.isConnect && !hasConnect) {
-//                    ILog.e("当前是未连接状态，首先进行设备连接");
-//                    connect();
-//                } else if (hasService) {
-//                    command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
-//                    String message = new Gson().toJson(command);
-//                    message = "DRC" + message + "DRC_SUFFIX";
-//                    bleManager.writeInfo(message, characWriteUuid);
-//                } else {
-//                    ILog.e("无连接");
-//                }
+                sendInfo(command);
+//                String message = new Gson().toJson(command);
+//                message = "DRC" + message + "DRC_SUFFIX";
+//                bleManager.writeInfo(message, characWriteUuid);
             }
 
             try {

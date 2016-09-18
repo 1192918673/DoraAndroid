@@ -2,7 +2,6 @@ package coms.geeknewbee.doraemon.robot;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
@@ -19,7 +18,6 @@ import android.widget.ImageButton;
 
 import com.google.gson.Gson;
 
-import java.security.cert.TrustAnchor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -219,7 +217,7 @@ public class RobotWifiActivity extends BaseActivity
                     if (!isMuchTime) {
                         hideDialog();
                         removeCallbacks(finish);
-                        tt.showMessage("连接已断开，请重新连接", tt.LONG);
+                        tt.showMessage("连接已断开，请重新设置wifi进行连接", tt.LONG);
                     }
                     break;
 
@@ -318,7 +316,6 @@ public class RobotWifiActivity extends BaseActivity
                 hasConnect = false;
                 isMuchTime = true;
                 tt.showMessage("连接超时……", tt.SHORT);
-                bleManager.cancle();
                 cancel();
                 finish();
             }
@@ -347,6 +344,7 @@ public class RobotWifiActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         hideDialog();
+        cancel();
         super.onDestroy();
     }
 
