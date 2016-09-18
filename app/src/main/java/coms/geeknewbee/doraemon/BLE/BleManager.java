@@ -25,6 +25,7 @@ import coms.geeknewbee.doraemon.utils.ILog;
  * Created by GYY on 2016/9/9.
  */
 public class BleManager {
+    public static boolean isConnect;
     public static final int MAX_LENGTH = 18;
     private static BleManager bleManager = new BleManager();
 
@@ -169,6 +170,7 @@ public class BleManager {
             //  status 表示相应的连接或断开操作是否完成，而不是指连接状态
             Message msg = Message.obtain();
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                isConnect = true;
                 ILog.e("Connected to GATT server.");
                 // Attempts to discover services after successful connection.
                 bleRead.clearData();
@@ -176,9 +178,11 @@ public class BleManager {
                 boolean discover = mBluetoothGatt.discoverServices();
                 ILog.e("Attempting to start service discovery:" + discover);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                isConnect = false;
                 ILog.e("Disconnected from GATT server.status:" + status);
-//                msg.what = MSG_DIS_CONNET;
-//                handler.sendMessage(msg);
+                msg.what = MSG_DIS_CONNET;
+                handler.sendMessage(msg);
+                bleSender.clearAllData();
             }
         }
 
@@ -220,7 +224,7 @@ public class BleManager {
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 ILog.e("回调：信息写入成功");
-                bleSender.sendNextPackage(characteristic);
+//                bleSender.sendData(characteristic);
             } else {
                 ILog.e("回调：信息写入失败");
             }
@@ -244,7 +248,7 @@ public class BleManager {
     }
 
     //  向蓝牙设备写信息
-    public synchronized void writeInfo(String info, UUID characWriteUuid) {
+    public void writeInfo(String info, UUID characWriteUuid) {
         //  获取我们需要的服务
         BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
         //  我需要得到的应该是一个特定的BluetoothGattCharacteristic,根据uuid获取
@@ -261,6 +265,7 @@ public class BleManager {
 
     //  关闭通信 BluetoothGatt
     public void close() {
+        bleSender.stopSend();
         if (mBluetoothGatt != null) {
             ILog.e("onDestory:断开蓝牙连接");
             mBluetoothGatt.close();

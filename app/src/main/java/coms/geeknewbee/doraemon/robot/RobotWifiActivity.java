@@ -77,8 +77,8 @@ public class RobotWifiActivity extends BaseActivity
     //  是否进行过连接
     public boolean hasConnect = false;
 
-//    //  网络连接是否超时
-//    private boolean isMuchTime;
+    //  网络连接是否超时
+    private boolean isMuchTime;
 
     /**
      * -----------------------使用蓝牙返回的信息----------------------
@@ -215,13 +215,13 @@ public class RobotWifiActivity extends BaseActivity
                     tt.showMessage("蓝牙类型不匹配", tt.SHORT);
                     break;
 
-//                case MSG_DIS_CONNET:    //连接已断开
-//                    if (!isMuchTime) {
-//                        hideDialog();
-//                        removeCallbacks(finish);
-//                        tt.showMessage("连接已断开，请重新连接", tt.LONG);
-//                    }
-//                    break;
+                case MSG_DIS_CONNET:    //连接已断开
+                    if (!isMuchTime) {
+                        hideDialog();
+                        removeCallbacks(finish);
+                        tt.showMessage("连接已断开，请重新连接", tt.LONG);
+                    }
+                    break;
 
                 case MSG_HAS_SERVICE:  //是否扫描到设备的服务
                     hasService = (Boolean) msg.obj;
@@ -316,7 +316,7 @@ public class RobotWifiActivity extends BaseActivity
                 //  wifi设置超时处理
             } else if (hasConnect) {
                 hasConnect = false;
-//                isMuchTime = true;
+                isMuchTime = true;
                 tt.showMessage("连接超时……", tt.SHORT);
                 bleManager.cancle();
                 cancel();

@@ -24,7 +24,7 @@ public class BleRead {
     public synchronized String read(BluetoothGattCharacteristic characteristic) {
         //  读取到设备的提供的信息byte[]
         byte[] info = characteristic.getValue();
-//        //  将byte[] 转为JSON类型的字符串
+        //  将byte[] 转为JSON类型的字符串
         String temp = new String(info);
 
         ILog.e("读取到的结果：" + temp);
