@@ -26,11 +26,10 @@ import coms.geeknewbee.doraemon.utils.ILog;
  */
 public class BleManager {
     public static boolean isConnect;
-    public static final int MAX_LENGTH = 18;
     private static BleManager bleManager = new BleManager();
 
-    private BleRead bleRead = new BleRead();
-    private BleSender bleSender = new BleSender();
+    private BleRead bleRead;
+    private BleSender bleSender;
 
     private static Handler handler;
     private static Context context;
@@ -68,7 +67,8 @@ public class BleManager {
     private static final int MSG_DIS_CONNET = 800;
 
     private BleManager() {
-
+        bleSender = new BleSender();
+        bleRead = new BleRead();
     }
 
     public static BleManager getInstance() {
@@ -154,7 +154,7 @@ public class BleManager {
     //  连接设备
     public void connect(final BluetoothDevice device) {
         if (mBluetoothAdapter != null) {
-            //  获取BluetoothGatt，连接设备，设为了自动连接，可能会存在问题，
+            //  获取BluetoothGatt，连接设备，设为了自动连接，可能会存在问题
             mBluetoothGatt = device.connectGatt(context, false, callback);
         } else {
             initBluetooth(handler, context);
@@ -172,17 +172,17 @@ public class BleManager {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 isConnect = true;
                 ILog.e("Connected to GATT server.");
-                // Attempts to discover services after successful connection.
                 bleRead.clearData();
-                bleSender.init(mBluetoothGatt);
+                // Attempts to discover services after successful connection.
                 boolean discover = mBluetoothGatt.discoverServices();
-                ILog.e("Attempting to start service discovery:" + discover);
+                ILog.e("Attempting to service discovery:" + discover);
+                bleSender.init(mBluetoothGatt);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 isConnect = false;
                 ILog.e("Disconnected from GATT server.status:" + status);
                 msg.what = MSG_DIS_CONNET;
+                bleSender.stopSend();
                 handler.sendMessage(msg);
-                bleSender.clearAllData();
             }
         }
 
@@ -209,7 +209,6 @@ public class BleManager {
                 ILog.e("onServicesDiscovered received: " + status);
                 msg.obj = false;
             }
-            ILog.e("发送是否扫描到服务的消息");
             handler.sendMessage(msg);
         }
 
@@ -253,7 +252,6 @@ public class BleManager {
         BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
         //  我需要得到的应该是一个特定的BluetoothGattCharacteristic,根据uuid获取
         BluetoothGattCharacteristic characteristic = service.getCharacteristic(characWriteUuid);
-        ILog.e("----------向设备写信息：" + info + "-----------");
         bleSender.addData(characteristic, info);
     }
 
@@ -261,7 +259,7 @@ public class BleManager {
     public void close() {
         bleSender.stopSend();
         if (mBluetoothGatt != null) {
-            ILog.e("onDestory:断开蓝牙连接");
+            ILog.e("断开蓝牙连接");
             mBluetoothGatt.disconnect();
             mBluetoothGatt.close();
             mBluetoothGatt = null;

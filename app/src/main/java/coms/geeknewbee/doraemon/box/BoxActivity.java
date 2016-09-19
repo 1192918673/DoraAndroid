@@ -144,16 +144,16 @@ public class BoxActivity extends Activity implements View.OnClickListener, Adapt
                 startActivity(intentSmart);
                 finish();
                 break;
-            case 4:   //视频通话
-                Intent intentLogin = new Intent(BoxActivity.this, FaceTimeActivity.class);
-                intentLogin.putExtra("robotPk", robotPk);
-                startActivity(intentLogin);
-                finish();
-                break;
-            case 5:     //储物间
+            case 4:     //储物间
                 Intent intentStore = new Intent(BoxActivity.this, StoreRoomActivity.class);
                 intentStore.putExtra("robotPk", robotPk);
                 startActivity(intentStore);
+                finish();
+                break;
+            case 5:     //查电影
+                Intent intentMovie = new Intent(BoxActivity.this, MoviesActivity.class);
+                intentMovie.putExtra("robotPk", robotPk);
+                startActivity(intentMovie);
                 finish();
                 break;
             case 6:   //时光机

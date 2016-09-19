@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.utils.ILog;
 
 /**
@@ -13,8 +14,6 @@ import coms.geeknewbee.doraemon.utils.ILog;
  */
 public class BleRead {
     public static final String EMPTY = "";
-    public static final String PREFIX = "DRC";
-    public static final String SUFFIX = "DRC_SUFFIX";
     private Map<BluetoothGattCharacteristic, String> dataMap;
 
     public BleRead() {
@@ -46,13 +45,13 @@ public class BleRead {
         if (isComplete(result)) {
             ILog.e("完成:" + result);
             dataMap.put(characteristic, EMPTY);
-            return result.substring(PREFIX.length(), result.length() - SUFFIX.length());
+            return result.substring(GlobalContants.COMMAND_ROBOT_PREFIX.length(), result.length() - GlobalContants.COMMAND_ROBOT_SUFFIX.length());
         } else
             return EMPTY;
     }
 
     private boolean isComplete(String str) {
-        return str.startsWith(PREFIX) && str.endsWith(SUFFIX);
+        return str.startsWith(GlobalContants.COMMAND_ROBOT_PREFIX) && str.endsWith(GlobalContants.COMMAND_ROBOT_SUFFIX);
     }
 
     public void clearData() {

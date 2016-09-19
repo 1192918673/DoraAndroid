@@ -7,9 +7,8 @@ import android.text.TextUtils;
 import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import coms.geeknewbee.doraemon.utils.ILog;
 
 /**
  * BLE数据发送对象
@@ -19,22 +18,21 @@ public class BleSender extends Thread {
     private BlockingQueue<BLEData> datas;
     //    private Map<BluetoothGattCharacteristic, Queue<byte[]>> characteristicQueueMap;
     private BluetoothGatt mBluetoothGatt;
-    private boolean isRunning;
     private boolean isExit;
+    private Thread sendThread;
 
     public BleSender() {
-        isRunning = false;
+        datas = new ArrayBlockingQueue<BLEData>(100);
     }
 
     public void init(BluetoothGatt mBluetoothGatt) {
         clearAllData();
 //        characteristicQueueMap = new HashMap<>();
-        datas = new ArrayBlockingQueue<BLEData>(100);
         this.mBluetoothGatt = mBluetoothGatt;
         isExit = false;
-        if (!isRunning) {
-            start();
-        }
+        ILog.e("开启run");
+        sendThread = new Thread(this);
+        sendThread.start();
     }
 
     public void addData(BluetoothGattCharacteristic characteristic, String data) {
@@ -44,6 +42,7 @@ public class BleSender extends Thread {
         byte[] bytes = data.getBytes();
         int length = bytes.length;
         int number = length % MAX_LENGTH == 0 ? length / MAX_LENGTH : length / MAX_LENGTH + 1;
+        ILog.e("向队列添加消息" + data);
         for (int i = 0; i < number; i++) {
             byte[] range = Arrays.copyOfRange(bytes, i * 18, i == number - 1 ? length : (i + 1) * MAX_LENGTH);
             try {
@@ -55,6 +54,12 @@ public class BleSender extends Thread {
         }
     }
 
+    public void stopSend() {
+        clearAllData();
+        isExit = true;
+        sendThread.interrupt();
+    }
+
     private void sendData(BLEData data) {
         BluetoothGattCharacteristic characteristic = data.characteristic;
         byte[] bytes = data.data;
@@ -62,31 +67,28 @@ public class BleSender extends Thread {
             return;
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         characteristic.setValue(bytes);
+        ILog.e("----------BleSender:向设备写信息：" + bytes + "-----------");
         mBluetoothGatt.writeCharacteristic(characteristic);
     }
 
-    public void clearAllData() {
-        if (datas != null)
-            datas.clear();
+    private void clearAllData() {
+        datas.clear();
     }
 
     @Override
     public void run() {
         super.run();
-        isRunning = true;
+        ILog.e("执行run");
         while (!isExit) {
             try {
                 BLEData data = datas.take();
                 Thread.sleep(20);
+                ILog.e("run中调用sendData方法");
                 sendData(data);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        isRunning = false;
-    }
-
-    public void stopSend() {
-        isExit = true;
+        ILog.e("send data thread complete");
     }
 }

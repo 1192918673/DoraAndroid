@@ -1,8 +1,10 @@
 package coms.geeknewbee.doraemon.robot;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +22,7 @@ import java.util.UUID;
 import coms.geeknewbee.doraemon.BLE.BleManager;
 import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.global.BaseActivity;
+import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.widget.PanelView;
@@ -132,8 +135,8 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     private static final int MSG_HAS_SERVICE = 700;
     private static final int MSG_DIS_CONNET = 800;
 
-    // Stops scanning and connect after 20 seconds.
-    private static final long SCAN_PERIOD = 20000;
+    // Stops scanning and connect after 30 seconds.
+    private static final long SCAN_PERIOD = 30000;
 
     int index = 0;
 
@@ -305,8 +308,16 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
                         ILog.e("连接已断开");
                         hideDialog();
                         handler.removeCallbacks(finish);
-                        tt.showMessage("连接已断开，请重新连接", tt.LONG);
-                        finish();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RobotOfflineActivity.this)
+                                .setTitle("温馨提示")
+                                .setMessage("连接已断开，请重新连接,点击确认关闭当前页面")
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                });
+                        builder.show();
                         break;
                     default:
                         break;
@@ -328,8 +339,11 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     //  发送命令
     private void sendCMD() {
-        showDialog("正在发送控制命令……");
-        handler.postDelayed(finish, 30000);
+        ILog.e("正在发送控制命令");
+        tt.showMessage("正在发送控制命令", tt.LONG);
+//        //  无法判断什么时候发送完毕，此dialog的隐藏不知道该发生在什么时候
+//        showDialog("正在发送控制命令……");
+//        handler.postDelayed(finish, 30000);
         BluetoothCommand command = new BluetoothCommand();
         command.action = cmd[index];
         sendInfo(command);
@@ -338,15 +352,16 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     //  向设备发送信息
     private void sendInfo(BluetoothCommand command) {
         if (linkDevice == null) {
+            tt.showMessage("没有可控制设备", tt.SHORT);
             return;
         }
         Gson gson = new Gson();
         String json = gson.toJson(command);
-        String jsonCommand = "DRC" + json + "DRC_SUFFIX";
+        String jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
         ILog.e("向蓝牙设备发送数据：" + jsonCommand);
         bleManager.writeInfo(jsonCommand, characWriteUuid);
-        hideDialog();
-        handler.removeCallbacks(finish);
+//        hideDialog();
+//        handler.removeCallbacks(finish);
     }
 
     //  超时处理
@@ -387,7 +402,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     @Override
     public void onBackPressed() {
-        hideDialog();
+//        hideDialog();
         if (rlAct.getVisibility() == View.VISIBLE) {
             rlAct.setVisibility(View.GONE);
             return;
