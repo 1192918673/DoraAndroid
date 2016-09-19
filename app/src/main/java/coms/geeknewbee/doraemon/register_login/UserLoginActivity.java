@@ -157,6 +157,17 @@ public class UserLoginActivity extends BaseActivity implements IUserLoginView {
     }
 
 
+    private void toSplash2Activity() {
+        startActivity(new Intent(UserLoginActivity.this, Splash2Activity.class));
+        this.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        toSplash2Activity();
+        this.finish();
+    }
+
     //设置关闭动画
     @Override
     public void finish() {

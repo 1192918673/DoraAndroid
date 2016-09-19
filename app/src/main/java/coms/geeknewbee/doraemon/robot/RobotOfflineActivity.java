@@ -78,15 +78,17 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     private static final int ACT_SAY_HI = 23;
 
-    private static final int ACT_END_SAY= 24;
+    private static final int ACT_END_SAY = 24;
+
+    private static final int ACT_READ_NEWS = 25;
 
     /**
      * -----------------------组件----------------------
      **/
 
-    Button sayhi;
+    Button olSayhi;
 
-    Button end_say;
+    Button olEnd_say;
 
     Button olInfo;
 
@@ -95,6 +97,8 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     Button olMovie;
 
     Button olAct;
+
+    Button olRead_news;
 
     Button olStop;
 
@@ -151,7 +155,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     String cmd[] = {"move", "forward", "backward", "left", "right", "disconnect", "intro_self", "dance",
             "movie", "stop", "head_left", "head_right", "head_up", "head_down", "l_arm_front",
             "l_arm_end", "l_arm_up", "l_arm_down", "r_arm_front", "r_arm_end", "r_arm_up",
-            "r_arm_down", "head_front", "sayhi", "end_say"};
+            "r_arm_down", "head_front", "say_hi", "end_say", "read_news"};
     private boolean isExit = false;
 
     @Override
@@ -168,12 +172,13 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     private void assignViews() {
         ibBack = (ImageButton) findViewById(R.id.ibBack);
-        sayhi = (Button) findViewById(R.id.say_hi);
-        end_say = (Button) findViewById(R.id.end_say);
+        olSayhi = (Button) findViewById(R.id.olSayhi);
+        olEnd_say = (Button) findViewById(R.id.olEnd_say);
         olInfo = (Button) findViewById(R.id.olInfo);
         olDance = (Button) findViewById(R.id.olDance);
         olAct = (Button) findViewById(R.id.olAct);
         olMovie = (Button) findViewById(R.id.olMovie);
+        olRead_news = (Button) findViewById(R.id.olRead_news);
 
         olStop = (Button) findViewById(R.id.olStop);
         rlAct = (LinearLayout) findViewById(R.id.rlAct);
@@ -183,11 +188,12 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
         pvFoot = (Rudder) findViewById(R.id.pvFoot);
 
         ibBack.setOnClickListener(clickListener);
-        sayhi.setOnClickListener(clickListener);
-        end_say.setOnClickListener(clickListener);
+        olSayhi.setOnClickListener(clickListener);
+        olEnd_say.setOnClickListener(clickListener);
         olInfo.setOnClickListener(clickListener);
         olDance.setOnClickListener(clickListener);
         olAct.setOnClickListener(clickListener);
+        olRead_news.setOnClickListener(clickListener);
         rlAct.setOnClickListener(clickListener);
 
         olMovie.setOnClickListener(clickListener);
@@ -230,11 +236,11 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
                     finish();
                     break;
 
-                case R.id.say_hi:
+                case R.id.olSayhi:
                     handler.sendEmptyMessage(ACT_SAY_HI);
                     break;
 
-                case R.id.end_say:
+                case R.id.olEnd_say:
                     handler.sendEmptyMessage(ACT_END_SAY);
                     break;
 
@@ -248,6 +254,10 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
                 case R.id.olMovie:
                     handler.sendEmptyMessage(ACT_MOVIE);
+                    break;
+
+                case R.id.olRead_news:
+                    handler.sendEmptyMessage(ACT_READ_NEWS);
                     break;
 
                 case R.id.olStop:
@@ -426,7 +436,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             rlAct.setVisibility(View.GONE);
             return;
         } else {
-            finish();
+            super.onBackPressed();
         }
     }
 
@@ -459,8 +469,8 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             float tv = (float) (radius * Math.cos(radian));
             float av = (float) (radius * Math.sin(radian));
 
-            mSpeedV = tv * 3;
-            mSpeedW = -av * 10;
+            mSpeedV = tv * 3 / 2;
+            mSpeedW = -av * 10 / 2;
             Log.e("RobotFoot", "onSteeringWheelChanged:" + tv + "  " + av);
         }
 

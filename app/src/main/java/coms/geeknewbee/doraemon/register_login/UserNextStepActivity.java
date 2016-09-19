@@ -191,6 +191,12 @@ public class UserNextStepActivity extends BaseActivity implements IUserNextStepV
         Toast.makeText(getApplicationContext(), "Failed..............", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onBackPressed() {
+        toSplash2Activity();
+        this.finish();
+    }
+
     //设置关闭动画
     @Override
     public void finish() {

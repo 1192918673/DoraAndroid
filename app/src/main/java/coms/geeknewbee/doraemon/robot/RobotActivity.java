@@ -80,19 +80,21 @@ public class RobotActivity extends BaseActivity {
             act_msg.setOnClickListener(null);
             act_robot.setOnClickListener(null);
             act_member.setOnClickListener(null);
+            actOffline.setOnClickListener(null);
         } else {
             robot = robotsView.getRobot();
             act_msg.setOnClickListener(clickListener);
             act_robot.setOnClickListener(clickListener);
             act_member.setOnClickListener(clickListener);
             actVoice.setOnClickListener(clickListener);
+            actOffline.setOnClickListener(clickListener);
         }
     }
 
     private void initListener() {
         ibBack.setOnClickListener(clickListener);
         tvAdd.setOnClickListener(clickListener);
-        actOffline.setOnClickListener(clickListener);
+//        actOffline.setOnClickListener(clickListener);
     }
 
     OnClickListener clickListener = new OnClickListener() {
