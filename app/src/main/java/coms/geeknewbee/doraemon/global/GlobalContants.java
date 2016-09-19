@@ -10,14 +10,18 @@ import coms.geeknewbee.doraemon.utils.StringHandler;
 public class GlobalContants {
 
     //蓝牙名
-    public static final String ROBOT_BT_NAME = "DoraemonLiXiang";
+    public static final String ROBOT_BT_NAME = "DoraemonTest";   //DoraemonLiXiang
 
     //发送蓝牙命令的前后缀
+
+//    public static final String COMMAND_ROBOT_PREFIX = "DRC";
+//    public static final String COMMAND_ROBOT_SUFFIX = "DRC_SUFFIX";
+
     public static final String COMMAND_ROBOT_PREFIX = new String(new byte[]{0x02});
     public static final String COMMAND_ROBOT_SUFFIX = new String(new byte[]{0x03});
 
     public static final String APP_URL = "http://doraemon.babadeyan.com:80/app";//app前缀
-    public static final String SEND_SUGGESTION = APP_URL+"/feedback";
+    public static final String SEND_SUGGESTION = APP_URL + "/feedback";
 
     //------------------------------------------------------------------------------------------
 

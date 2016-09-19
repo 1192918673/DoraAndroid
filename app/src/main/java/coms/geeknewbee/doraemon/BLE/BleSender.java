@@ -42,7 +42,7 @@ public class BleSender extends Thread {
         byte[] bytes = data.getBytes();
         int length = bytes.length;
         int number = length % MAX_LENGTH == 0 ? length / MAX_LENGTH : length / MAX_LENGTH + 1;
-        ILog.e("向队列添加消息" + data);
+        ILog.e("向队列添加消息：" + data);
         for (int i = 0; i < number; i++) {
             byte[] range = Arrays.copyOfRange(bytes, i * 18, i == number - 1 ? length : (i + 1) * MAX_LENGTH);
             try {
@@ -67,7 +67,7 @@ public class BleSender extends Thread {
             return;
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         characteristic.setValue(bytes);
-        ILog.e("----------BleSender:向设备写信息：" + bytes + "-----------");
+        ILog.e("BleSender:向设备写信息：" + bytes);
         mBluetoothGatt.writeCharacteristic(characteristic);
     }
 
@@ -83,7 +83,6 @@ public class BleSender extends Thread {
             try {
                 BLEData data = datas.take();
                 Thread.sleep(20);
-                ILog.e("run中调用sendData方法");
                 sendData(data);
             } catch (Exception e) {
                 e.printStackTrace();

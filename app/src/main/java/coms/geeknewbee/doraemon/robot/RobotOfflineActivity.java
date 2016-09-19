@@ -76,9 +76,17 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     private static final int ACT_HEAD_FRONT = 22;
 
+    private static final int ACT_SAY_HI = 23;
+
+    private static final int ACT_END_SAY= 24;
+
     /**
      * -----------------------组件----------------------
      **/
+
+    Button sayhi;
+
+    Button end_say;
 
     Button olInfo;
 
@@ -143,7 +151,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     String cmd[] = {"move", "forward", "backward", "left", "right", "disconnect", "intro_self", "dance",
             "movie", "stop", "head_left", "head_right", "head_up", "head_down", "l_arm_front",
             "l_arm_end", "l_arm_up", "l_arm_down", "r_arm_front", "r_arm_end", "r_arm_up",
-            "r_arm_down", "head_front"};
+            "r_arm_down", "head_front", "sayhi", "end_say"};
     private boolean isExit = false;
 
     @Override
@@ -160,6 +168,8 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     private void assignViews() {
         ibBack = (ImageButton) findViewById(R.id.ibBack);
+        sayhi = (Button) findViewById(R.id.say_hi);
+        end_say = (Button) findViewById(R.id.end_say);
         olInfo = (Button) findViewById(R.id.olInfo);
         olDance = (Button) findViewById(R.id.olDance);
         olAct = (Button) findViewById(R.id.olAct);
@@ -173,6 +183,8 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
         pvFoot = (Rudder) findViewById(R.id.pvFoot);
 
         ibBack.setOnClickListener(clickListener);
+        sayhi.setOnClickListener(clickListener);
+        end_say.setOnClickListener(clickListener);
         olInfo.setOnClickListener(clickListener);
         olDance.setOnClickListener(clickListener);
         olAct.setOnClickListener(clickListener);
@@ -216,6 +228,14 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
                 case R.id.ibBack:
 //                    onBackPressed();
                     finish();
+                    break;
+
+                case R.id.say_hi:
+                    handler.sendEmptyMessage(ACT_SAY_HI);
+                    break;
+
+                case R.id.end_say:
+                    handler.sendEmptyMessage(ACT_END_SAY);
                     break;
 
                 case R.id.olInfo:
@@ -402,10 +422,11 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     @Override
     public void onBackPressed() {
-//        hideDialog();
         if (rlAct.getVisibility() == View.VISIBLE) {
             rlAct.setVisibility(View.GONE);
             return;
+        } else {
+            finish();
         }
     }
 
