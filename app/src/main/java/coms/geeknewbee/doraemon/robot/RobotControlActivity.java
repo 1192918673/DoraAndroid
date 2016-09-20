@@ -86,6 +86,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     /**
      * -----------------------组件----------------------
      **/
+    TextView tv_control;
 
     Button olSayhi;
 
@@ -168,11 +169,6 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     private boolean isExit = false;
     private String ip;
 
-    //状态
-    private boolean isGoStop;
-    private boolean isBackStop;
-    private TextView tv_control;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,8 +186,8 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     }
 
     private void assignViews() {
-        tv_control = (TextView) findViewById(R.id.tv_control);
         control = new SocketManager();
+        tv_control = (TextView) findViewById(R.id.tv_control);
         tv_control.setText("Socket控制");
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         olSayhi = (Button) findViewById(R.id.olSayhi);

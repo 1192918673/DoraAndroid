@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -85,6 +86,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     /**
      * -----------------------组件----------------------
      **/
+    TextView tv_control;
 
     Button olSayhi;
 
@@ -114,6 +116,10 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     Rudder pvFoot;
 
+    Button bt_go;
+    Button bt_back;
+    Button bt_stop;
+
     /**
      * 可连接设备
      **/
@@ -131,6 +137,11 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     private BleManager bleManager;
 
     private static final int REQUEST_ENABLE_BT = 1000;
+
+    /**
+     * -----------------------使用socket返回的信息----------------------
+     **/
+    private final int MSG_WHAT_SOCKET_CONNECT = 1000;
 
     /**
      * -----------------------使用蓝牙返回的信息----------------------
@@ -168,6 +179,8 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     }
 
     private void assignViews() {
+        bleManager = BleManager.getInstance();
+        tv_control = (TextView) findViewById(R.id.tv_control);
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         olSayhi = (Button) findViewById(R.id.olSayhi);
         olEnd_say = (Button) findViewById(R.id.olEnd_say);
@@ -183,6 +196,10 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
         pvLarm = (PanelView) findViewById(R.id.pvLarm);
         pvRarm = (PanelView) findViewById(R.id.pvRarm);
         pvFoot = (Rudder) findViewById(R.id.pvFoot);
+
+        bt_go = (Button) findViewById(R.id.bt_go);
+        bt_back = (Button) findViewById(R.id.bt_back);
+        bt_stop = (Button) findViewById(R.id.bt_stop);
 
         ibBack.setOnClickListener(clickListener);
         olSayhi.setOnClickListener(clickListener);
@@ -201,7 +218,9 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
         // pvFoot.setOnClickListener(clickListener);
         pvFoot.setRudderListener(rudderListener);
 
-        bleManager = BleManager.getInstance();
+        bt_go.setOnClickListener(clickListener);
+        bt_back.setOnClickListener(clickListener);
+        bt_stop.setOnClickListener(clickListener);
 
         pvHead.setName("头");
         pvHead.setBtn("上", "下", "左", "右");
@@ -267,9 +286,30 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
                 case R.id.olAct:// 动作控制按钮
                     rlAct.setVisibility(View.VISIBLE);
-                    pvFoot.setVisibility(View.VISIBLE);
+//                    pvFoot.setVisibility(View.VISIBLE);
                     isExit = false;
                     new Thread(RobotOfflineActivity.this).start();
+                    break;
+
+                case R.id.bt_go:    //点击前进
+                    mSpeedV = 1000;
+                    mSpeedW = 0;
+                    isRudderUse = true;
+                    break;
+
+                case R.id.bt_back:    //点击后退
+                    mSpeedV = -1000;
+                    mSpeedW = 0;
+                    isRudderUse = true;
+                    break;
+
+                case R.id.bt_stop:  //点击停止
+                    mSpeedV = 0;
+                    mSpeedW = 0;
+                    BluetoothCommand command = new BluetoothCommand();
+                    command.setBluetoothFootCommand(new BluetoothCommand.FootCommand(0, 0));
+                    sendInfo(command);
+                    isRudderUse = false;
                     break;
             }
         }
@@ -292,6 +332,12 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             super.handleMessage(msg);
             if (msg.what >= 100) {
                 switch (msg.what) {
+                    case MSG_WHAT_SOCKET_CONNECT:   //socket连接成功
+                        hideDialog();
+                        handler.removeCallbacks(finish);
+                        tt.showMessage("连接到设备，可以进行控制", tt.SHORT);
+                        break;
+
                     case MSG_WHAT_NO_SUPPORT_BLE:   //不支持BLE
                         tt.showMessage("您的手机不支持蓝牙BLE连接", tt.LONG);
                         finish();
@@ -481,9 +527,6 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             BluetoothCommand command = new BluetoothCommand();
             command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
             sendInfo(command);
-//            String message = new Gson().toJson(command);
-//            message = "DRC" + message + "DRC_SUFFIX";
-//            bleManager.writeInfo(message, characWriteUuid);
         }
     };
 
@@ -494,9 +537,6 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             if (isRudderUse) {
                 command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
                 sendInfo(command);
-//                String message = new Gson().toJson(command);
-//                message = "DRC" + message + "DRC_SUFFIX";
-//                bleManager.writeInfo(message, characWriteUuid);
             }
 
             try {
