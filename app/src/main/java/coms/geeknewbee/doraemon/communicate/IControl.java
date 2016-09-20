@@ -26,7 +26,7 @@ public interface IControl {
     /**
      * 写信息的方法
      * @param data  写入的信息
-     * @param type  发送的类型，1：设置wifi；2：使用BLE发送控制命令；3：使用socket发送控制命令
+     * @param type  发送的类型，1：设置wifi；2：发送控制命令
      */
     void writeInfo(String data, int type);
 

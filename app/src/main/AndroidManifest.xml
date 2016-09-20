@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="coms.geeknewbee.doraemon"> <!-- 解决Android L上通知显示异常问题，targetSdkVersion需要设置成22 -->
-        <uses-sdk
-            android:minSdkVersion="18"
-            android:targetSdkVersion="23" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="coms.geeknewbee.doraemon"> <!-- 解决Android L上通知显示异常问题，targetSdkVersion需要设置成22 -->
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="23" />
 
     <!-- Declare this required feature if you want to make the app available to BLE-capable
     devices only.  If you want to make your app available to devices that don't support BLE,
     you should omit this in the manifest.  Instead, determine BLE capability by using
     PackageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE) -->
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -218,26 +220,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <activity android:name=".robot.RobotControlActivity"
+        <activity
+            android:name=".robot.RobotControlActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 机器人离线控制界面 -->
-        <activity
-            android:name=".robot.RobotOfflineActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 机器人语音控制界面 -->
         <activity
             android:name=".robot.RobotVoiceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 扫描二维码界面 -->
-        <activity
-            android:name=".robot.RobotZxingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <activity android:name=".box.smart_home.SmartHomeActivity"
+        <activity
+            android:name=".box.smart_home.SmartHomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
@@ -294,6 +290,11 @@
             android:name=".box.movie.MoviesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".robot.TestActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <receiver
             android:name=".robot.utils.NetworkStateReceiver"

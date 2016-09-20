@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import coms.geeknewbee.doraemon.R;
-import coms.geeknewbee.doraemon.communicate.BLE.BleRead;
+import coms.geeknewbee.doraemon.communicate.BLE.BleManager;
 import coms.geeknewbee.doraemon.communicate.IControl;
 import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.BaseActivity;
@@ -134,7 +134,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     //  是否扫描到服务
     private Boolean hasService = false;
 
-    private IControl control;
+    public static IControl control;
 
     private static final int REQUEST_ENABLE_BT = 1000;
 
@@ -178,17 +178,25 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 
         showDialog("正在连接。。。。");
         if (controlInit()) {
-//            startDiscoverDevice();
-            //  使用socket，此时进行连接
-            handler.postDelayed(finish, SOCKET_PERIOD);
-            connect();
+            if (ip == null) {
+                startDiscoverDevice();
+            } else {
+                //  使用socket，此时进行连接
+                handler.postDelayed(finish, SOCKET_PERIOD);
+                connect();
+            }
         }
     }
 
     private void assignViews() {
-        control = new SocketManager();
         tv_control = (TextView) findViewById(R.id.tv_control);
-        tv_control.setText("Socket控制");
+        if (ip == null) {
+            control = new BleManager();
+            tv_control.setText("蓝牙控制");
+        } else {
+            control = new SocketManager();
+            tv_control.setText("Socket控制");
+        }
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         olSayhi = (Button) findViewById(R.id.olSayhi);
         olEnd_say = (Button) findViewById(R.id.olEnd_say);
@@ -229,6 +237,8 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         bt_go.setOnClickListener(clickListener);
         bt_back.setOnClickListener(clickListener);
         bt_stop.setOnClickListener(clickListener);
+
+        findViewById(R.id.olTest).setOnClickListener(clickListener);
 
         pvHead.setName("头");
         pvHead.setBtn("上", "下", "左", "右");
@@ -295,7 +305,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 
                 case R.id.olAct:// 动作控制按钮
                     rlAct.setVisibility(View.VISIBLE);
-//                    pvFoot.setVisibility(View.VISIBLE);
+                    pvFoot.setVisibility(View.VISIBLE);
                     isExit = false;
                     new Thread(RobotControlActivity.this).start();
                     break;
@@ -319,6 +329,11 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     command.setBluetoothFootCommand(new BluetoothCommand.FootCommand(0, 0));
                     sendInfo(command);
                     isRudderUse = false;
+                    break;
+
+                case R.id.olTest:   //跳转到测试界面
+                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                    startActivity(intent);
                     break;
             }
         }
@@ -433,15 +448,15 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 
     //  向设备发送信息
     private void sendInfo(BluetoothCommand command) {
-//        if (linkDevice == null) {
-//            tt.showMessage("没有可控制设备", tt.SHORT);
-//            return;
-//        }
+        if (ip == null && linkDevice == null) {
+            tt.showMessage("没有可控制设备", tt.SHORT);
+            return;
+        }
         Gson gson = new Gson();
         String json = gson.toJson(command);
         String jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
         ILog.e("发送数据：" + jsonCommand);
-        control.writeInfo(jsonCommand, 3);
+        control.writeInfo(jsonCommand, 2);
     }
 
     //  超时处理

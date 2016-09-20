@@ -152,6 +152,21 @@
             android:textColor="#FFFFFF"
             android:textSize="15dp" />
 
+        <Button
+            android:id="@+id/olTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:background="#00A0E8"
+            android:gravity="center"
+            android:text="测试"
+            android:textColor="#FFFFFF"
+            android:textSize="15dp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -205,7 +220,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:alpha="0.9"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -215,6 +230,7 @@
             android:padding="20dp">
 
             <Button
+                android:visibility="gone"
                 android:id="@+id/bt_go"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -225,6 +241,7 @@
                 android:textColor="#fff"/>
 
             <Button
+                android:visibility="gone"
                 android:id="@+id/bt_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -236,6 +253,7 @@
                 android:textSize="20sp"/>
 
             <Button
+                android:visibility="gone"
                 android:id="@+id/bt_stop"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

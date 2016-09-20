@@ -127,7 +127,7 @@ public class RobotActivity extends BaseActivity {
                     startActivity(intent_member);
                     break;
                 case R.id.actOffline:
-                    Intent intentOffline = new Intent(RobotActivity.this, RobotOfflineActivity.class);
+                    Intent intentOffline = new Intent(RobotActivity.this, RobotControlActivity.class);
                     startActivity(intentOffline);
                     break;
                 case R.id.actVoice:
