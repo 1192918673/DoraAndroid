@@ -14,13 +14,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import java.util.UUID;
-
-import coms.geeknewbee.doraemon.communicate.BLE.BleManager;
 import coms.geeknewbee.doraemon.R;
+import coms.geeknewbee.doraemon.communicate.BLE.BleRead;
+import coms.geeknewbee.doraemon.communicate.IControl;
+import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
@@ -28,7 +29,7 @@ import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.widget.PanelView;
 import coms.geeknewbee.doraemon.widget.Rudder;
 
-public class RobotOfflineActivity extends BaseActivity implements Runnable {
+public class RobotControlActivity extends BaseActivity implements Runnable {
 
     private static final int ACT_MOVE = 0;
 
@@ -114,6 +115,10 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     Rudder pvFoot;
 
+    Button bt_go;
+    Button bt_back;
+    Button bt_stop;
+
     /**
      * 可连接设备
      **/
@@ -128,9 +133,14 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     //  是否扫描到服务
     private Boolean hasService = false;
 
-    private BleManager bleManager;
+    private IControl control;
 
     private static final int REQUEST_ENABLE_BT = 1000;
+
+    /**
+     * -----------------------使用socket返回的信息----------------------
+     **/
+    private final int MSG_WHAT_SOCKET_CONNECT = 1000;
 
     /**
      * -----------------------使用蓝牙返回的信息----------------------
@@ -146,6 +156,8 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     // Stops scanning and connect after 30 seconds.
     private static final long SCAN_PERIOD = 30000;
+    // socket连接时长10s
+    private static final long SOCKET_PERIOD = 10000;
 
     int index = 0;
 
@@ -154,20 +166,33 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             "l_arm_end", "l_arm_up", "l_arm_down", "r_arm_front", "r_arm_end", "r_arm_up",
             "r_arm_down", "head_front", "say_hi", "end_say", "read_news"};
     private boolean isExit = false;
+    private String ip;
+
+    //状态
+    private boolean isGoStop;
+    private boolean isBackStop;
+    private TextView tv_control;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_robot_offline);
+        ip = getIntent().getStringExtra("ip");
         assignViews();
 
-        showDialog("正在连接蓝牙。。。。");
-        if (bluetoothInit()) {
-            startDiscoverDevice();
+        showDialog("正在连接。。。。");
+        if (controlInit()) {
+//            startDiscoverDevice();
+            //  使用socket，此时进行连接
+            handler.postDelayed(finish, SOCKET_PERIOD);
+            connect();
         }
     }
 
     private void assignViews() {
+        tv_control = (TextView) findViewById(R.id.tv_control);
+        control = new SocketManager();
+        tv_control.setText("Socket控制");
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         olSayhi = (Button) findViewById(R.id.olSayhi);
         olEnd_say = (Button) findViewById(R.id.olEnd_say);
@@ -183,6 +208,10 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
         pvLarm = (PanelView) findViewById(R.id.pvLarm);
         pvRarm = (PanelView) findViewById(R.id.pvRarm);
         pvFoot = (Rudder) findViewById(R.id.pvFoot);
+
+        bt_go = (Button) findViewById(R.id.bt_go);
+        bt_back = (Button) findViewById(R.id.bt_back);
+        bt_stop = (Button) findViewById(R.id.bt_stop);
 
         ibBack.setOnClickListener(clickListener);
         olSayhi.setOnClickListener(clickListener);
@@ -201,7 +230,9 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
         // pvFoot.setOnClickListener(clickListener);
         pvFoot.setRudderListener(rudderListener);
 
-        bleManager = BleManager.getInstance();
+        bt_go.setOnClickListener(clickListener);
+        bt_back.setOnClickListener(clickListener);
+        bt_stop.setOnClickListener(clickListener);
 
         pvHead.setName("头");
         pvHead.setBtn("上", "下", "左", "右");
@@ -230,6 +261,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             switch (v.getId()) {
                 case R.id.ibBack:
 //                    onBackPressed();
+                    toRobotActivity();
                     finish();
                     break;
 
@@ -267,23 +299,49 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
                 case R.id.olAct:// 动作控制按钮
                     rlAct.setVisibility(View.VISIBLE);
-                    pvFoot.setVisibility(View.VISIBLE);
+//                    pvFoot.setVisibility(View.VISIBLE);
                     isExit = false;
-                    new Thread(RobotOfflineActivity.this).start();
+                    new Thread(RobotControlActivity.this).start();
+                    break;
+
+                case R.id.bt_go:    //点击前进
+                    mSpeedV = 1000;
+                    mSpeedW = 0;
+                    isRudderUse = true;
+                    break;
+
+                case R.id.bt_back:    //点击后退
+                    mSpeedV = -1000;
+                    mSpeedW = 0;
+                    isRudderUse = true;
+                    break;
+
+                case R.id.bt_stop:  //点击停止
+                    mSpeedV = 0;
+                    mSpeedW = 0;
+                    BluetoothCommand command = new BluetoothCommand();
+                    command.setBluetoothFootCommand(new BluetoothCommand.FootCommand(0, 0));
+                    sendInfo(command);
+                    isRudderUse = false;
                     break;
             }
         }
     };
 
-    //  调用蓝牙管理功能初始化蓝牙设备
-    private boolean bluetoothInit() {
-        return bleManager.init(handler, this);
+    private void toRobotActivity() {
+        Intent intent = new Intent(RobotControlActivity.this, RobotActivity.class);
+        startActivity(intent);
+    }
+
+    //  初始化操作
+    private boolean controlInit() {
+        return control.init(handler, this);
     }
 
     //  开始扫描设备
     private void startDiscoverDevice() {
         handler.postDelayed(finish, SCAN_PERIOD);
-        bleManager.startScan();
+        control.startScan();
     }
 
     Handler handler = new Handler() {
@@ -292,6 +350,12 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             super.handleMessage(msg);
             if (msg.what >= 100) {
                 switch (msg.what) {
+                    case MSG_WHAT_SOCKET_CONNECT:   //socket连接成功
+                        hideDialog();
+                        handler.removeCallbacks(finish);
+                        tt.showMessage("连接到设备，可以进行控制", tt.SHORT);
+                        break;
+
                     case MSG_WHAT_NO_SUPPORT_BLE:   //不支持BLE
                         tt.showMessage("您的手机不支持蓝牙BLE连接", tt.LONG);
                         finish();
@@ -309,8 +373,6 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
                         break;
 
                     case MSG_WHAT_FOUND_DEVICE: //发现蓝牙设备
-                        //停止扫描
-                        bleManager.stopScan();
                         linkDevice = (BluetoothDevice) msg.obj;
                         connect();
                         break;
@@ -335,7 +397,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
                         ILog.e("连接已断开");
                         hideDialog();
                         handler.removeCallbacks(finish);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(RobotOfflineActivity.this)
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RobotControlActivity.this)
                                 .setTitle("温馨提示")
                                 .setMessage("连接已断开，请重新连接,点击确认关闭当前页面")
                                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
@@ -361,16 +423,13 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     //  连接设备
     public void connect() {
         hasConnect = true;
-        bleManager.connect(null);
+        control.connect(ip);
     }
 
     //  发送命令
     private void sendCMD() {
         ILog.e("正在发送控制命令");
         tt.showMessage("正在发送控制命令", tt.LONG);
-//        //  无法判断什么时候发送完毕，此dialog的隐藏不知道该发生在什么时候
-//        showDialog("正在发送控制命令……");
-//        handler.postDelayed(finish, 30000);
         BluetoothCommand command = new BluetoothCommand();
         command.action = cmd[index];
         sendInfo(command);
@@ -378,17 +437,15 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
 
     //  向设备发送信息
     private void sendInfo(BluetoothCommand command) {
-        if (linkDevice == null) {
-            tt.showMessage("没有可控制设备", tt.SHORT);
-            return;
-        }
+//        if (linkDevice == null) {
+//            tt.showMessage("没有可控制设备", tt.SHORT);
+//            return;
+//        }
         Gson gson = new Gson();
         String json = gson.toJson(command);
         String jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
-        ILog.e("向蓝牙设备发送数据：" + jsonCommand);
-        bleManager.writeInfo(jsonCommand, 2);
-//        hideDialog();
-//        handler.removeCallbacks(finish);
+        ILog.e("发送数据：" + jsonCommand);
+        control.writeInfo(jsonCommand, 3);
     }
 
     //  超时处理
@@ -397,12 +454,16 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
         public void run() {
             hideDialog();
             if (linkDevice == null) {
-                bleManager.stopScan();
+                control.stopScan();
                 tt.showMessage("未检测到可控制设备", tt.SHORT);
                 finish();
             } else if (hasConnect) {
 //                isMuchTime = true;
                 hasConnect = false;
+                tt.showMessage("连接超时……", tt.SHORT);
+                cancel();
+                finish();
+            } else {
                 tt.showMessage("连接超时……", tt.SHORT);
                 cancel();
                 finish();
@@ -433,13 +494,14 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             rlAct.setVisibility(View.GONE);
             return;
         } else {
-            super.onBackPressed();
+            toRobotActivity();
+            finish();
         }
     }
 
     public void cancel() {
         try {
-            bleManager.close();
+            control.close();
         } catch (Exception e) {
             ILog.e(e);
         } finally {
@@ -450,7 +512,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
     @Override
     protected void onDestroy() {
         isExit = true;
-        ILog.e("onDestory:断开蓝牙连接");
+        ILog.e("onDestory:断开连接");
         hideDialog();
         cancel();
         super.onDestroy();
@@ -481,9 +543,6 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             BluetoothCommand command = new BluetoothCommand();
             command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
             sendInfo(command);
-//            String message = new Gson().toJson(command);
-//            message = "DRC" + message + "DRC_SUFFIX";
-//            bleManager.writeInfo(message, characWriteUuid);
         }
     };
 
@@ -494,11 +553,7 @@ public class RobotOfflineActivity extends BaseActivity implements Runnable {
             if (isRudderUse) {
                 command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
                 sendInfo(command);
-//                String message = new Gson().toJson(command);
-//                message = "DRC" + message + "DRC_SUFFIX";
-//                bleManager.writeInfo(message, characWriteUuid);
             }
-
             try {
                 Thread.sleep(150);
             } catch (InterruptedException e) {

@@ -1,4 +1,4 @@
-package coms.geeknewbee.doraemon.BLE;
+package coms.geeknewbee.doraemon.communicate.BLE;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -18,13 +18,14 @@ import android.text.TextUtils;
 import java.util.List;
 import java.util.UUID;
 
+import coms.geeknewbee.doraemon.communicate.IControl;
 import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.utils.ILog;
 
 /**
  * Created by GYY on 2016/9/9.
  */
-public class BleManager {
+public class BleManager implements IControl{
     public static boolean isConnect;
     private static BleManager bleManager = new BleManager();
 
@@ -34,9 +35,9 @@ public class BleManager {
     private static Handler handler;
     private static Context context;
 
+    private static BluetoothDevice device;
     private static BluetoothAdapter mBluetoothAdapter;
     private static BluetoothGatt mBluetoothGatt;
-    private static List<BluetoothGattService> services;
 
     // Stops scanning after 30 seconds.
     private static final long SCAN_PERIOD = 10000;
@@ -48,8 +49,10 @@ public class BleManager {
     private static UUID SERVICE_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
     //  读charac的uuid
     private static UUID CHARAC_READ_UUID = UUID.fromString("00002a31-0000-1000-8000-00805f9b34fb");
-    //  写charac的uuid
-    private static UUID CHARAC_WRITE_UUID = UUID.fromString("00002a30-0000-1000-8000-00805f9b34fb");
+    //  向设备设置wifi的uuid
+    private static UUID wifiWriteUUID = UUID.fromString("00002a30-0000-1000-8000-00805f9b34fb");
+    //  向设备发送控制命令的uuid
+    private static UUID controlWriteUuid = UUID.fromString("00002a32-0000-1000-8000-00805f9b34fb");
 
     private static final UUID[] ROBOT_UUID = new UUID[]{SERVICE_UUID};
 
@@ -66,7 +69,7 @@ public class BleManager {
     private static final int MSG_HAS_SERVICE = 700;
     private static final int MSG_DIS_CONNET = 800;
 
-    private BleManager() {
+    public BleManager() {
         bleSender = new BleSender();
         bleRead = new BleRead();
     }
@@ -75,7 +78,8 @@ public class BleManager {
         return bleManager;
     }
 
-    public boolean initBluetooth(Handler handler, Context context) {
+    @Override
+    public boolean init(Handler handler, Context context) {
 
         this.handler = handler;
         this.context = context;
@@ -113,12 +117,14 @@ public class BleManager {
     }
 
     //  开始扫描蓝牙设备
+    @Override
     public void startScan() {
         ILog.e("---------开始扫描-----------");
         mBluetoothAdapter.startLeScan(ROBOT_UUID, mLeScanCallback);
     }
 
     //  停止扫描蓝牙设备
+    @Override
     public void stopScan() {
         ILog.e("---------停止扫描-----------");
         mBluetoothAdapter.stopLeScan(mLeScanCallback);
@@ -137,10 +143,13 @@ public class BleManager {
 
             //  如果扫描到的设备名字和给定的机器猫名一致，将设备返回
             if (GlobalContants.ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
+                BleManager.device = device;
                 //蓝牙类型
                 int type = device.getType();
                 ILog.e(device.getName() + "---" + GlobalContants.ROBOT_BT_NAME + "----" + type);
                 if (type == BluetoothDevice.DEVICE_TYPE_LE) {
+                    //  扫描到所需设备，停止扫描
+                    stopScan();
                     msg.what = MSG_WHAT_FOUND_DEVICE;
                     msg.obj = device;
                 } else {
@@ -152,12 +161,16 @@ public class BleManager {
     };
 
     //  连接设备
-    public void connect(final BluetoothDevice device) {
+    @Override
+    public void connect(String ip) {
+        if (device == null) {
+            return;
+        }
         if (mBluetoothAdapter != null) {
             //  获取BluetoothGatt，连接设备，设为了自动连接，可能会存在问题
             mBluetoothGatt = device.connectGatt(context, false, callback);
         } else {
-            initBluetooth(handler, context);
+            init(handler, context);
         }
     }
 
@@ -246,13 +259,24 @@ public class BleManager {
         }
     }
 
-    //  向蓝牙设备写信息
-    public void writeInfo(String info, UUID characWriteUuid) {
+    /**
+     * 向蓝牙设备写信息
+     * @param data  写入的信息
+     * @param type  发送的类型，1：设置wifi；2：使用BLE发送控制命令；3：使用socket发送控制命令
+     */
+    @Override
+    public void writeInfo(String data, int type) {
+        UUID characWriteUuid = null;
+        if (type == 1) {
+            characWriteUuid = wifiWriteUUID;
+        } else if (type == 2) {
+            characWriteUuid = controlWriteUuid;
+        }
         //  获取我们需要的服务
         BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
         //  我需要得到的应该是一个特定的BluetoothGattCharacteristic,根据uuid获取
         BluetoothGattCharacteristic characteristic = service.getCharacteristic(characWriteUuid);
-        bleSender.addData(characteristic, info);
+        bleSender.addData(characteristic, data);
     }
 
     //  关闭通信 BluetoothGatt

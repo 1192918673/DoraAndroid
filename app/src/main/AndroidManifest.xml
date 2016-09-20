@@ -217,6 +217,10 @@
             android:name=".robot.RobotWifiActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity android:name=".robot.RobotControlActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 机器人离线控制界面 -->
         <activity
             android:name=".robot.RobotOfflineActivity"

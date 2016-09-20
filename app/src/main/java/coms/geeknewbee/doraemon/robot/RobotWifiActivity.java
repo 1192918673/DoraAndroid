@@ -32,7 +32,7 @@ import coms.geeknewbee.doraemon.robot.presenter.IRobotBindPresenter;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.robot.utils.NetworkStateReceiver;
 import coms.geeknewbee.doraemon.robot.view.IBindView;
-import coms.geeknewbee.doraemon.BLE.BleManager;
+import coms.geeknewbee.doraemon.communicate.BLE.BleManager;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.SoftKeyboardManager;
 import coms.geeknewbee.doraemon.utils.StringHandler;
@@ -94,9 +94,6 @@ public class RobotWifiActivity extends BaseActivity
 
     // Stops scanning after 30 seconds.
     private static final long SCAN_PERIOD = 10000;
-
-    //  写charac的uuid
-    private static UUID CHARAC_WRITE_UUID = UUID.fromString("00002a30-0000-1000-8000-00805f9b34fb");
 
     Gson gson = new Gson();
     private String send;
@@ -169,7 +166,7 @@ public class RobotWifiActivity extends BaseActivity
         wifi_ssid.setText("" + SSID);
 
         //调用蓝牙管理功能初始化蓝牙设备
-        boolean isSuccess = bleManager.initBluetooth(handler, this);
+        boolean isSuccess = bleManager.init(handler, this);
         return isSuccess;
     }
 
@@ -231,7 +228,7 @@ public class RobotWifiActivity extends BaseActivity
                         send = gson.toJson(bluetoothCommand);
                         String sendData = GlobalContants.COMMAND_ROBOT_PREFIX + send + GlobalContants.COMMAND_ROBOT_SUFFIX;
                         ILog.e("发送消息：" + sendData);
-                        bleManager.writeInfo(sendData, CHARAC_WRITE_UUID);
+                        bleManager.writeInfo(sendData, 1);
                     } else {
                         tt.showMessage("未扫描到服务", tt.SHORT);
                     }
@@ -249,13 +246,24 @@ public class RobotWifiActivity extends BaseActivity
                     //  返回的信息
                     String content = back.content;
                     if (isSuccess) {
-                        if (type != null && type.equals("reLink")) {
-                            ILog.e("WIFI设置成功");
-                            tt.showMessage("Wifi设置成功", tt.LONG);
-                            getIntent().putExtra("ssid", SSID);
-                            setResult(0, getIntent());
-                            finish();
-                            return;
+                        if (type != null) {
+                            if (type.equals("reLink")) {
+                                ILog.e("WIFI设置成功");
+                                tt.showMessage("Wifi设置成功", tt.LONG);
+                                getIntent().putExtra("ssid", SSID);
+                                setResult(0, getIntent());
+                                finish();
+                                return;
+                            } else if (type.equals("control")) {
+                                ILog.e("WIFI设置成功,进入控制界面");
+                                tt.showMessage("Wifi设置成功,进入控制界面", tt.LONG);
+                                Intent intent_control = new Intent(RobotWifiActivity.this, RobotControlActivity.class);
+                                String ip = back.ipAddress;
+                                intent_control.putExtra("ip", ip);
+                                startActivity(intent_control);
+                                finish();
+                                return;
+                            }
                         }
 
                         if (hadBind) {
@@ -299,7 +307,7 @@ public class RobotWifiActivity extends BaseActivity
         handler.postDelayed(finish, 35000);
         // 连接设备
         hasConnect = true;
-        bleManager.connect(linkDevice);
+        bleManager.connect(null);
     }
 
     //  超时操作

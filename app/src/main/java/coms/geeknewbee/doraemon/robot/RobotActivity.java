@@ -39,6 +39,8 @@ public class RobotActivity extends BaseActivity {
 
     private RelativeLayout actVoice;
 
+    private RelativeLayout actEnterControl;
+
     /**---------------------数据--------------------**/
     RobotBean robot;
 
@@ -51,6 +53,7 @@ public class RobotActivity extends BaseActivity {
         robotsView = (RobotsView)findViewById(R.id.robotsView);
         actOffline = (RelativeLayout) findViewById(R.id.actOffline);
         actVoice = (RelativeLayout) findViewById(R.id.actVoice);
+        actEnterControl = (RelativeLayout) findViewById(R.id.actEnterControl);
     }
 
     @Override
@@ -95,6 +98,7 @@ public class RobotActivity extends BaseActivity {
         ibBack.setOnClickListener(clickListener);
         tvAdd.setOnClickListener(clickListener);
 //        actOffline.setOnClickListener(clickListener);
+        actEnterControl.setOnClickListener(clickListener);
     }
 
     OnClickListener clickListener = new OnClickListener() {
@@ -130,6 +134,11 @@ public class RobotActivity extends BaseActivity {
                     Intent intent_voice = new Intent(RobotActivity.this, RobotVoiceActivity.class);
                     intent_voice.putExtra("robotPk", "" + robotsView.getRobot().getId());
                     startActivity(intent_voice);
+                    break;
+                case R.id.actEnterControl:
+                    Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
+                    intent_wifi.putExtra("type", "control");
+                    startActivity(intent_wifi);
                     break;
             }
         }

@@ -1,4 +1,4 @@
-package coms.geeknewbee.doraemon.BLE;
+package coms.geeknewbee.doraemon.communicate.BLE;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 
