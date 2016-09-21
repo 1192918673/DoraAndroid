@@ -83,6 +83,8 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 
     private static final int ACT_READ_NEWS = 25;
 
+    private static final int ACT_SLEEP = 26;
+
     /**
      * -----------------------组件----------------------
      **/
@@ -165,7 +167,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     String cmd[] = {"move", "forward", "backward", "left", "right", "disconnect", "intro_self", "dance",
             "movie", "stop", "head_left", "head_right", "head_up", "head_down", "l_arm_front",
             "l_arm_end", "l_arm_up", "l_arm_down", "r_arm_front", "r_arm_end", "r_arm_up",
-            "r_arm_down", "head_front", "say_hi", "end_say", "read_news"};
+            "r_arm_down", "head_front", "say_hi", "end_say", "read_news", "sleep"};
     private boolean isExit = false;
     private String ip;
 
@@ -239,6 +241,11 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         bt_stop.setOnClickListener(clickListener);
 
         findViewById(R.id.olTest).setOnClickListener(clickListener);
+        findViewById(R.id.olSleep).setOnClickListener(clickListener);
+
+        findViewById(R.id.bt_left).setOnClickListener(clickListener);
+        findViewById(R.id.bt_right).setOnClickListener(clickListener);
+        findViewById(R.id.bt_stopFoot).setOnClickListener(clickListener);
 
         pvHead.setName("头");
         pvHead.setBtn("上", "下", "左", "右");
@@ -264,6 +271,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            BluetoothCommand command = new BluetoothCommand();
             switch (v.getId()) {
                 case R.id.ibBack:
 //                    onBackPressed();
@@ -299,6 +307,10 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     handler.sendEmptyMessage(ACT_STOP);
                     break;
 
+                case R.id.olSleep:  //休眠
+                    handler.sendEmptyMessage(ACT_SLEEP);
+                    break;
+
                 case R.id.rlAct:// 控制界面
                     // rlAct.setVisibility(View.GONE);
                     break;
@@ -308,6 +320,22 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     pvFoot.setVisibility(View.VISIBLE);
                     isExit = false;
                     new Thread(RobotControlActivity.this).start();
+                    break;
+
+                case R.id.bt_left:  //向左转
+                    handler.sendEmptyMessage(ACT_LEFT);
+                    break;
+
+                case R.id.bt_right:  //向右转
+                    handler.sendEmptyMessage(ACT_RIGHT);
+                    break;
+
+                case R.id.bt_stopFoot:  //脚步停止
+                    mSpeedV = 0;
+                    mSpeedW = 0;
+                    command.setBluetoothFootCommand(new BluetoothCommand.FootCommand(0, 0));
+                    sendInfo(command);
+                    isRudderUse = false;
                     break;
 
                 case R.id.bt_go:    //点击前进
@@ -325,7 +353,6 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                 case R.id.bt_stop:  //点击停止
                     mSpeedV = 0;
                     mSpeedW = 0;
-                    BluetoothCommand command = new BluetoothCommand();
                     command.setBluetoothFootCommand(new BluetoothCommand.FootCommand(0, 0));
                     sendInfo(command);
                     isRudderUse = false;
@@ -335,6 +362,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                     startActivity(intent);
                     break;
+
             }
         }
     };

@@ -31,50 +31,71 @@
                 android:textSize="22dp" />
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/olSayhi"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="20dp"
-            android:background="#00A0E8"
-            android:gravity="center"
-            android:text="打招呼"
-            android:textColor="#FFFFFF"
-            android:textSize="15dp" />
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/olSayhi"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:background="#00A0E8"
+                android:gravity="center"
+                android:text="打招呼"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
 
-        <Button
-            android:id="@+id/olEnd_say"
+            <Button
+                android:id="@+id/olEnd_say"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="#00A0E8"
+                android:gravity="center"
+                android:text="结束语"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
-            android:background="#00A0E8"
-            android:gravity="center"
-            android:text="结束语"
-            android:textColor="#FFFFFF"
-            android:textSize="15dp" />
+            android:orientation="horizontal">
 
         <Button
             android:id="@+id/olInfo"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
             android:background="#00A0E8"
             android:gravity="center"
             android:text="自我介绍"
             android:textColor="#FFFFFF"
             android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/olRead_news"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#00A0E8"
+            android:gravity="center"
+            android:text="读新闻"
+            android:textColor="#FFFFFF"
+            android:textSize="15dp" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/olDance"
@@ -123,21 +144,6 @@
             android:textSize="15dp" />
 
         <Button
-            android:id="@+id/olRead_news"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:background="#00A0E8"
-            android:gravity="center"
-            android:text="读新闻"
-            android:textColor="#FFFFFF"
-            android:textSize="15dp" />
-
-        <Button
             android:id="@+id/olStop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -149,6 +155,21 @@
             android:background="#00A0E8"
             android:gravity="center"
             android:text="停止"
+            android:textColor="#FFFFFF"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/olSleep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:background="#00A0E8"
+            android:gravity="center"
+            android:text="休眠"
             android:textColor="#FFFFFF"
             android:textSize="15dp" />
 
@@ -230,6 +251,47 @@
             android:padding="20dp">
 
             <Button
+                android:id="@+id/bt_left"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="向左"
+                android:textSize="20sp"
+                android:background="#00A0E8"
+                android:textColor="#fff"/>
+
+            <Button
+                android:id="@+id/bt_right"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:background="#00A0E8"
+                android:textColor="#fff"
+                android:text="向右"
+                android:textSize="20sp"/>
+
+            <Button
+                android:id="@+id/bt_stopFoot"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:background="#00A0E8"
+                android:textColor="#fff"
+                android:text="停止"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <Button
                 android:visibility="gone"
                 android:id="@+id/bt_go"
                 android:layout_width="0dp"
@@ -265,7 +327,6 @@
                 android:textSize="20sp"/>
 
         </LinearLayout>
-
     </LinearLayout>
 
 </RelativeLayout>
