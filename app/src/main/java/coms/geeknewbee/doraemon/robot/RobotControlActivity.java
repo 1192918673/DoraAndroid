@@ -567,8 +567,8 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
             float tv = (float) (radius * Math.cos(radian));
             float av = (float) (radius * Math.sin(radian));
 
-            mSpeedV = tv * 3 / 2;
-            mSpeedW = -av * 10 / 2;
+            mSpeedV = tv * 3;
+            mSpeedW = -av * 10;
             Log.e("RobotFoot", "onSteeringWheelChanged:" + tv + "  " + av);
         }
 

@@ -24,6 +24,7 @@ public class SocketManager implements IControl {
     private BufferedOutputStream out;
     private final int MSG_WHAT_SOCKET_CONNECT = 1000;
     private ReadInfoThread runnable;
+    private Thread thread;
     private ExecutorService singleThreadExecutor;
 
     public SocketManager() {
@@ -52,7 +53,8 @@ public class SocketManager implements IControl {
                     handler.sendMessage(msg);
                     //  创建线程不断地读取消息
                     runnable = new ReadInfoThread(socket);
-                    new Thread(runnable).start();
+                    thread = new Thread(runnable);
+                    thread.start();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -88,6 +90,7 @@ public class SocketManager implements IControl {
                 socket.close();
                 socket = null;
                 runnable.stopThread();
+                thread.interrupted();
             }
         } catch (IOException e) {
             e.printStackTrace();

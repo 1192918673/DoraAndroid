@@ -248,6 +248,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:padding="20dp">
 
             <Button
@@ -289,10 +290,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:padding="20dp">
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/bt_go"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -303,7 +304,6 @@
                 android:textColor="#fff"/>
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/bt_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -315,7 +315,6 @@
                 android:textSize="20sp"/>
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/bt_stop"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
