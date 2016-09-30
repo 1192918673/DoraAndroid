@@ -24,6 +24,7 @@ import coms.geeknewbee.doraemon.communicate.IControl;
 import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.GlobalContants;
+import coms.geeknewbee.doraemon.readface.AddFaceActivity;
 import coms.geeknewbee.doraemon.readface.InsertFaceActivity;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
@@ -90,6 +91,8 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
      * -----------------------组件----------------------
      **/
     Button olAddFace;
+
+    Button olAddFaceSelf;
 
     TextView tv_control;
 
@@ -197,15 +200,18 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     private void assignViews() {
         tv_control = (TextView) findViewById(R.id.tv_control);
         olAddFace = (Button) findViewById(R.id.olAddFace);
+        olAddFaceSelf = (Button) findViewById(R.id.olAddFaceSelf);
 
         if (ip == null) {
             control = BleManager.getInstance();
             tv_control.setText("蓝牙控制");
             olAddFace.setVisibility(View.GONE);
+            olAddFaceSelf.setVisibility(View.GONE);
         } else {
             control = SocketManager.getInstance();
             tv_control.setText("Socket控制");
             olAddFace.setVisibility(View.VISIBLE);
+            olAddFaceSelf.setVisibility(View.VISIBLE);
         }
 
         ibBack = (ImageButton) findViewById(R.id.ibBack);
@@ -229,6 +235,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         bt_stop = (Button) findViewById(R.id.bt_stop);
 
         olAddFace.setOnClickListener(clickListener);
+        olAddFaceSelf.setOnClickListener(clickListener);
 
         ibBack.setOnClickListener(clickListener);
         olSayhi.setOnClickListener(clickListener);
@@ -293,6 +300,11 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                 case R.id.olAddFace:    //添加人脸
                     Intent intent_addface = new Intent(RobotControlActivity.this, InsertFaceActivity.class);
                     startActivity(intent_addface);
+                    break;
+
+                case R.id.olAddFaceSelf:    //通过相册添加人脸
+                    Intent intent_self = new Intent(RobotControlActivity.this, AddFaceActivity.class);
+                    startActivity(intent_self);
                     break;
 
                 case R.id.olSayhi:
@@ -563,7 +575,9 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 
     public void cancel() {
         try {
-            control.close();
+            if (control != null) {
+                control.close();
+            }
         } catch (Exception e) {
             ILog.e(e);
         } finally {

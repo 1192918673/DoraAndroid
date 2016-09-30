@@ -93,7 +93,9 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
     @Override
     public void close() {
         try {
-            out.close();
+            if (out != null) {
+                out.close();
+            }
             if (socket != null) {
                 ILog.e("关闭socket");
                 socket.close();
