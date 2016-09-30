@@ -102,6 +102,6 @@ public class TestActivity extends Activity implements View.OnClickListener, Runn
         String json = gson.toJson(command);
         String jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
         ILog.e("向设备发送数据：" + jsonCommand);
-        RobotControlActivity.control.writeInfo(jsonCommand, 2);
+        RobotControlActivity.control.writeInfo(jsonCommand.getBytes(), 2);
     }
 }

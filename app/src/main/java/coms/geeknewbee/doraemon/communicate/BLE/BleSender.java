@@ -35,14 +35,12 @@ public class BleSender extends Thread {
         sendThread.start();
     }
 
-    public void addData(BluetoothGattCharacteristic characteristic, String data) {
-        if (TextUtils.isEmpty(data))
+    public void addData(BluetoothGattCharacteristic characteristic, byte[] bytes) {
+        if (bytes.length == 0)
             return;
         //分包
-        byte[] bytes = data.getBytes();
         int length = bytes.length;
         int number = length % MAX_LENGTH == 0 ? length / MAX_LENGTH : length / MAX_LENGTH + 1;
-        ILog.e("向队列添加消息：" + data);
         for (int i = 0; i < number; i++) {
             byte[] range = Arrays.copyOfRange(bytes, i * 18, i == number - 1 ? length : (i + 1) * MAX_LENGTH);
             try {

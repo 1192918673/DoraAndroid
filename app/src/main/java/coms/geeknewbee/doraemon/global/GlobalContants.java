@@ -2,8 +2,6 @@ package coms.geeknewbee.doraemon.global;
 
 import com.igexin.sdk.PushManager;
 
-import coms.geeknewbee.doraemon.utils.StringHandler;
-
 /**
  * Created by chen on 2016/3/18
  */
@@ -15,6 +13,16 @@ public class GlobalContants {
     //发送蓝牙命令的前后缀
     public static final String COMMAND_ROBOT_PREFIX = new String(new byte[]{0x02});
     public static final String COMMAND_ROBOT_SUFFIX = new String(new byte[]{0x03});
+
+    //socket传输数据的头尾标志
+    public static final String COMMAND_ROBOT_PREFIX_FOR_SOCKET = "ROBOT_PREFIX";
+    public static final String COMMAND_ROBOT_SUFFIX_FOR_SOCKET = "ROBOT_SUFFIX";
+
+
+    //发送数据的功能码
+    public static final int  READY_ADD_FACE = 2;
+    public static final int ADD_FACE_DATA = 3;
+    public static final int NAME_DATA = 4;
 
     //socket端口号
     public static final int PORT = 9000;

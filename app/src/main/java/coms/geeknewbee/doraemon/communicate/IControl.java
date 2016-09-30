@@ -28,7 +28,7 @@ public interface IControl {
      * @param data  写入的信息
      * @param type  发送的类型，1：设置wifi；2：发送控制命令
      */
-    void writeInfo(String data, int type);
+    void writeInfo(byte[] data, int type);
 
     //  关闭连接
     void close();

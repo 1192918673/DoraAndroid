@@ -24,6 +24,7 @@ import coms.geeknewbee.doraemon.communicate.IControl;
 import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.GlobalContants;
+import coms.geeknewbee.doraemon.readface.InsertFaceActivity;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.widget.PanelView;
@@ -88,6 +89,8 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     /**
      * -----------------------组件----------------------
      **/
+    Button olAddFace;
+
     TextView tv_control;
 
     Button olSayhi;
@@ -144,6 +147,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
      * -----------------------使用socket返回的信息----------------------
      **/
     private final int MSG_WHAT_SOCKET_CONNECT = 1000;
+    private final int MSG_WHAT_SOCKET_DISCONNECT = 1001;
 
     /**
      * -----------------------使用蓝牙返回的信息----------------------
@@ -192,13 +196,18 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 
     private void assignViews() {
         tv_control = (TextView) findViewById(R.id.tv_control);
+        olAddFace = (Button) findViewById(R.id.olAddFace);
+
         if (ip == null) {
-            control = new BleManager();
+            control = BleManager.getInstance();
             tv_control.setText("蓝牙控制");
+            olAddFace.setVisibility(View.GONE);
         } else {
-            control = new SocketManager();
+            control = SocketManager.getInstance();
             tv_control.setText("Socket控制");
+            olAddFace.setVisibility(View.VISIBLE);
         }
+
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         olSayhi = (Button) findViewById(R.id.olSayhi);
         olEnd_say = (Button) findViewById(R.id.olEnd_say);
@@ -218,6 +227,8 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         bt_go = (Button) findViewById(R.id.bt_go);
         bt_back = (Button) findViewById(R.id.bt_back);
         bt_stop = (Button) findViewById(R.id.bt_stop);
+
+        olAddFace.setOnClickListener(clickListener);
 
         ibBack.setOnClickListener(clickListener);
         olSayhi.setOnClickListener(clickListener);
@@ -277,6 +288,11 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 //                    onBackPressed();
                     toRobotActivity();
                     finish();
+                    break;
+
+                case R.id.olAddFace:    //添加人脸
+                    Intent intent_addface = new Intent(RobotControlActivity.this, InsertFaceActivity.class);
+                    startActivity(intent_addface);
                     break;
 
                 case R.id.olSayhi:
@@ -432,7 +448,9 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                         }
                         break;
 
-                    case MSG_DIS_CONNET:    //连接已断开
+                    case MSG_WHAT_SOCKET_DISCONNECT:    //socket连接断开
+
+                    case MSG_DIS_CONNET:    //蓝牙连接已断开
                         ILog.e("连接已断开");
                         hideDialog();
                         handler.removeCallbacks(finish);
@@ -482,9 +500,14 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         }
         Gson gson = new Gson();
         String json = gson.toJson(command);
-        String jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
+        String jsonCommand = "";
+        if (ip == null) {
+            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
+        } else {
+            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
+        }
         ILog.e("发送数据：" + jsonCommand);
-        control.writeInfo(jsonCommand, 2);
+        control.writeInfo(jsonCommand.getBytes(), 2);
     }
 
     //  超时处理

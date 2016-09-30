@@ -14,13 +14,16 @@ import com.igexin.sdk.PushManager;
 import java.util.Iterator;
 import java.util.List;
 
+import dou.utils.DisplayUtil;
+
 
 /**
  * Created by chen on 2016/4/1
  */
 public class MyApplication extends Application {
     private static Context ctx;
-
+    protected int screenW;
+    protected int screenH;
 
     public static Context getContext() {
         return ctx;
@@ -29,6 +32,9 @@ public class MyApplication extends Application {
     @SuppressLint("MissingSuperCall")
     @Override
     public void onCreate() {
+        //人脸识别所需
+        screenW = DisplayUtil.getScreenWidthPixels(this);
+        screenH = DisplayUtil.getScreenHeightPixels(this);
         //初始化环信SDK
         EMOptions options = new EMOptions();
         // 默认添加好友时，是不需要验证的，改成需要验证
@@ -57,6 +63,21 @@ public class MyApplication extends Application {
 
     }
 
+    public int getScreenW() {
+        return screenW;
+    }
+
+    public void setScreenW(int screenW) {
+        this.screenW = screenW;
+    }
+
+    public int getScreenH() {
+        return screenH;
+    }
+
+    public void setScreenH(int screenH) {
+        this.screenH = screenH;
+    }
 
     private String getAppName(int pID) {
         String processName = null;

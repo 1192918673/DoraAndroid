@@ -228,7 +228,7 @@ public class RobotWifiActivity extends BaseActivity
                         send = gson.toJson(bluetoothCommand);
                         String sendData = GlobalContants.COMMAND_ROBOT_PREFIX + send + GlobalContants.COMMAND_ROBOT_SUFFIX;
                         ILog.e("发送消息：" + sendData);
-                        bleManager.writeInfo(sendData, 1);
+                        bleManager.writeInfo(sendData.getBytes(), 1);
                     } else {
                         tt.showMessage("未扫描到服务", tt.SHORT);
                     }

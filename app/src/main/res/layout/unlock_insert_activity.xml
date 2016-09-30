@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff2f2f2">
+
+
+    <include layout="@layout/camera_view" />
+
+    <View
+        android:id="@+id/popView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/insert_hold7" />
+
+    <include layout="@layout/unlock_title" />
+
+    <Button
+        android:visibility="gone"
+        android:id="@+id/add_face"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/add_face_unable"
+        android:onClick="topClick"
+        android:text="@string/add_face"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:padding="6dp"
+        android:singleLine="true"
+        android:textColor="#fff05c32"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/tips_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="80dp"
+        android:padding="6dp"
+        android:singleLine="true"
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/show_image"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="45dp"
+        android:layout_marginLeft="10dp" />
+
+    <TextView
+        android:layout_width="65dp"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:text="示例"
+        android:textColor="@android:color/holo_red_light" />
+
+</RelativeLayout>

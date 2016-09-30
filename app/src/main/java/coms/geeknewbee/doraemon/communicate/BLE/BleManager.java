@@ -69,7 +69,7 @@ public class BleManager implements IControl{
     private static final int MSG_HAS_SERVICE = 700;
     private static final int MSG_DIS_CONNET = 800;
 
-    public BleManager() {
+    private BleManager() {
         bleSender = new BleSender();
         bleRead = new BleRead();
     }
@@ -265,7 +265,7 @@ public class BleManager implements IControl{
      * @param type 发送的类型，1：设置wifi；2：发送控制命令
      */
     @Override
-    public void writeInfo(String data, int type) {
+    public void writeInfo(byte[] data, int type) {
         UUID characWriteUuid = null;
         if (type == 1) {
             characWriteUuid = wifiWriteUUID;
