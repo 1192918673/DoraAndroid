@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="coms.geeknewbee.doraemon.robot.EmotionActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="15dp"
+            android:background="#00000000"
+            android:src="@mipmap/back_blue" />
+
+        <TextView
+            android:id="@+id/tv_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="表情控制"
+            android:textSize="22dp" />
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/gview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:numColumns="5"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="2dp" />
+
+</LinearLayout>

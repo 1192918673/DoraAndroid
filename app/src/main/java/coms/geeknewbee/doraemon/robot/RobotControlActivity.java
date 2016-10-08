@@ -89,6 +89,8 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     /**
      * -----------------------组件----------------------
      **/
+    Button olEmotion;
+
     Button olReadFace;
 
     TextView tv_control;
@@ -207,6 +209,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
             tv_control.setText("Socket控制");
             olReadFace.setVisibility(View.VISIBLE);
         }
+        olEmotion = (Button) findViewById(R.id.olEmoticon);
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         olSayhi = (Button) findViewById(R.id.olSayhi);
         olEnd_say = (Button) findViewById(R.id.olEnd_say);
@@ -228,6 +231,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         bt_stop = (Button) findViewById(R.id.bt_stop);
 
         olReadFace.setOnClickListener(clickListener);
+        olEmotion.setOnClickListener(clickListener);
 
         ibBack.setOnClickListener(clickListener);
         olSayhi.setOnClickListener(clickListener);
@@ -292,6 +296,12 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                 case R.id.olReadFace:    //添加人脸
                     Intent intent_addface = new Intent(RobotControlActivity.this, ReadFaceActivity.class);
                     startActivity(intent_addface);
+                    break;
+
+                case R.id.olEmoticon:   //表情
+                    Intent intent_Emotion = new Intent(RobotControlActivity.this, EmotionActivity.class);
+                    intent_Emotion.putExtra("ip", ip);
+                    startActivity(intent_Emotion);
                     break;
 
                 case R.id.olSayhi:

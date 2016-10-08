@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="coms.geeknewbee.doraemon"> <!-- 解决Android L上通知显示异常问题，targetSdkVersion需要设置成22 -->
+    package="coms.geeknewbee.doraemon">
+    <!-- 解决Android L上通知显示异常问题，targetSdkVersion需要设置成22 -->
     <uses-sdk
         android:minSdkVersion="18"
         android:targetSdkVersion="23" />
 
-    <!-- Declare this required feature if you want to make the app available to BLE-capable
+    <!--
+    Declare this required feature if you want to make the app available to BLE-capable
     devices only.  If you want to make your app available to devices that don't support BLE,
     you should omit this in the manifest.  Instead, determine BLE capability by using
-    PackageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE) -->
+    PackageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE)
+    -->
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
-
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -203,98 +205,96 @@
         <activity
             android:name=".robot.RobotManagerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- 机器人硬件信息 -->
         <activity
             android:name=".robot.RobotHardInfoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- 成员管理界面 -->
         <activity
             android:name=".robot.RobotMemberActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- 机器人Wifi设置界面 -->
         <activity
             android:name=".robot.RobotWifiActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".robot.RobotControlActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- 机器人离线控制界面 -->
         <!-- 机器人语音控制界面 -->
         <activity
             android:name=".robot.RobotVoiceActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- 扫描二维码界面 -->
 
         <activity
             android:name=".box.smart_home.SmartHomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 电视遥控器设置界面 -->
         <activity
             android:name=".box.smart_home.SmartTVActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 智能家居Wifi设置界面 -->
         <activity
             android:name=".box.smart_home.SmartTVWifiActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 电视遥控器学习界面 -->
         <activity
             android:name=".box.smart_home.SmartTVStudyActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 净化器界面 -->
         <activity
             android:name=".box.smart_home.SmartPurifierActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 净化器扫描界面 -->
         <activity
             android:name=".box.smart_home.SmartPurifierCodeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 净化器连接结果界面 -->
         <activity
             android:name=".box.smart_home.SmartPurifierSuccessActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 智能插座界面 -->
         <activity
             android:name=".box.smart_home.SmartPlugActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 智能插座配置WIFI界面 -->
         <activity
             android:name=".box.smart_home.SmartPlugWifiActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 电影搜索界面 -->
         <activity
             android:name=".box.movie.MoviesActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".robot.TestActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 人脸识别 -->
         <activity
@@ -309,6 +309,12 @@
             android:name=".robot.readface.AddFaceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--表情-->
+        <activity
+            android:name=".robot.EmotionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <receiver
             android:name=".robot.utils.NetworkStateReceiver"
@@ -467,7 +473,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

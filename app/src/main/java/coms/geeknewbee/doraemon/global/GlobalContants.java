@@ -2,13 +2,15 @@ package coms.geeknewbee.doraemon.global;
 
 import com.igexin.sdk.PushManager;
 
+import coms.geeknewbee.doraemon.R;
+
 /**
  * Created by chen on 2016/3/18
  */
 public class GlobalContants {
 
     //蓝牙名
-    public static final String ROBOT_BT_NAME = "DoraemonTestLX";   //DoraemonLiXiang  //DoraemonTest
+    public static final String ROBOT_BT_NAME = "DoraemonTestLX";   //DoraemonLiXiang  //DoraemonTest    //DoraemonTestLX
 
     //发送蓝牙命令的前后缀
     public static final String COMMAND_ROBOT_PREFIX = new String(new byte[]{0x02});
@@ -20,8 +22,8 @@ public class GlobalContants {
 
 
     //发送数据的功能码
-    public static final int  SEND_SOCKET_CONTROL = 1;
-    public static final int  READY_ADD_FACE = 2;
+    public static final int SEND_SOCKET_CONTROL = 1;
+    public static final int READY_ADD_FACE = 2;
     public static final int ADD_FACE_DATA = 3;
     public static final int NAME_DATA = 4;
     public static final int ADD_FACE_PHOTO = 5;
@@ -29,6 +31,17 @@ public class GlobalContants {
 
     //socket端口号
     public static final int PORT = 9000;
+
+    // 表情gif名称
+    public static String[] emotion = {"wei_xiao", "dai", "wei_xiao", "ji_dong", "yi_wen", "yun", "se", "dai", "hai_xiu", "ku",
+            "gan_ga", "jing_kong", "de_yi", "bai_yan", "ke_lian_meng", "nu", "jing_kong", "ji_yan", "wei_xiao", "wei_xiao"};
+
+    public static String[] sound = {"太对了", "宝宝不同意", "好好开心啊", "好激动啊", "宝宝不知道", "晕死了", "么么哒", "我想静静", "我都不好意思了", "好难过",
+            "我竟无言以对", "当时我就惊呆了", "宝宝聪明不", "宝宝鄙视你", "感觉自己萌萌哒", "气死宝宝了", "好怕怕啊", "再见，来不及挥手", "快来抱抱", "欢迎欢迎，热烈欢迎"};
+
+    // 动作RawID
+    public static int[] action = {R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi,
+            R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi, R.raw.tong_yi};
 
     //------------------------------------------------------------------------------------------
 

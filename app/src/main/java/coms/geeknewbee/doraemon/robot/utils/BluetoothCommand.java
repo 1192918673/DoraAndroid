@@ -1,5 +1,7 @@
 package coms.geeknewbee.doraemon.robot.utils;
 
+import java.util.List;
+
 /**
  * Created by zq on 2016/8/22 0022.
  */
@@ -47,9 +49,35 @@ public class BluetoothCommand {
      */
     private FootCommand bluetoothFootCommand;
 
+    /**
+     * 表情名字
+     */
+    private String faceName;
+    /**
+     * 声音
+     */
+    private String sound;
+    /**
+     * 动作脚本
+     */
+    private List<String> lines;
+
+    public void setFaceName(String faceName) {
+        this.faceName = faceName;
+    }
+
+    public void setSound(String sound) {
+        this.sound = sound;
+    }
+
     public void setBluetoothFootCommand(FootCommand bluetoothFootCommand) {
         this.bluetoothFootCommand = bluetoothFootCommand;
     }
+
+    public void setLines(List<String> lines) {
+        this.lines = lines;
+    }
+
 
     public static class LimbCommand {
 
