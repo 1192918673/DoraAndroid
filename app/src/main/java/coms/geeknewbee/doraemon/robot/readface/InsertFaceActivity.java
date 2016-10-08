@@ -1,4 +1,4 @@
-package coms.geeknewbee.doraemon.readface;
+package coms.geeknewbee.doraemon.robot.readface;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -25,16 +25,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.readface.bean.ReadFaceInitParams;
+import coms.geeknewbee.doraemon.robot.readface.bean.ReadFaceInitParams;
 import coms.geeknewbee.doraemon.robot.RobotActivity;
 import coms.geeknewbee.doraemon.utils.ILog;
 import dou.utils.DLog;
@@ -60,86 +57,94 @@ public class InsertFaceActivity extends FaceBaseActivity {
     //当前是否在发送人脸信息
     private boolean isSending;
 
+    /**
+     * -----------------------使用socket返回的信息----------------------
+     **/
+    private final int MSG_WHAT_SOCKET_DISCONNECT = 1001;
+    private final int MSG_WHAT_START_ADD_FACE = 1002;
+    private final int MSG_WHAT_ADD_FACE = 1003;
+    private final int MSG_WHAT_ADD_NAME = 1004;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             hideDialog();
             handler.removeCallbacks(finish);
-            String message = (String) msg.obj;
-            if (message == null) {
-                ILog.e("socket连接已断开");
-                Toast.makeText(InsertFaceActivity.this, "socket连接已断开", Toast.LENGTH_SHORT);
-                socketManager.close();
-                Intent intent = new Intent(InsertFaceActivity.this, RobotActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            if (message.startsWith(2 + "")) {
-                isEnter = false;
-                String code2 = 2 + "";
-                String data = message.substring(message.length() - code2.length());
-                if (data.equals("1")) {
-                    ILog.e("可以录入");
-                    Toast.makeText(InsertFaceActivity.this, "可以开始录入人脸啦", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(InsertFaceActivity.this, "稍等一下，多啦A梦还没有准备好哦！", Toast.LENGTH_SHORT).show();
+            String data = (String) msg.obj;
+            switch (msg.what) {
+                case MSG_WHAT_SOCKET_DISCONNECT:    //socket连接断开
+                    ILog.e("socket连接已断开");
+                    Toast.makeText(InsertFaceActivity.this, "socket连接已断开", Toast.LENGTH_SHORT);
+                    socketManager.close();
+                    Intent intent = new Intent(InsertFaceActivity.this, RobotActivity.class);
+                    startActivity(intent);
                     finish();
-                }
-            } else if (message.startsWith(3 + "")) {
-                String code3 = 3 + "";
-                String data = message.substring(message.length() - code3.length());
-                isSending = false;
-                if (data.equals("1")) {
-                    addCount++;
-                    switch (addCount) {
-                        case 1: //第一张人脸添加完成
-                            tips_load.setText("准备添加第二张人脸--侧脸(2/4)");
-                            show_image.setBackgroundResource(R.drawable.nomal_2);
-                            break;
-                        case 2: //第二张人脸添加完成
-                            tips_load.setText("准备添加第三张人脸--抬头侧脸(3/4)");
-                            show_image.setBackgroundResource(R.drawable.nomal_3);
-                            break;
-                        case 3: //第三张人脸添加完成
-                            tips_load.setText("准备添加第四张人脸--低头侧脸(4/4)");
-                            show_image.setBackgroundResource(R.drawable.nomal_4);
-                            break;
-                        case 4: //第四张人脸添加完成
-                            doEnd();
-                            break;
-
+                    break;
+                case MSG_WHAT_START_ADD_FACE:   //是否可以录入人脸
+                    isEnter = false;
+                    if (data.equals("1")) {
+                        ILog.e("可以录入");
+                        Toast.makeText(InsertFaceActivity.this, "可以开始录入人脸啦", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(InsertFaceActivity.this, "稍等一下，多啦A梦还没有准备好哦！", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
-                } else {
-                    Toast.makeText(InsertFaceActivity.this, "添加失败，请重新添加", Toast.LENGTH_SHORT).show();
-                }
-            } else if (message.startsWith(4 + "")) {
-                String code4 = 4 + "";
-                String data = message.substring(message.length() - code4.length());
-                if (data.equals("1")) {
-                    addCount++;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(InsertFaceActivity.this);
-                    builder.setCancelable(false);
-                    builder.setMessage("当前录入完成，是否录入下一个？")
-                            .setNegativeButton("是",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            addCount = 0;
-                                            tips_load.setText("准备添加第一张人脸--正脸(1/4)");
-                                            show_image.setBackgroundResource(R.drawable.nomal_1);
-                                        }
-                                    })
-                            .setPositiveButton("否", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    finish();
-                                }
-                            });
-                    builder.create().show();
-                } else {
-                    doEnd();
-                    Toast.makeText(InsertFaceActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
-                }
+                    break;
+                case MSG_WHAT_ADD_FACE: //人脸是否添加成功
+                    if (data.equals("1")) {
+                        addCount++;
+                        switch (addCount) {
+                            case 1: //第一张人脸添加完成
+                                tips_load.setText("准备添加第二张人脸--侧脸(2/4)");
+                                show_image.setBackgroundResource(R.drawable.nomal_2);
+                                break;
+                            case 2: //第二张人脸添加完成
+                                tips_load.setText("准备添加第三张人脸--抬头侧脸(3/4)");
+                                show_image.setBackgroundResource(R.drawable.nomal_3);
+                                break;
+                            case 3: //第三张人脸添加完成
+                                tips_load.setText("准备添加第四张人脸--低头侧脸(4/4)");
+                                show_image.setBackgroundResource(R.drawable.nomal_4);
+                                break;
+                            case 4: //第四张人脸添加完成
+                                doEnd();
+                                break;
+
+                        }
+                    } else {
+                        Toast.makeText(InsertFaceActivity.this, "添加失败，请重新添加", Toast.LENGTH_SHORT).show();
+                    }
+                    isSending = false;
+                    break;
+                case MSG_WHAT_ADD_NAME: //人名是否添加成功
+                    if (data.equals("1")) {
+                        addCount++;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(InsertFaceActivity.this);
+                        builder.setCancelable(false);
+                        builder.setMessage("当前录入完成，是否录入下一个？")
+                                .setNegativeButton("是",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                addCount = 0;
+                                                tips_load.setText("准备添加第一张人脸--正脸(1/4)");
+                                                show_image.setBackgroundResource(R.drawable.nomal_1);
+                                            }
+                                        })
+                                .setPositiveButton("否", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        finish();
+                                    }
+                                });
+                        builder.create().show();
+                    } else {
+                        doEnd();
+                        Toast.makeText(InsertFaceActivity.this, "添加失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -323,10 +328,6 @@ public class InsertFaceActivity extends FaceBaseActivity {
                     tipSetText("请低头20°");
                 }
                 break;
-//            case 4:
-//                //TODO 结束
-//                doEnd();
-//                break;
         }
     }
 

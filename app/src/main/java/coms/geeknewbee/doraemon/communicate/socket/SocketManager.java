@@ -25,6 +25,12 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
     private BufferedOutputStream out;
     private final int MSG_WHAT_SOCKET_CONNECT = 1000;
     private final int MSG_WHAT_SOCKET_DISCONNECT = 1001;
+
+    private final int MSG_WHAT_START_ADD_FACE = 1002;
+    private final int MSG_WHAT_ADD_FACE = 1003;
+    private final int MSG_WHAT_ADD_NAME = 1004;
+    private final int MSG_WHAT_ADD_PHOTO = 1005;
+
     private ReadInfoThread runnable;
     private Thread thread;
     private ExecutorService singleThreadExecutor;
@@ -119,10 +125,25 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
     @Override
     public void onReceiveData(String data) {
         Message msg = Message.obtain();
-        if (data == null) {
+        String code2 = 2 + "";
+        String code3 = 3 + "";
+        String code4 = 4 + "";
+        String code5 = 5 + "";
+        if (data == null) { //连接断开的消息
             msg.what = MSG_WHAT_SOCKET_DISCONNECT;
+        } else if (data.startsWith(code2)) {    //开始录入人脸
+            msg.what = MSG_WHAT_START_ADD_FACE;
+            msg.obj = data.substring(data.length() - code2.length());
+        } else if (data.startsWith(code3)) {    //录入人脸是否成功
+            msg.what = MSG_WHAT_ADD_FACE;
+            msg.obj = data.substring(data.length() - code3.length());
+        } else if (data.startsWith(code4)) {    //人名是否添加成功
+            msg.what = MSG_WHAT_ADD_NAME;
+            msg.obj = data.substring(data.length() - code4.length());
+        } else if (data.startsWith(code5)) {    //照片是否添加成功
+            msg.what = MSG_WHAT_ADD_PHOTO;
+            msg.obj = data.substring(data.length() - code5.length());
         }
-        msg.obj = data;
         handler.sendMessage(msg);
     }
 }

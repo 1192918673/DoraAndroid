@@ -296,13 +296,19 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".readface.InsertFaceActivity"
+        <!-- 人脸识别 -->
+        <activity
+            android:name=".robot.readface.ReadFaceActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".readface.AddFaceActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".robot.readface.InsertFaceActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".robot.readface.AddFaceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".robot.utils.NetworkStateReceiver"

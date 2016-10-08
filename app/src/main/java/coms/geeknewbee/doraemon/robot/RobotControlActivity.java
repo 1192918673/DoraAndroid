@@ -24,8 +24,7 @@ import coms.geeknewbee.doraemon.communicate.IControl;
 import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.readface.AddFaceActivity;
-import coms.geeknewbee.doraemon.readface.InsertFaceActivity;
+import coms.geeknewbee.doraemon.robot.readface.ReadFaceActivity;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.widget.PanelView;
@@ -90,9 +89,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     /**
      * -----------------------组件----------------------
      **/
-    Button olAddFace;
-
-    Button olAddFaceSelf;
+    Button olReadFace;
 
     TextView tv_control;
 
@@ -199,21 +196,17 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 
     private void assignViews() {
         tv_control = (TextView) findViewById(R.id.tv_control);
-        olAddFace = (Button) findViewById(R.id.olAddFace);
-        olAddFaceSelf = (Button) findViewById(R.id.olAddFaceSelf);
+        olReadFace = (Button) findViewById(R.id.olReadFace);
 
         if (ip == null) {
             control = BleManager.getInstance();
             tv_control.setText("蓝牙控制");
-            olAddFace.setVisibility(View.GONE);
-            olAddFaceSelf.setVisibility(View.GONE);
+            olReadFace.setVisibility(View.GONE);
         } else {
             control = SocketManager.getInstance();
             tv_control.setText("Socket控制");
-            olAddFace.setVisibility(View.VISIBLE);
-            olAddFaceSelf.setVisibility(View.VISIBLE);
+            olReadFace.setVisibility(View.VISIBLE);
         }
-
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         olSayhi = (Button) findViewById(R.id.olSayhi);
         olEnd_say = (Button) findViewById(R.id.olEnd_say);
@@ -234,8 +227,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         bt_back = (Button) findViewById(R.id.bt_back);
         bt_stop = (Button) findViewById(R.id.bt_stop);
 
-        olAddFace.setOnClickListener(clickListener);
-        olAddFaceSelf.setOnClickListener(clickListener);
+        olReadFace.setOnClickListener(clickListener);
 
         ibBack.setOnClickListener(clickListener);
         olSayhi.setOnClickListener(clickListener);
@@ -297,14 +289,9 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     finish();
                     break;
 
-                case R.id.olAddFace:    //添加人脸
-                    Intent intent_addface = new Intent(RobotControlActivity.this, InsertFaceActivity.class);
+                case R.id.olReadFace:    //添加人脸
+                    Intent intent_addface = new Intent(RobotControlActivity.this, ReadFaceActivity.class);
                     startActivity(intent_addface);
-                    break;
-
-                case R.id.olAddFaceSelf:    //通过相册添加人脸
-                    Intent intent_self = new Intent(RobotControlActivity.this, AddFaceActivity.class);
-                    startActivity(intent_self);
                     break;
 
                 case R.id.olSayhi:
@@ -516,7 +503,8 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         if (ip == null) {
             jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
         } else {
-            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
+            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.SEND_SOCKET_CONTROL
+                    + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
         }
         ILog.e("发送数据：" + jsonCommand);
         control.writeInfo(jsonCommand.getBytes(), 2);

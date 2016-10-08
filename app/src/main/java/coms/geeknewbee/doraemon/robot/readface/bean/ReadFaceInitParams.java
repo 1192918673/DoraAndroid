@@ -1,4 +1,4 @@
-package coms.geeknewbee.doraemon.readface.bean;
+package coms.geeknewbee.doraemon.robot.readface.bean;
 
 /**
  * Created by GYY on 2016/9/29.

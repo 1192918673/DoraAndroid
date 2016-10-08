@@ -1,4 +1,4 @@
-package coms.geeknewbee.doraemon.readface;
+package coms.geeknewbee.doraemon.robot.readface;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -23,7 +24,7 @@ import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.readface.bean.ReadFaceInitParams;
+import coms.geeknewbee.doraemon.robot.readface.bean.ReadFaceInitParams;
 import coms.geeknewbee.doraemon.robot.RobotActivity;
 import coms.geeknewbee.doraemon.utils.ILog;
 import dou.utils.BitmapUtil;
@@ -35,6 +36,7 @@ import mobile.ReadFace.YMFaceTrack;
  */
 public class AddFaceActivity extends BaseActivity implements View.OnClickListener {
 
+    private ImageButton ibBack;
     private Button btn_open;
     private Button btn_ok;
     private EditText et_name;
@@ -44,44 +46,60 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
 
     private boolean isSuccess;
 
+    /**
+     * -----------------------使用socket返回的信息----------------------
+     **/
+    private final int MSG_WHAT_SOCKET_DISCONNECT = 1001;
+    private final int MSG_WHAT_START_ADD_FACE = 1002;
+    private final int MSG_WHAT_ADD_FACE = 1003;
+    private final int MSG_WHAT_ADD_NAME = 1004;
+    private final int MSG_WHAT_ADD_PHOTO = 1005;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            String message = (String) msg.obj;
-            if (message == null) {
-                ILog.e("socket连接已断开");
-                Toast.makeText(AddFaceActivity.this, "socket连接已断开", Toast.LENGTH_SHORT);
-                socketManager.close();
-                Intent intent = new Intent(AddFaceActivity.this, RobotActivity.class);
-                startActivity(intent);
-                finish();
-            }else if (message.startsWith(2 + "")) {
-                String code2 = 2 + "";
-                String data = message.substring(message.length() - code2.length());
-                if (data.equals("1")) {
-                    ILog.e("可以录入");
-                } else {
-                    ILog.e("不可以录入");
-                }
-            } else if (message.startsWith(5 + "")) {
-                String code5 = 5 + "";
-                String data = message.substring(message.length() - code5.length());
-                if (data.equals("1")) {
-                    isSuccess = true;
-                    ILog.e("添加成功");
-                    Toast.makeText(AddFaceActivity.this, "照片添加成功，请继续录入人名！", Toast.LENGTH_SHORT).show();
-                } else {
-                    ILog.e("添加失败");
-                    Toast.makeText(AddFaceActivity.this, "照片添加失败，请重新选取照片进行添加！", Toast.LENGTH_SHORT).show();
-                }
-            } else if (message.startsWith(4 + "")) {
-                String code4 = 4 + "";
-                String data = message.substring(message.length() - code4.length());
-                if (data.equals("1")) {
-                    ILog.e("添加成功");
-                    Toast.makeText(AddFaceActivity.this, "录入成功！", Toast.LENGTH_SHORT).show();
+            hideDialog();
+            String data = (String) msg.obj;
+            switch (msg.what) {
+                case MSG_WHAT_SOCKET_DISCONNECT:    //socket连接断开
+                    ILog.e("socket连接已断开");
+                    Toast.makeText(AddFaceActivity.this, "socket连接已断开", Toast.LENGTH_SHORT);
+                    socketManager.close();
+                    Intent intent = new Intent(AddFaceActivity.this, RobotActivity.class);
+                    startActivity(intent);
                     finish();
-                }
+                    break;
+                case MSG_WHAT_START_ADD_FACE:   //是否可以录入人脸
+                    if (data.equals("1")) {
+                        ILog.e("可以录入");
+                        Toast.makeText(AddFaceActivity.this, "可以开始录入人脸啦", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(AddFaceActivity.this, "稍等一下，多啦A梦还没有准备好哦！", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                    break;
+                case MSG_WHAT_ADD_PHOTO:    //照片是否添加成功
+                    if (data.equals("1")) {
+                        isSuccess = true;
+                        ILog.e("照片添加成功");
+                        Toast.makeText(AddFaceActivity.this, "照片添加成功，请继续录入人名！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        ILog.e("照片添加失败");
+                        Toast.makeText(AddFaceActivity.this, "照片添加失败，请重新选取照片进行添加！", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case MSG_WHAT_ADD_NAME: //人名是否添加成功
+                    if (data.equals("1")) {
+                        ILog.e("人名添加成功");
+                        Toast.makeText(AddFaceActivity.this, "添加成功！", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        ILog.e("人名添加失败");
+                        Toast.makeText(AddFaceActivity.this, "人名添加失败，请再次发送！", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -90,10 +108,12 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_face);
+        ibBack = (ImageButton) findViewById(R.id.ibBack);
         btn_open = (Button) findViewById(R.id.btn_open);
         btn_ok = (Button) findViewById(R.id.btn_ok);
         et_name = (EditText) findViewById(R.id.et_name);
 
+        ibBack.setOnClickListener(this);
         btn_open.setOnClickListener(this);
         btn_ok.setOnClickListener(this);
 
@@ -106,31 +126,38 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
         faceTrack.resetAlbum();
 
         isSuccess = false;
+
+        showDialog("正在通知哆啦A梦要添加人脸");
+        //发送相机参数信息
+        ReadFaceInitParams initParams = new ReadFaceInitParams(YMFaceTrack.FACE_0, YMFaceTrack.RESIZE_WIDTH_1920, 0, 0);
+        Gson gson = new Gson();
+        String json = gson.toJson(initParams);
+        String send = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.READY_ADD_FACE
+                + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
+        socketManager.writeInfo(send.getBytes(), 2);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.ibBack:
+                onBackPressed();
+                break;
             case R.id.btn_open: //打开图库
-                //发送相机参数信息
-                ReadFaceInitParams initParams = new ReadFaceInitParams(YMFaceTrack.FACE_0, YMFaceTrack.RESIZE_WIDTH_1920, 0, 0);
-                Gson gson = new Gson();
-                String json = gson.toJson(initParams);
-                String send = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.READY_ADD_FACE
-                        + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
-                socketManager.writeInfo(send.getBytes(), 2);
-                //打开图库
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 0);
                 break;
-            case R.id.btn_send:
+            case R.id.btn_ok:
                 String name = et_name.getText().toString().trim();
                 if (TextUtils.isEmpty(name)) {
                     Toast.makeText(this, "名字不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //  如果收到图片发送成功才可以发送
-                if (isSuccess) {
+                if (!isSuccess) {
+                    Toast.makeText(AddFaceActivity.this, "请先选取照片再进行添加！", Toast.LENGTH_SHORT).show();
+                } else {
+                    showDialog("正在发送人名信息");
                     String data = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.NAME_DATA + name + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
                     ILog.e("发送人名信息：" + data);
                     socketManager.writeInfo(data.getBytes(), 2);
@@ -147,10 +174,10 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
-
+                //进行人脸识别
                 Bitmap bitmap = BitmapUtil.decodeScaleImage(path, 640, 640);
                 List<YMFace> ymFaces = faceTrack.detectMultiBitmap(bitmap);
-
+                //识别成功
                 if (ymFaces != null && ymFaces.size() != 0) {
                     Toast.makeText(this, "识别到人脸信息，正在进行添加", Toast.LENGTH_SHORT).show();
 
@@ -163,7 +190,8 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
+                    showDialog("正在发送照片");
+                    //发送人脸信息
                     addFace(bytes);
                 } else {
                     Toast.makeText(this, "未识别到人脸信息，请重新选取照片进行添加！", Toast.LENGTH_SHORT).show();
@@ -172,6 +200,11 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    /**
+     * 发送人脸信息
+     *
+     * @param bytes 照片字节数组
+     */
     private void addFace(byte[] bytes) {
         byte[] prefix = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET.getBytes();
         byte[] suffix = GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET.getBytes();

@@ -8,7 +8,7 @@ import com.igexin.sdk.PushManager;
 public class GlobalContants {
 
     //蓝牙名
-    public static final String ROBOT_BT_NAME = "DoraemonTest";   //DoraemonLiXiang  //DoraemonTest
+    public static final String ROBOT_BT_NAME = "DoraemonTestLX";   //DoraemonLiXiang  //DoraemonTest
 
     //发送蓝牙命令的前后缀
     public static final String COMMAND_ROBOT_PREFIX = new String(new byte[]{0x02});
@@ -20,9 +20,12 @@ public class GlobalContants {
 
 
     //发送数据的功能码
+    public static final int  SEND_SOCKET_CONTROL = 1;
     public static final int  READY_ADD_FACE = 2;
     public static final int ADD_FACE_DATA = 3;
     public static final int NAME_DATA = 4;
+    public static final int ADD_FACE_PHOTO = 5;
+    public static final int DELETE_ALL_FACE = 6;
 
     //socket端口号
     public static final int PORT = 9000;

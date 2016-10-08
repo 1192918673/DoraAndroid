@@ -1,4 +1,4 @@
-package coms.geeknewbee.doraemon.readface;
+package coms.geeknewbee.doraemon.robot.readface;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -8,15 +8,10 @@ import android.support.v4.app.FragmentActivity;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import coms.geeknewbee.doraemon.R;
-import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
-import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.readface.bean.ReadFaceInitParams;
 import dou.helper.CameraHelper;
 import dou.utils.DLog;
 import dou.utils.DisplayUtil;

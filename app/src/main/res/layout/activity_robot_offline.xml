@@ -173,7 +173,7 @@
             android:textSize="15dp" />
 
         <Button
-            android:id="@+id/olAddFace"
+            android:id="@+id/olReadFace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -183,12 +183,12 @@
             android:layout_marginTop="10dp"
             android:background="#00A0E8"
             android:gravity="center"
-            android:text="添加人脸"
+            android:text="人脸识别"
             android:textColor="#FFFFFF"
             android:textSize="15dp" />
 
         <Button
-            android:id="@+id/olAddFaceSelf"
+            android:id="@+id/olEmoticon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -198,7 +198,7 @@
             android:layout_marginTop="10dp"
             android:background="#00A0E8"
             android:gravity="center"
-            android:text="通过相册添加人脸"
+            android:text="表情"
             android:textColor="#FFFFFF"
             android:textSize="15dp" />
 
