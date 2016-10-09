@@ -1,11 +1,16 @@
 package coms.geeknewbee.doraemon.robot;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.SimpleAdapter;
 
 import com.google.gson.Gson;
@@ -44,6 +49,24 @@ public class EmotionActivity extends BaseActivity implements AdapterView.OnItemC
     private String ip;
     private List<String> lines;
 
+    private final int MSG_WHAT_SOCKET_DISCONNECT = 1001;
+    private static final int MSG_DIS_CONNET = 800;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MSG_WHAT_SOCKET_DISCONNECT:    //socket连接断开
+                case MSG_DIS_CONNET:    //蓝牙连接已断开
+                    ILog.e("连接已断开");
+                    tt.showMessage("连接已断开，将要关闭当前页面", tt.SHORT);
+                    finish();
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +77,15 @@ public class EmotionActivity extends BaseActivity implements AdapterView.OnItemC
         } else {
             iControl = SocketManager.getInstance();
         }
-
+        iControl.init(handler, this);
+        ImageButton ibBack = (ImageButton) findViewById(R.id.ibBack);
         GridView gview = (GridView) findViewById(R.id.gview);
+        ibBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         gview.setOnItemClickListener(this);
         items = new ArrayList<>();
         lines = new ArrayList<>();
