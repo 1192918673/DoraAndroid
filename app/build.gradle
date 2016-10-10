@@ -3,18 +3,22 @@ apply plugin: 'com.android.application'
 
 android {
     //编译SDK的版本
-    compileSdkVersion 23
+    compileSdkVersion 22
     //build tools的版本
     buildToolsVersion '23.0.3'
-    useLibrary 'org.apache.http.legacy'
+//    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         //应用的包名
         applicationId 'com.geeknewbee.doraemon'
         minSdkVersion 18
         targetSdkVersion 22
         versionCode 1
-        versionName "1.2.0.10"
+        versionName "1.2.0.11"
         multiDexEnabled true
+        ndk { abiFilters 'armeabi' }
+
+//        buildConfigField "String", "BLUETOOTH_NAME", localProps["bluetoothName"] == null ? "Doraemon" : localProps["bluetoothName"]
+//        println "BLUETOOTH_NAME:" + (localProps["bluetoothName"] == null ? BLNAME : localProps["bluetoothName"])
     }
 
     signingConfigs {
@@ -39,7 +43,7 @@ android {
             signingConfig signingConfigs.myConfig
             minifyEnabled false
             zipAlignEnabled true
-            shrinkResources true // 是否去除无效的资源文件
+            shrinkResources true// 是否去除无效的资源文件
         }
     }
 
@@ -99,8 +103,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:design:22.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
     testCompile 'junit:junit:4.12'
-    compile files('libs/AISpeech-SDK-for-Android-1.9.6.0.jar')
 }

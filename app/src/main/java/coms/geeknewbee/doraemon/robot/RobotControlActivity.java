@@ -270,7 +270,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 
         findViewById(R.id.olSleep).setOnClickListener(clickListener);
 
-//        findViewById(R.id.olTest).setOnClickListener(clickListener);
+        findViewById(R.id.olTest).setOnClickListener(clickListener);
         findViewById(R.id.bt_left).setOnClickListener(clickListener);
         findViewById(R.id.bt_right).setOnClickListener(clickListener);
         findViewById(R.id.bt_stopFoot).setOnClickListener(clickListener);
@@ -408,10 +408,11 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     isRudderUse = false;
                     break;
 
-//                case R.id.olTest:   //跳转到测试界面
-//                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-//                    startActivity(intent);
-//                    break;
+                case R.id.olTest:   //跳转到测试界面
+                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                    intent.putExtra("ip", ip);
+                    startActivity(intent);
+                    break;
 
             }
         }
@@ -680,6 +681,16 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         BluetoothCommand command = new BluetoothCommand();
         while (!isExit) {
             if (isRudderUse) {
+                if (mSpeedV < -100) {
+                    mSpeedV = -100;
+                } else if (mSpeedV > 100) {
+                    mSpeedV = 100;
+                }
+                if(mSpeedW < -200) {
+                    mSpeedW = -200;
+                } else if(mSpeedW >200) {
+                    mSpeedW = 200;
+                }
                 command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
                 sendInfo(command);
             }

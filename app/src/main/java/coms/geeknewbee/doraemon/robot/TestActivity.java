@@ -10,6 +10,8 @@ import com.google.gson.Gson;
 
 import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.communicate.BLE.BleManager;
+import coms.geeknewbee.doraemon.communicate.IControl;
+import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
@@ -30,11 +32,19 @@ public class TestActivity extends Activity implements View.OnClickListener, Runn
     private int speechW;
     private int speechV;
 
+    IControl iControl;
+    private String ip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_foot);
-
+        ip = getIntent().getStringExtra("ip");
+        if (ip == null) {
+            iControl = BleManager.getInstance();
+        } else {
+            iControl = SocketManager.getInstance();
+        }
         edW = (EditText) findViewById(R.id.et_w);
         edV = (EditText) findViewById(R.id.et_v);
         btSend = (Button) findViewById(R.id.bt_send);
@@ -100,8 +110,14 @@ public class TestActivity extends Activity implements View.OnClickListener, Runn
     private void sendInfo(BluetoothCommand command) {
         Gson gson = new Gson();
         String json = gson.toJson(command);
-        String jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
+        String jsonCommand = "";
+        if (ip == null) {
+            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
+        } else {
+            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.SEND_SOCKET_CONTROL
+                    + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
+        }
         ILog.e("向设备发送数据：" + jsonCommand);
-        RobotControlActivity.control.writeInfo(jsonCommand.getBytes(), 2);
+        iControl.writeInfo(jsonCommand.getBytes(), 2);
     }
 }

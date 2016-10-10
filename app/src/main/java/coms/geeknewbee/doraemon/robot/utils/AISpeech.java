@@ -40,8 +40,8 @@ public class AISpeech {
     private final AIASRListener aiasrListener;
     private RobotVoiceActivity activity;
 
-    public static final String APPKEY = "145938860085957a";// 测试激活码用的appkey
-    public static final String SECRETKEY = "f9e1be91df8510449cbe3818a46e2deb";// 添加您的SECRETKEY"
+    public static final String APPKEY = "147601158385960f";// 测试激活码用的appkey
+    public static final String SECRETKEY = "1898fa1e09c7fdb3dfd059b35fa22489";//添加您的SECRETKEY"
     AIAuthEngine mAuthEngine;
     public boolean isAuthority = false;
     private boolean isAuthrizing = false;
@@ -398,6 +398,11 @@ public class AISpeech {
         @Override
         public void onRecorderReleased() {
             LogUtils.e("检测到录音机停止\n");
+        }
+
+        @Override
+        public void onBufferReceived(byte[] bytes) {
+
         }
     }
 

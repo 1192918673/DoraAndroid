@@ -292,6 +292,10 @@ public class RobotVoiceActivity extends BaseActivity {
 //            LogUtils.e("检测到录音机停止\n");
         }
 
+        @Override
+        public void onBufferReceived(byte[] bytes) {
+
+        }
     }
 
     private void startListenTo() {
