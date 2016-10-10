@@ -135,8 +135,8 @@ public class EmotionActivity extends BaseActivity implements AdapterView.OnItemC
         BluetoothCommand command = new BluetoothCommand();
         command.setFaceName(GlobalContants.emotion[position]);
         command.setSound(GlobalContants.sound[position]);
-        initLines(GlobalContants.action[position]);
-        command.setLines(lines);
+//        initLines(GlobalContants.action[position]);
+//        command.setLines(lines);
         Gson gson = new Gson();
         String json = gson.toJson(command);
         String jsonCommand = "";

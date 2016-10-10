@@ -53,6 +53,12 @@ public class BluetoothCommand {
      * 表情名字
      */
     private String faceName;
+
+    /**
+     * 表情的循环次数
+     */
+    private int loop;
+
     /**
      * 声音
      */
@@ -64,6 +70,10 @@ public class BluetoothCommand {
 
     public void setFaceName(String faceName) {
         this.faceName = faceName;
+    }
+
+    public void setLoop(int loop) {
+        this.loop = loop;
     }
 
     public void setSound(String sound) {

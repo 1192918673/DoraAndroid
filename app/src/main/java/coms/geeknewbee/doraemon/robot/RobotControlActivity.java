@@ -18,6 +18,12 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.communicate.BLE.BleManager;
 import coms.geeknewbee.doraemon.communicate.IControl;
@@ -46,49 +52,55 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 
     private static final int ACT_INTRO = 6;
 
-    private static final int ACT_DANCE = 7;
+//    private static final int ACT_DANCE = 7;
 
-    private static final int ACT_MOVIE = 8;
+//    private static final int ACT_MOVIE = 8;
 
-    private static final int ACT_STOP = 9;
+//    private static final int ACT_STOP = 9;
 
-    private static final int ACT_HEAD_LEFT = 10;
+    private static final int ACT_HEAD_LEFT = 7;
 
-    private static final int ACT_HEAD_RIGHT = 11;
+    private static final int ACT_HEAD_RIGHT = 8;
 
-    private static final int ACT_HEAD_UP = 12;
+    private static final int ACT_HEAD_UP = 9;
 
-    private static final int ACT_HEAD_DOWN = 13;
+    private static final int ACT_HEAD_DOWN = 10;
 
-    private static final int ACT_ARM_LFRONT = 14;
+    private static final int ACT_ARM_LFRONT = 11;
 
-    private static final int ACT_ARM_LEND = 15;
+    private static final int ACT_ARM_LEND = 12;
 
-    private static final int ACT_ARM_LUP = 16;
+    private static final int ACT_ARM_LUP = 13;
 
-    private static final int ACT_ARM_LDOWN = 17;
+    private static final int ACT_ARM_LDOWN = 14;
 
-    private static final int ACT_ARM_RFRONT = 18;
+    private static final int ACT_ARM_RFRONT = 15;
 
-    private static final int ACT_ARM_REND = 19;
+    private static final int ACT_ARM_REND = 16;
 
-    private static final int ACT_ARM_RUP = 20;
+    private static final int ACT_ARM_RUP = 17;
 
-    private static final int ACT_ARM_RDOWN = 21;
+    private static final int ACT_ARM_RDOWN = 18;
 
-    private static final int ACT_HEAD_FRONT = 22;
+    private static final int ACT_HEAD_FRONT = 19;
 
-    private static final int ACT_SAY_HI = 23;
+    private static final int ACT_SAY_HI = 20;
 
-    private static final int ACT_END_SAY = 24;
+    private static final int ACT_END_SAY = 21;
 
-    private static final int ACT_READ_NEWS = 25;
+//    private static final int ACT_READ_NEWS = 22;
 
-    private static final int ACT_SLEEP = 26;
+    //    private static final int ACT_SLEEP = 26;
+    //呼和浩特使用
+    private static final int ACT_CAN_DO = 22;
+    private static final int ACT_HOW_TO_TEACH = 23;
+    private static final int ACT_FOR_OLD = 24;
+    private static final int ACT_HH = 25;
 
     /**
      * -----------------------组件----------------------
      **/
+
     Button olEmotion;
 
     Button olReadFace;
@@ -106,8 +118,6 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     Button olMovie;
 
     Button olAct;
-
-    Button olRead_news;
 
     Button olStop;
 
@@ -169,11 +179,11 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     private static final long SOCKET_PERIOD = 10000;
 
     int index = 0;
-
-    String cmd[] = {"move", "forward", "backward", "left", "right", "disconnect", "intro_self", "dance",
-            "movie", "stop", "head_left", "head_right", "head_up", "head_down", "l_arm_front",
-            "l_arm_end", "l_arm_up", "l_arm_down", "r_arm_front", "r_arm_end", "r_arm_up",
-            "r_arm_down", "head_front", "say_hi", "end_say", "read_news", "sleep"};
+    private List<String> lines;
+    //    String cmd[] = {"move", "forward", "backward", "left", "right", "disconnect", "intro_self", "dance", "movie", "stop",
+//            "head_left", "head_right", "head_up", "head_down", "l_arm_front", "l_arm_end", "l_arm_up", "l_arm_down", "r_arm_front", "r_arm_end",
+//            "r_arm_up", "r_arm_down", "head_front", "say_hi", "end_say", "read_news", "sleep", "can_do", "how_teach", "for_old",
+//            "hh"};
     private boolean isExit = false;
     private String ip;
 
@@ -183,7 +193,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         setContentView(R.layout.activity_robot_offline);
         ip = getIntent().getStringExtra("ip");
         assignViews();
-
+        lines = new ArrayList<>();
         showDialog("正在连接。。。。");
         if (controlInit()) {
             if (ip == null) {
@@ -217,7 +227,6 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         olDance = (Button) findViewById(R.id.olDance);
         olAct = (Button) findViewById(R.id.olAct);
         olMovie = (Button) findViewById(R.id.olMovie);
-        olRead_news = (Button) findViewById(R.id.olRead_news);
 
         olStop = (Button) findViewById(R.id.olStop);
         rlAct = (LinearLayout) findViewById(R.id.rlAct);
@@ -239,7 +248,6 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         olInfo.setOnClickListener(clickListener);
         olDance.setOnClickListener(clickListener);
         olAct.setOnClickListener(clickListener);
-        olRead_news.setOnClickListener(clickListener);
         rlAct.setOnClickListener(clickListener);
 
         olMovie.setOnClickListener(clickListener);
@@ -254,9 +262,15 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         bt_back.setOnClickListener(clickListener);
         bt_stop.setOnClickListener(clickListener);
 
-        findViewById(R.id.olTest).setOnClickListener(clickListener);
+        //呼和浩特添加
+        findViewById(R.id.olCanDo).setOnClickListener(clickListener);
+        findViewById(R.id.olHowToTeach).setOnClickListener(clickListener);
+        findViewById(R.id.olForOld).setOnClickListener(clickListener);
+        findViewById(R.id.olHH).setOnClickListener(clickListener);
+
         findViewById(R.id.olSleep).setOnClickListener(clickListener);
 
+//        findViewById(R.id.olTest).setOnClickListener(clickListener);
         findViewById(R.id.bt_left).setOnClickListener(clickListener);
         findViewById(R.id.bt_right).setOnClickListener(clickListener);
         findViewById(R.id.bt_stopFoot).setOnClickListener(clickListener);
@@ -293,6 +307,20 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     finish();
                     break;
 
+                //呼和浩特使用
+                case R.id.olCanDo:
+                    handler.sendEmptyMessage(ACT_CAN_DO);
+                    break;
+                case R.id.olHowToTeach:
+                    handler.sendEmptyMessage(ACT_HOW_TO_TEACH);
+                    break;
+                case R.id.olForOld:
+                    handler.sendEmptyMessage(ACT_FOR_OLD);
+                    break;
+                case R.id.olHH:
+                    handler.sendEmptyMessage(ACT_HH);
+                    break;
+
                 case R.id.olReadFace:    //添加人脸
                     Intent intent_addface = new Intent(RobotControlActivity.this, ReadFaceActivity.class);
                     startActivity(intent_addface);
@@ -317,23 +345,22 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     break;
 
                 case R.id.olDance:
-                    handler.sendEmptyMessage(ACT_DANCE);
+                    command.action = "dance";
+                    sendInfo(command);
                     break;
 
-                case R.id.olMovie:
-                    handler.sendEmptyMessage(ACT_MOVIE);
-                    break;
-
-                case R.id.olRead_news:
-                    handler.sendEmptyMessage(ACT_READ_NEWS);
-                    break;
+//                case R.id.olMovie:
+//                    handler.sendEmptyMessage(ACT_MOVIE);
+//                    break;
 
                 case R.id.olStop:
-                    handler.sendEmptyMessage(ACT_STOP);
+                    command.action = "stop";
+                    sendInfo(command);
                     break;
 
                 case R.id.olSleep:  //休眠
-                    handler.sendEmptyMessage(ACT_SLEEP);
+                    command.action = "sleep";
+                    sendInfo(command);
                     break;
 
                 case R.id.rlAct:// 控制界面
@@ -368,13 +395,11 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     mSpeedW = 0;
                     isRudderUse = true;
                     break;
-
                 case R.id.bt_back:    //点击后退
                     mSpeedV = -1000;
                     mSpeedW = 0;
                     isRudderUse = true;
                     break;
-
                 case R.id.bt_stop:  //点击停止
                     mSpeedV = 0;
                     mSpeedW = 0;
@@ -383,10 +408,10 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                     isRudderUse = false;
                     break;
 
-                case R.id.olTest:   //跳转到测试界面
-                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-                    startActivity(intent);
-                    break;
+//                case R.id.olTest:   //跳转到测试界面
+//                    Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+//                    startActivity(intent);
+//                    break;
 
             }
         }
@@ -492,12 +517,42 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         control.connect(ip);
     }
 
+    //初始化动作集合
+    private void initLines(int rawId) {
+        if (rawId == -1) {
+            return;
+        }
+        //清空动作集合
+        lines.clear();
+        //获取raw文件输入流
+        BufferedReader bufReader = new BufferedReader(new InputStreamReader(getResources().openRawResource(rawId)));
+        String line;
+        try {
+            while ((line = bufReader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     //  发送命令
     private void sendCMD() {
         ILog.e("正在发送控制命令");
         tt.showMessage("正在发送控制命令", tt.LONG);
         BluetoothCommand command = new BluetoothCommand();
-        command.action = cmd[index];
+//        command.action = cmd[index];
+        command.setFaceName(GlobalContants.img[index]);
+        command.setLoop(5);
+        command.setSound(GlobalContants.word[index]);
+        initLines(GlobalContants.act[index]);
+        command.setLines(lines);
         sendInfo(command);
     }
 

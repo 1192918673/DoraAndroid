@@ -40,8 +40,8 @@ public class AISpeech {
     private final AIASRListener aiasrListener;
     private RobotVoiceActivity activity;
 
-    private static final String APPKEY = "1462760478859598";// 测试激活码用的appkey
-    private static final String SECRETKEY = "c5443d07cec8872e7475c664768a78d0";//添加您的SECRETKEY"
+    public static final String APPKEY = "145938860085957a";// 测试激活码用的appkey
+    public static final String SECRETKEY = "f9e1be91df8510449cbe3818a46e2deb";// 添加您的SECRETKEY"
     AIAuthEngine mAuthEngine;
     public boolean isAuthority = false;
     private boolean isAuthrizing = false;
@@ -57,7 +57,7 @@ public class AISpeech {
         this.aiasrListener = aiasrListener;
         mAuthEngine = AIAuthEngine.getInstance(this.activity);
         try {
-            mAuthEngine.init(APPKEY, SECRETKEY, "0c8c-d47c-049d-2856");
+            mAuthEngine.init(APPKEY, SECRETKEY, "");
             if (!this.activity.getAiSpeechIsAuthority()) {
                 LogUtils.e("AISpeech未申请授权，发起申请");
                 authority();
@@ -118,6 +118,7 @@ public class AISpeech {
                 .init(this.activity, new AILocalGrammarListenerImpl(), APPKEY, SECRETKEY);
         mGrammarEngine.setDeviceId((String) Session.getSession().get(Session.DEVICE_ID));
     }
+
     /**
      * 初始化云端语音识别引擎
      */
@@ -166,6 +167,7 @@ public class AISpeech {
 
         LogUtils.e("initLocalTTSEngine完成...");
     }
+
     /**
      * 初始化本地合成引擎
      */
@@ -238,6 +240,7 @@ public class AISpeech {
         LogUtils.e("asr engine init 成功");
         mASREngine.start();
     }
+
     public void setASRListener(AIASRListener listener) {
         mASREngine.setListener(listener);
     }
@@ -279,6 +282,7 @@ public class AISpeech {
             LogUtils.e("合成完成");
         }
     }
+
     public void ASRStart() {
         mASREngine.start();
     }
@@ -307,6 +311,7 @@ public class AISpeech {
         // 启动语法编译引擎，更新资源
         mGrammarEngine.update();
     }
+
     /**
      * 语法编译引擎回调接口，用以接收相关事件
      */
@@ -333,6 +338,7 @@ public class AISpeech {
             }
         }
     }
+
     /**
      * 云端语音识别默认监听实现
      */
