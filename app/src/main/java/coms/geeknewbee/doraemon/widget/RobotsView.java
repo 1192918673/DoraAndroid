@@ -20,282 +20,290 @@ import coms.geeknewbee.doraemon.robot.bean.RobotBean;
 
 /**
  * 数字图片
- * @author Li Shaoqing
  *
+ * @author Li Shaoqing
  */
 public class RobotsView extends View {
 
-	/**----------------机器人数据---------------**/
+    /**
+     * ----------------机器人数据---------------
+     **/
 
-	List<RobotBean> robots;
+    List<RobotBean> robots;
 
-	int current;
+    int current;
 
-	String robotKey;
+    String robotKey;
 
-	/**----------------画布元素---------------**/
+    /**
+     * ----------------画布元素---------------
+     **/
 
-	Paint paint;
+    Paint paint;
 
-	float width;
+    float width;
 
-	float height;
+    float height;
 
-	float textSize;
+    float textSize;
 
-	float circleSize;
+    float circleSize;
 
-	float picSize;
+    float picSize;
 
-	float divSize;
+    float divSize;
 
-	int alpha = 51;
+    int alpha = 51;
 
-	/**----------------颜色值---------------**/
+    /**
+     * ----------------颜色值---------------
+     **/
 
-	// 文字颜色
-	int c_text = 0xffffffff;
+    // 文字颜色
+    int c_text = 0xffffffff;
 
-	// 圆形背景颜色
-	int c_bg = 0xff058cfe;
+    // 圆形背景颜色
+    int c_bg = 0xff058cfe;
 
-	Bitmap robot;
+    Bitmap robot;
 
-	Matrix matrix;
+    Matrix matrix;
 
-	float scale;
+    float scale;
 
-	/**----------------动画参数---------------**/
+    /**
+     * ----------------动画参数---------------
+     **/
 
-	boolean changeing = false;
+    boolean changeing = false;
 
-	int old;
+    int old;
 
-	int times = 20;
+    int times = 20;
 
-	Handler handler = new Handler();
+    Handler handler = new Handler();
 
-	public RobotsView(Context context, AttributeSet attr) {
-		super(context, attr);
-		robot = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_robot_dr);
-	}
+    public RobotsView(Context context, AttributeSet attr) {
+        super(context, attr);
+        robot = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_robot_dr);
+    }
 
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);// 重写onDraw方法
-		
-		if(width == 0){
-			width = getWidth();
-			height = getHeight();
-			paint = new Paint();
-			paint.setAntiAlias(true);// 去锯齿
-			paint.setFilterBitmap(true);
-			paint.setStyle(Style.FILL_AND_STROKE);
-			paint.setTextAlign(Align.CENTER);
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);// 重写onDraw方法
 
-			textSize = height / 8;
-			picSize = height / 2;
-			circleSize = height * 4 / 5;
-			divSize = textSize * 2;
+        if (width == 0) {
+            width = getWidth();
+            height = getHeight();
+            paint = new Paint();
+            paint.setAntiAlias(true);// 去锯齿
+            paint.setFilterBitmap(true);
+            paint.setStyle(Style.FILL_AND_STROKE);
+            paint.setTextAlign(Align.CENTER);
 
-			matrix = new Matrix();
-			scale = picSize / robot.getWidth();
-		}
+            textSize = height / 8;
+            picSize = height / 2;
+            circleSize = height * 4 / 5;
+            divSize = textSize * 2;
 
-		if(robots == null || robots.size() == 0){
-			// 绘制圆形
-			paint.setColor(c_bg);
-			paint.setAlpha(alpha);
-			canvas.drawCircle(width / 2, circleSize / 2, circleSize / 2, paint);
-			// 绘制图片
-			paint.setAlpha(alpha * 3);
-			matrix.setScale(scale, scale);
-			matrix.postTranslate(width / 2 - picSize / 2, circleSize / 2 - picSize / 2);
-			canvas.drawBitmap(robot, matrix, paint);
-			// 绘制文字
-			paint.setColor(c_text);
-			paint.setAlpha(255);
-			paint.setTextSize(textSize);
-			canvas.drawText("暂无设备", width / 2, height - 5, paint);
-		} else {
-			if(changeing){
-				int len = robots.size();
-				float d = (current - old) * (circleSize / 2 + divSize + picSize / 2) * times / 20;
-				for(int i = 0; i < len; i++){
-					if(Math.abs(current - i) * (picSize + divSize) + circleSize / 2 > width / 2){
-						continue;
-					} else if(current == i){
-						// 绘制圆形
-						paint.setColor(c_bg);
-						paint.setAlpha(alpha * (20 - times) / 20);
-						canvas.drawCircle(width / 2 + d, circleSize / 2, circleSize / 2, paint);
-						// 绘制图片
-						paint.setAlpha(255);
-						matrix.setScale(scale, scale);
-						matrix.postTranslate(width / 2 - picSize / 2 + d, circleSize / 2 - picSize / 2);
-						canvas.drawBitmap(robot, matrix, paint);
-						// 绘制文字
-						paint.setColor(c_text);
-						paint.setTextSize(textSize);
-						canvas.drawText("" + robots.get(i).getName(), width / 2 + d, height - 5, paint);
-					} else {
-						float div = 0;
-						if(i > current){
-							div = (i - current) * (picSize + divSize) - picSize / 2 + circleSize / 2;
-						} else {
-							div = (i - current) * (picSize + divSize) - circleSize / 2 + picSize / 2;
-						}
-						div += d;
-						if(i == old){
-							// 绘制圆形
-							paint.setColor(c_bg);
-							paint.setAlpha(alpha * times / 20);
-							canvas.drawCircle(width / 2 + div, circleSize / 2, circleSize / 2, paint);
-						}
-						// 绘制图片
-						paint.setAlpha(255 - 102 * Math.abs(current - i));
-						matrix.setScale(scale, scale);
-						matrix.postTranslate(width / 2 - picSize / 2 + div, circleSize / 2 - picSize / 2);
-						canvas.drawBitmap(robot, matrix, paint);
-						// 绘制文字
-						paint.setColor(c_text);
-						paint.setTextSize(textSize * 4 / 5);
-						paint.setAlpha(255 - 102 * Math.abs(current - i));
-						canvas.drawText("" + robots.get(i).getName(), width / 2 + div, height - 30, paint);
-					}
-				}
-			} else {
-				int len = robots.size();
-				for(int i = 0; i < len; i++){
-					if(Math.abs(current - i) * (picSize + divSize) + circleSize / 2 > width / 2){
-						continue;
-					} else if(current == i){
-						// 绘制圆形
-						paint.setColor(c_bg);
-						paint.setAlpha(alpha);
-						canvas.drawCircle(width / 2, circleSize / 2, circleSize / 2, paint);
-						// 绘制图片
-						paint.setAlpha(255);
-						matrix.setScale(scale, scale);
-						matrix.postTranslate(width / 2 - picSize / 2, circleSize / 2 - picSize / 2);
-						canvas.drawBitmap(robot, matrix, paint);
-						// 绘制文字
-						paint.setColor(c_text);
-						paint.setTextSize(textSize);
-						canvas.drawText("" + robots.get(i).getName(), width / 2, height - 5, paint);
-					} else {
-						// 绘制图片
-						paint.setAlpha(255 - 102 * Math.abs(current - i));
-						float div = 0;
-						if(i > current){
-							div = (i - current) * (picSize + divSize) - picSize / 2 + circleSize / 2;
-						} else {
-							div = (i - current) * (picSize + divSize) - circleSize / 2 + picSize / 2;
-						}
-						matrix.setScale(scale, scale);
-						matrix.postTranslate(width / 2 - picSize / 2 + div, circleSize / 2 - picSize / 2);
-						canvas.drawBitmap(robot, matrix, paint);
-						// 绘制文字
-						paint.setColor(c_text);
-						paint.setTextSize(textSize * 4 / 5);
-						paint.setAlpha(255 - 102 * Math.abs(current - i));
-						canvas.drawText("" + robots.get(i).getName(), width / 2 + div, height - 30, paint);
-					}
-				}
-			}
-		}
-	}
+            matrix = new Matrix();
+            scale = picSize / robot.getWidth();
+        }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if(changeing){
+        if (robots == null || robots.size() == 0) {
+            // 绘制圆形
+            paint.setColor(c_bg);
+            paint.setAlpha(alpha);
+            canvas.drawCircle(width / 2, circleSize / 2, circleSize / 2, paint);
+            // 绘制图片
+            paint.setAlpha(alpha * 3);
+            matrix.setScale(scale, scale);
+            matrix.postTranslate(width / 2 - picSize / 2, circleSize / 2 - picSize / 2);
+            canvas.drawBitmap(robot, matrix, paint);
+            // 绘制文字
+            paint.setColor(c_text);
+            paint.setAlpha(255);
+            paint.setTextSize(textSize);
+            canvas.drawText("暂无设备", width / 2, height - 5, paint);
+        } else {
+            if (changeing) {
+                int len = robots.size();
+                float d = (current - old) * (circleSize / 2 + divSize + picSize / 2) * times / 20;
+                for (int i = 0; i < len; i++) {
+                    if (Math.abs(current - i) * (picSize + divSize) + circleSize / 2 > width / 2) {
+                        continue;
+                    } else if (current == i) {
+                        // 绘制圆形
+                        paint.setColor(c_bg);
+                        paint.setAlpha(alpha * (20 - times) / 20);
+                        canvas.drawCircle(width / 2 + d, circleSize / 2, circleSize / 2, paint);
+                        // 绘制图片
+                        paint.setAlpha(255);
+                        matrix.setScale(scale, scale);
+                        matrix.postTranslate(width / 2 - picSize / 2 + d, circleSize / 2 - picSize / 2);
+                        canvas.drawBitmap(robot, matrix, paint);
+                        // 绘制文字
+                        paint.setColor(c_text);
+                        paint.setTextSize(textSize);
+                        canvas.drawText("" + robots.get(i).getName(), width / 2 + d, height - 5, paint);
+                    } else {
+                        float div = 0;
+                        if (i > current) {
+                            div = (i - current) * (picSize + divSize) - picSize / 2 + circleSize / 2;
+                        } else {
+                            div = (i - current) * (picSize + divSize) - circleSize / 2 + picSize / 2;
+                        }
+                        div += d;
+                        if (i == old) {
+                            // 绘制圆形
+                            paint.setColor(c_bg);
+                            paint.setAlpha(alpha * times / 20);
+                            canvas.drawCircle(width / 2 + div, circleSize / 2, circleSize / 2, paint);
+                        }
+                        // 绘制图片
+                        paint.setAlpha(255 - 102 * Math.abs(current - i));
+                        matrix.setScale(scale, scale);
+                        matrix.postTranslate(width / 2 - picSize / 2 + div, circleSize / 2 - picSize / 2);
+                        canvas.drawBitmap(robot, matrix, paint);
+                        // 绘制文字
+                        paint.setColor(c_text);
+                        paint.setTextSize(textSize * 4 / 5);
+                        paint.setAlpha(255 - 102 * Math.abs(current - i));
+                        canvas.drawText("" + robots.get(i).getName(), width / 2 + div, height - 30, paint);
+                    }
+                }
+            } else {
+                int len = robots.size();
+                for (int i = 0; i < len; i++) {
+                    if (Math.abs(current - i) * (picSize + divSize) + circleSize / 2 > width / 2) {
+                        continue;
+                    } else if (current == i) {
+                        // 绘制圆形
+                        paint.setColor(c_bg);
+                        paint.setAlpha(alpha);
+                        canvas.drawCircle(width / 2, circleSize / 2, circleSize / 2, paint);
+                        // 绘制图片
+                        paint.setAlpha(255);
+                        matrix.setScale(scale, scale);
+                        matrix.postTranslate(width / 2 - picSize / 2, circleSize / 2 - picSize / 2);
+                        canvas.drawBitmap(robot, matrix, paint);
+                        // 绘制文字
+                        paint.setColor(c_text);
+                        paint.setTextSize(textSize);
+                        canvas.drawText("" + robots.get(i).getName(), width / 2, height - 5, paint);
+                    } else {
+                        // 绘制图片
+                        paint.setAlpha(255 - 102 * Math.abs(current - i));
+                        float div = 0;
+                        if (i > current) {
+                            div = (i - current) * (picSize + divSize) - picSize / 2 + circleSize / 2;
+                        } else {
+                            div = (i - current) * (picSize + divSize) - circleSize / 2 + picSize / 2;
+                        }
+                        matrix.setScale(scale, scale);
+                        matrix.postTranslate(width / 2 - picSize / 2 + div, circleSize / 2 - picSize / 2);
+                        canvas.drawBitmap(robot, matrix, paint);
+                        // 绘制文字
+                        paint.setColor(c_text);
+                        paint.setTextSize(textSize * 4 / 5);
+                        paint.setAlpha(255 - 102 * Math.abs(current - i));
+                        canvas.drawText("" + robots.get(i).getName(), width / 2 + div, height - 30, paint);
+                    }
+                }
+            }
+        }
+    }
 
-		} else if(event.getAction() == MotionEvent.ACTION_UP
-				|| event.getAction() == MotionEvent.ACTION_CANCEL){
-			if(robots != null || robots.size() > 0){
-				int len = robots.size();
-				for(int i = 0; i < len; i++){
-					if(Math.abs(current - i) * (picSize + divSize) + circleSize / 2 > width / 2){
-						continue;
-					} else if(current == i){
-						continue;
-					} else {
-						float div = 0;
-						if(i > current){
-							div = (i - current) * (picSize + divSize) - picSize / 2 + circleSize / 2;
-						} else {
-							div = (i - current) * (picSize + divSize) - circleSize / 2 + picSize / 2;
-						}
-						if(event.getY() < height - 30
-								&& event.getX() > width / 2 - picSize / 2 + div
-								&& event.getX() < width / 2 + picSize / 2 + div){
-							old = current;
-							current = i;
-							changeing = true;
-							times = 20;
-							handler.postDelayed(update, 25);
-							postInvalidate();
-							break;
-						}
-					}
-				}
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (changeing) {
 
-	Runnable update = new Runnable() {
-		@Override
-		public void run() {
-			times--;
-			if(times > 0){
-				postInvalidate();
-				handler.postDelayed(update, 25);
-			} else {
-				changeing = false;
-				postInvalidate();
-			}
-		}
-	};
+        } else if (event.getAction() == MotionEvent.ACTION_UP
+                || event.getAction() == MotionEvent.ACTION_CANCEL) {
+            if (robots != null && robots.size() > 0) {
+                int len = robots.size();
+                for (int i = 0; i < len; i++) {
+                    if (Math.abs(current - i) * (picSize + divSize) + circleSize / 2 > width / 2) {
+                        continue;
+                    } else if (current == i) {
+                        continue;
+                    } else {
+                        float div = 0;
+                        if (i > current) {
+                            div = (i - current) * (picSize + divSize) - picSize / 2 + circleSize / 2;
+                        } else {
+                            div = (i - current) * (picSize + divSize) - circleSize / 2 + picSize / 2;
+                        }
+                        if (event.getY() < height - 30
+                                && event.getX() > width / 2 - picSize / 2 + div
+                                && event.getX() < width / 2 + picSize / 2 + div) {
+                            old = current;
+                            current = i;
+                            changeing = true;
+                            times = 20;
+                            handler.postDelayed(update, 25);
+                            postInvalidate();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
-	public RobotBean getRobot() {
-		if(robots == null){
-			return null;
-		}
-		return robots.get(current);
-	}
+    Runnable update = new Runnable() {
+        @Override
+        public void run() {
+            times--;
+            if (times > 0) {
+                postInvalidate();
+                handler.postDelayed(update, 25);
+            } else {
+                changeing = false;
+                postInvalidate();
+            }
+        }
+    };
 
-	public void setRobotKey(String robotKey) {
-		this.robotKey = robotKey;
-		current = 0;
-		if(robotKey != null && robots != null && robots.size() > 0){
-			int len = robots.size();
-			for(int i = 0; i < len; i++){
-				if(robotKey.equals("" + robots.get(i).getId())){
-					current = i;
-					break;
-				}
-			}
-		}
-		postInvalidate();
-	}
+    public RobotBean getRobot() {
+        if (robots == null) {
+            return null;
+        }
+        return robots.get(current);
+    }
 
-	public int getCurrent() {
-		return current;
-	}
+    public void setRobotKey(String robotKey) {
+        this.robotKey = robotKey;
+        current = 0;
+        if (robotKey != null && robots != null && robots.size() > 0) {
+            int len = robots.size();
+            for (int i = 0; i < len; i++) {
+                if (robotKey.equals("" + robots.get(i).getId())) {
+                    current = i;
+                    break;
+                }
+            }
+        }
+        postInvalidate();
+    }
 
-	public void setRobots(List<RobotBean> robots) {
-		this.robots = robots;
-		current = 0;
-		if(robotKey != null && robots != null && robots.size() > 0){
-			int len = robots.size();
-			for(int i = 0; i < len; i++){
-				if(robotKey.equals("" + robots.get(i).getId())){
-					current = i;
-					break;
-				}
-			}
-		}
-		postInvalidate();
-	}
+    public int getCurrent() {
+        return current;
+    }
+
+    public void setRobots(List<RobotBean> robots) {
+        this.robots = robots;
+        current = 0;
+        if (robotKey != null && robots != null && robots.size() > 0) {
+            int len = robots.size();
+            for (int i = 0; i < len; i++) {
+                if (robotKey.equals("" + robots.get(i).getId())) {
+                    current = i;
+                    break;
+                }
+            }
+        }
+        postInvalidate();
+    }
 }
