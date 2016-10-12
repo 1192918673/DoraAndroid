@@ -10,7 +10,7 @@ import coms.geeknewbee.doraemon.R;
 public class GlobalContants {
 
     //蓝牙名
-    public static final String ROBOT_BT_NAME = "Doraemon";   //DoraemonLiXiang  //DoraemonTest    //DoraemonTestLX
+//    public static final String ROBOT_BT_NAME = "DoraemonTestLIX";   //DoraemonLiXiang  //DoraemonTest    //DoraemonTestLX
 
     //发送蓝牙命令的前后缀
     public static final String COMMAND_ROBOT_PREFIX = new String(new byte[]{0x02});

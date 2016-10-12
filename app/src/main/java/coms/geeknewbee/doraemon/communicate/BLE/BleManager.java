@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import java.util.List;
 import java.util.UUID;
 
+import coms.geeknewbee.doraemon.BuildConfig;
 import coms.geeknewbee.doraemon.communicate.IControl;
 import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.utils.ILog;
@@ -25,7 +26,7 @@ import coms.geeknewbee.doraemon.utils.ILog;
 /**
  * Created by GYY on 2016/9/9.
  */
-public class BleManager implements IControl{
+public class BleManager implements IControl {
     public static boolean isConnect;
     private static BleManager bleManager = new BleManager();
 
@@ -142,11 +143,11 @@ public class BleManager implements IControl{
             ILog.e(str);
 
             //  如果扫描到的设备名字和给定的机器猫名一致，将设备返回
-            if (GlobalContants.ROBOT_BT_NAME.equalsIgnoreCase(device.getName())) {
+            if (BuildConfig.BLUETOOTH_NAME.equalsIgnoreCase(device.getName())) {
                 BleManager.device = device;
                 //蓝牙类型
                 int type = device.getType();
-                ILog.e(device.getName() + "---" + GlobalContants.ROBOT_BT_NAME + "----" + type);
+                ILog.e(device.getName() + "---" + BuildConfig.BLUETOOTH_NAME + "----" + type);
                 if (type == BluetoothDevice.DEVICE_TYPE_LE) {
                     //  扫描到所需设备，停止扫描
                     stopScan();
@@ -261,6 +262,7 @@ public class BleManager implements IControl{
 
     /**
      * 向蓝牙设备写信息
+     *
      * @param data 写入的信息
      * @param type 发送的类型，1：设置wifi；2：发送控制命令
      */

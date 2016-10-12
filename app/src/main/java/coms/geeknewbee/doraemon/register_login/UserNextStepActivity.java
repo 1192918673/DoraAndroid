@@ -86,17 +86,17 @@ public class UserNextStepActivity extends BaseActivity implements IUserNextStepV
     View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if(hasFocus){
+            if (hasFocus) {
                 skm.show();
             }
         }
     };
 
     //计时器
-    private CountDownTimer timer = new CountDownTimer(60000,1000) {
+    private CountDownTimer timer = new CountDownTimer(60000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            btGetcodeId.setText(millisUntilFinished/1000+"秒后重新获取");
+            btGetcodeId.setText(millisUntilFinished / 1000 + "秒后重新获取");
         }
 
         @Override
@@ -122,11 +122,11 @@ public class UserNextStepActivity extends BaseActivity implements IUserNextStepV
                 btGetcodeId.setEnabled(false);
                 btGetcodeId.setTextColor(Color.GRAY);
                 mUserRegisterPresenter.getCode();
-                timer.start();//计时器
-                skm.hide();
-                showDialog("正在发送验证码……");
-                etRegisterCodeId.setEnabled(true);
-                etRegisterCodeId.setFocusable(true);
+//                timer.start();//计时器
+//                skm.hide();
+//                showDialog("正在发送验证码……");
+//                etRegisterCodeId.setEnabled(true);
+//                etRegisterCodeId.setFocusable(true);
             }
         } else {
             //输入为空
@@ -136,7 +136,7 @@ public class UserNextStepActivity extends BaseActivity implements IUserNextStepV
     }
 
     private void isInvalidInput() {
-        if (!TextUtils.isEmpty(getMobile())||!TextUtils.isEmpty(getCode())) {
+        if (!TextUtils.isEmpty(getMobile()) || !TextUtils.isEmpty(getCode())) {
             if (!StringHandler.testPhone(getMobile())) {
                 //手机号格式不正确
                 showMsg("输入错误", "请正确输入手机号");
@@ -162,13 +162,22 @@ public class UserNextStepActivity extends BaseActivity implements IUserNextStepV
     public void setCode(String code) {
         //SystemClock.sleep(2000);
         hideDialog();
-        if(code != null && code.length() > 0)
+        if (code != null && code.length() > 0)
             etRegisterCodeId.setText(code);
     }
 
     @Override
     public String getCode() {
         return etRegisterCodeId.getText().toString().trim();
+    }
+
+    @Override
+    public void getCodeSuccess() {
+        timer.start();//计时器
+        skm.hide();
+        showDialog("正在发送验证码……");
+        etRegisterCodeId.setEnabled(true);
+        etRegisterCodeId.setFocusable(true);
     }
 
 

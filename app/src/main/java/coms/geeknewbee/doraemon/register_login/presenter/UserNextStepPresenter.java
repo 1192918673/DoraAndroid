@@ -35,6 +35,7 @@ public class UserNextStepPresenter {
                     @Override
                     public void run() {
                         userRegisterView.setCode(code);
+                        userRegisterView.getCodeSuccess();
                     }
                 });
             }

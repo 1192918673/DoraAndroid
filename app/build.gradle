@@ -1,6 +1,16 @@
 //声明是Android程序
 apply plugin: 'com.android.application'
 
+def Properties localProps = new Properties()
+try {
+    localProps.load(new FileInputStream(file('local.properties')))
+} catch (Exception e) {
+}
+
+ext {
+    BLNAME = '"Doraemon"'
+}
+
 android {
     //编译SDK的版本
     compileSdkVersion 22
@@ -17,8 +27,8 @@ android {
         multiDexEnabled true
         ndk { abiFilters 'armeabi' }
 
-//        buildConfigField "String", "BLUETOOTH_NAME", localProps["bluetoothName"] == null ? "Doraemon" : localProps["bluetoothName"]
-//        println "BLUETOOTH_NAME:" + (localProps["bluetoothName"] == null ? BLNAME : localProps["bluetoothName"])
+        buildConfigField "String", "BLUETOOTH_NAME", localProps["bluetoothName"] == null ? "Doraemon" : localProps["bluetoothName"]
+        println "BLUETOOTH_NAME:" + (localProps["bluetoothName"] == null ? BLNAME : localProps["bluetoothName"])
     }
 
     signingConfigs {
@@ -37,6 +47,7 @@ android {
             zipAlignEnabled true
             shrinkResources true // 是否去除无效的资源文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BLUETOOTH_NAME", BLNAME
         }
 
         debug {

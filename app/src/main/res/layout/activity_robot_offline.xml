@@ -37,7 +37,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <Button
@@ -70,7 +70,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
             <Button
@@ -103,7 +103,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
             <Button
@@ -131,6 +131,7 @@
         </LinearLayout>
 
         <View
+            android:layout_marginTop="3dp"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="#ddd" />
@@ -141,7 +142,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
             <Button
@@ -176,7 +177,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
             <Button
@@ -226,7 +227,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
             <Button
@@ -262,7 +263,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:background="#00A0E8"
             android:gravity="center"
             android:text="人脸识别"
@@ -277,7 +278,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:background="#00A0E8"
             android:gravity="center"
             android:text="测试"
