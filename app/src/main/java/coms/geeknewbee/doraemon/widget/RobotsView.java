@@ -267,7 +267,7 @@ public class RobotsView extends View {
     };
 
     public RobotBean getRobot() {
-        if (robots == null) {
+        if (robots == null || robots.size() == 0) {
             return null;
         }
         return robots.get(current);
