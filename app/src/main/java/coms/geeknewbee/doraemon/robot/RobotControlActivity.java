@@ -176,7 +176,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     // Stops scanning and connect after 30 seconds.
     private static final long SCAN_PERIOD = 30000;
     // socket连接时长10s
-    private static final long SOCKET_PERIOD = 10000;
+    private static final long SOCKET_PERIOD = 20000;
 
     int index = 0;
     private List<String> lines;
@@ -581,7 +581,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         @Override
         public void run() {
             hideDialog();
-            if (linkDevice == null) {
+            if (ip == null && linkDevice == null) {
                 control.stopScan();
                 tt.showMessage("未检测到可控制设备", tt.SHORT);
                 finish();
@@ -686,9 +686,9 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                 } else if (mSpeedV > 100) {
                     mSpeedV = 100;
                 }
-                if(mSpeedW < -200) {
+                if (mSpeedW < -200) {
                     mSpeedW = -200;
-                } else if(mSpeedW >200) {
+                } else if (mSpeedW > 200) {
                     mSpeedW = 200;
                 }
                 command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));

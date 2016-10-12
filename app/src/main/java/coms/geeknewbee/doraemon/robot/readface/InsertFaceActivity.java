@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.robot.readface.bean.ReadFaceInitParams;
 import coms.geeknewbee.doraemon.robot.RobotActivity;
 import coms.geeknewbee.doraemon.utils.ILog;
+import dou.utils.BitmapUtil;
 import dou.utils.DLog;
 import mobile.ReadFace.YMFace;
 import mobile.ReadFace.YMFaceTrack;
@@ -56,6 +59,8 @@ public class InsertFaceActivity extends FaceBaseActivity {
     private boolean isEnter;
     //当前是否在发送人脸信息
     private boolean isSending;
+    //是否保存图片
+    private boolean isSaveImg = false;
 
     /**
      * -----------------------使用socket返回的信息----------------------
@@ -64,6 +69,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
     private final int MSG_WHAT_START_ADD_FACE = 1002;
     private final int MSG_WHAT_ADD_FACE = 1003;
     private final int MSG_WHAT_ADD_NAME = 1004;
+    private final int MSG_WHAT_ADD_PHOTO = 1005;
 
     private Handler handler = new Handler() {
         @Override
@@ -90,7 +96,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
                         finish();
                     }
                     break;
-                case MSG_WHAT_ADD_FACE: //人脸是否添加成功
+                case MSG_WHAT_ADD_PHOTO: //人脸是否添加成功
                     if (data.equals("1")) {
                         addCount++;
                         switch (addCount) {
@@ -148,6 +154,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
             }
         }
     };
+    private int i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +168,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
         initCamera();
         showFps(false);
         initView();
-
+        i = 1;
         isEnter = true;
         showDialog("正在通知哆啦A梦要添加人脸");
         handler.postDelayed(finish, OVERTIME);
@@ -248,15 +255,13 @@ public class InsertFaceActivity extends FaceBaseActivity {
         isSending = true;
         byte[] prefix = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET.getBytes();
         byte[] suffix = GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET.getBytes();
-        byte[] code = new byte[]{0x33};
+        byte[] code = new byte[]{0x35};
 
-
-        ByteArrayOutputStream outstr = new ByteArrayOutputStream();
-        YuvImage yuvimage = new YuvImage(bytes, ImageFormat.NV21, 640, 480, null);
-        yuvimage.compressToJpeg(new Rect(0, 0, yuvimage.getWidth(), yuvimage.getHeight()), 100, outstr);
-        Bitmap bmp = BitmapFactory.decodeByteArray(outstr.toByteArray(), 0, outstr.size());
-        List<YMFace> ymFaces = faceTrack.trackMulti(bmp);
-
+//        ByteArrayOutputStream outstr = new ByteArrayOutputStream();
+//        YuvImage yuvimage = new YuvImage(bytes, ImageFormat.NV21, 640, 480, null);
+//        yuvimage.compressToJpeg(new Rect(0, 0, yuvimage.getWidth(), yuvimage.getHeight()), 100, outstr);
+//        Bitmap bmp = BitmapFactory.decodeByteArray(outstr.toByteArray(), 0, outstr.size());
+//        List<YMFace> ymFaces = faceTrack.trackMulti(bmp);
 
         byte[] send = new byte[prefix.length + suffix.length + code.length + bytes.length];
         System.arraycopy(prefix, 0, send, 0, prefix.length);
@@ -268,11 +273,79 @@ public class InsertFaceActivity extends FaceBaseActivity {
         socketManager.writeInfo(send, 2);
     }
 
+    private void cut(byte[] data, float[] rect) {
+        //转为图片，裁剪后存入流中
+//        YuvImage image = new YuvImage(data, ImageFormat.NV21, ih, iw, null);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        image.compressToJpeg(new Rect(0, 0, image.getWidth(), image.getHeight()), 90, baos);
+//        try {
+//            image.compressToJpeg(new Rect((int) Math.ceil(rect[0] * scale_bit), (int) Math.floor(rect[1] * scale_bit),
+//                    (int) Math.ceil((rect[0] + rect[2]) * scale_bit), (int) Math.ceil((rect[1] + rect[3]) * scale_bit)), 90, baos);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        byte[] bytes = baos.toByteArray();
+//        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, baos.size());
+//        List<YMFace> ymFaces = faceTrack.detectMultiBitmap(bmp);
+//        if (ymFaces != null && ymFaces.size() > 0) {
+//            ILog.e("剪裁后识别到人脸");
+//            addFace(bytes);
+//        } else {
+//            ILog.e("剪裁后识别不到人脸");
+//        }
+//        //  将byte[]转为bitmap
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+        //  对图片进行裁剪
+//        Bitmap newBitmap = Bitmap.createBitmap(bitmap, (int) Math.ceil(rect[0]), (int) Math.floor(rect[1]),
+//                (int) Math.ceil(rect[2]), (int) Math.ceil(rect[3]));
+
+        //  将byte[]转为bitmap
+        ByteArrayOutputStream outstr = new ByteArrayOutputStream();
+        Rect rect1 = new Rect(0, 0, iw, ih);
+        YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, iw, ih, null);
+        yuvimage.compressToJpeg(rect1, 100, outstr);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(outstr.toByteArray(), 0, outstr.size());
+        //  图片压缩
+        Bitmap newBitmap = BitmapUtil.scaleImage(bitmap, 0.1f, 0.1f);
+        //人脸识别
+        List<YMFace> ymFaces = faceTrack.detectMultiBitmap(newBitmap);
+        //识别成功
+        if (ymFaces != null && ymFaces.size() != 0) {
+            Toast.makeText(this, "识别到人脸信息，正在进行添加", Toast.LENGTH_SHORT).show();
+            ByteArrayOutputStream output = new ByteArrayOutputStream();//初始化一个流对象
+            if (isSaveImg) {
+                try {
+                    FileOutputStream fos = new FileOutputStream("/storage/emulated/0/DCIM/Camera/" + i + ".jpg");
+                    i++;
+                    newBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            newBitmap.compress(Bitmap.CompressFormat.PNG, 100, output);//把bitmap100%高质量压缩 到 output对象里
+            bitmap.recycle();
+            newBitmap.recycle();//自由选择是否进行回收
+            byte[] bytes = output.toByteArray();//转换成功了
+            try {
+                output.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //发送人脸信息
+            addFace(bytes);
+        } else {
+            isSending = false;
+        }
+    }
+
     private void initModel2(List<YMFace> faces, final byte[] bytes) {
         //rule 1 人脸框在指定框内
         if (!isCenter(faces.get(0).getRect())) {
             return;
         }
+        // 获取人脸框的矩形区域
+        float[] rect = faces.get(0).getRect();
         //rule 2 第一张图片是正脸的
         switch (addCount) {
             case 0:
@@ -282,7 +355,8 @@ public class InsertFaceActivity extends FaceBaseActivity {
                         tipSetText("正在添加第一张人脸");
                         showDialog("正在添加第一张人脸");
                         handler.postDelayed(finish, OVERTIME);
-                        addFace(bytes);
+                        cut(bytes, rect);
+//                        addFace(bytes);
                     }
                 } else {
                     tipSetText("请正脸面对");
@@ -295,7 +369,8 @@ public class InsertFaceActivity extends FaceBaseActivity {
                         tipSetText("正在添加第二张人脸");
                         showDialog("正在添加第二张人脸");
                         handler.postDelayed(finish, OVERTIME);
-                        addFace(bytes);
+                        cut(bytes, rect);
+//                        addFace(bytes);
                     }
                 } else {
                     tipSetText("请侧脸20°");
@@ -309,7 +384,8 @@ public class InsertFaceActivity extends FaceBaseActivity {
                         tipSetText("正在添加第三张人脸");
                         showDialog("正在添加第三张人脸");
                         handler.postDelayed(finish, OVERTIME);
-                        addFace(bytes);
+                        cut(bytes, rect);
+//                        addFace(bytes);
                     }
                 } else {
                     tipSetText("请抬头20°");
@@ -322,7 +398,8 @@ public class InsertFaceActivity extends FaceBaseActivity {
                         tipSetText("正在添加第四张人脸");
                         showDialog("正在添加第四张人脸");
                         handler.postDelayed(finish, OVERTIME);
-                        addFace(bytes);
+                        cut(bytes, rect);
+//                        addFace(bytes);
                     }
                 } else {
                     tipSetText("请低头20°");

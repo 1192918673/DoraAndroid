@@ -174,16 +174,28 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
-                //进行人脸识别
                 Bitmap bitmap = BitmapUtil.decodeScaleImage(path, 640, 640);
-                List<YMFace> ymFaces = faceTrack.detectMultiBitmap(bitmap);
+//                List<YMFace> ymFaces = faceTrack.detectMultiBitmap(bitmap);
+                //压缩图片
+                Bitmap newBitmap = BitmapUtil.scaleImage(bitmap, 0.4f, 0.4f);
+                //进行人脸识别
+                List<YMFace> ymFaces = faceTrack.detectMultiBitmap(newBitmap);
                 //识别成功
                 if (ymFaces != null && ymFaces.size() != 0) {
                     Toast.makeText(this, "识别到人脸信息，正在进行添加", Toast.LENGTH_SHORT).show();
-
+//                    float[] rect = ymFaces.get(0).getRect();
+//                    Bitmap newBitmap = Bitmap.createBitmap(bitmap, (int) Math.ceil(rect[0] / 2), (int) Math.ceil(rect[1] / 3),
+//                            (int) Math.ceil(rect[2] + rect[0]), (int) Math.ceil(rect[3] + rect[1]));
+//                    try {
+//                        FileOutputStream fos = new FileOutputStream("/storage/emulated/0/DCIM/Camera/1.jpg");
+//                        newBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
                     ByteArrayOutputStream output = new ByteArrayOutputStream();//初始化一个流对象
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);//把bitmap100%高质量压缩 到 output对象里
+                    newBitmap.compress(Bitmap.CompressFormat.PNG, 100, output);//把bitmap100%高质量压缩 到 output对象里
                     bitmap.recycle();//自由选择是否进行回收
+                    newBitmap.recycle();
                     byte[] bytes = output.toByteArray();//转换成功了
                     try {
                         output.close();
