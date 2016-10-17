@@ -337,6 +337,14 @@ public class FaceTimeActivity extends BaseActivity implements IUserView {
     };
 
     /**
+     * 返回到IndexActivity
+     */
+    public void backOff() {
+        startActivity(new Intent(this, IndexActivity.class));
+        finish();
+    }
+
+    /**
      * 挂断电话
      */
     private void shutDown() {
@@ -346,7 +354,7 @@ public class FaceTimeActivity extends BaseActivity implements IUserView {
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
         } finally {
-            finish();
+            backOff();
         }
     }
 

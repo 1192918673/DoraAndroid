@@ -79,12 +79,20 @@ public class LearnEnActivity extends BaseActivity implements ILearnEnView {
         refreshableView.setAdapter(adapter);
     }
 
+    /**
+     * 返回到IndexActivity
+     */
+    public void backOff() {
+        startActivity(new Intent(this, IndexActivity.class));
+        finish();
+    }
+
     private void initListener() {
         //返回
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                backOff();
             }
         });
         lvList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -100,6 +108,11 @@ public class LearnEnActivity extends BaseActivity implements ILearnEnView {
                 presenter.retrieve();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        backOff();
     }
 
     @Override
@@ -127,11 +140,11 @@ public class LearnEnActivity extends BaseActivity implements ILearnEnView {
     public void transfer(List<LearnEnBean> list) {
         hideDialog();
         lvList.onRefreshComplete();
-        if(mList != null && page == 1){
+        if (mList != null && page == 1) {
             mList.clear();
         }
-        if(list != null && list.size() > 0){
-            if(page == 1){
+        if (list != null && list.size() > 0) {
+            if (page == 1) {
                 mList = list;
                 lvList.setMode(PullToRefreshBase.Mode.BOTH);
             } else {
@@ -139,14 +152,14 @@ public class LearnEnActivity extends BaseActivity implements ILearnEnView {
                 lvList.setMode(PullToRefreshBase.Mode.BOTH);
             }
         } else {
-            if(mList != null && mList.size() > 0){
+            if (mList != null && mList.size() > 0) {
                 lvList.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
             } else {
                 // 没有数据
                 lvList.setMode(PullToRefreshBase.Mode.DISABLED);
             }
         }
-        if(mList != null && mList.size() > 0){
+        if (mList != null && mList.size() > 0) {
             lvList.setVisibility(View.VISIBLE);
             empty.setVisibility(View.GONE);
         } else {
@@ -168,7 +181,7 @@ public class LearnEnActivity extends BaseActivity implements ILearnEnView {
 
         @Override
         public int getCount() {
-            if(mList == null){
+            if (mList == null) {
                 return 0;
             }
             return mList.size();

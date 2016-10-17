@@ -24,6 +24,7 @@ import coms.geeknewbee.doraemon.box.storeroom.presenter.StoreRoomPresenter;
 import coms.geeknewbee.doraemon.box.storeroom.view.IStoreRoomView;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
+import coms.geeknewbee.doraemon.index.IndexActivity;
 
 /**
  * Created by chen on 2016/4/8
@@ -81,7 +82,7 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
     @Override
     protected void onResume() {
         super.onResume();
-        if(session.contains("good_refresh")){
+        if (session.contains("good_refresh")) {
             showDialog("正在刷新储物记录……");
             session.remove("good_refresh");
             page = 1;
@@ -89,20 +90,28 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
         }
     }
 
+    /**
+     * 返回到IndexActivity
+     */
+    public void backOff() {
+        startActivity(new Intent(this, IndexActivity.class));
+        finish();
+    }
+
     private void initListener() {
         mLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!edit){
+                if (!edit) {
                     return;
                 }
 
                 int num = new Long(id).intValue();
 
-                if(selected.contains((Integer)mList.get(num).getId())){
-                    selected.remove((Integer)mList.get(num).getId());
+                if (selected.contains((Integer) mList.get(num).getId())) {
+                    selected.remove((Integer) mList.get(num).getId());
                 } else {
-                    selected.add((Integer)mList.get(num).getId());
+                    selected.add((Integer) mList.get(num).getId());
                 }
 
                 adapter.notifyDataSetChanged();
@@ -112,7 +121,7 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                backOff();
             }
         });
         //编辑
@@ -120,7 +129,7 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
             @Override
             public void onClick(View v) {
                 edit = !edit;
-                if(edit){
+                if (edit) {
                     strIds = "";
                     selected.clear();
                     //1.更新右上角TextView的值
@@ -143,7 +152,7 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
         edit_template.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(edit){
+                if (edit) {
                     showDialog("正在删除数据……");
                     presenter.delete();
                 } else {
@@ -186,7 +195,7 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
 
         @Override
         public int getCount() {
-            if(mList == null)
+            if (mList == null)
                 return 0;
             return mList.size();
         }
@@ -219,9 +228,9 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
             StoreRoomBean bean = (StoreRoomBean) mList.get(position);
             holder.tv_goods.setText(bean.getName());
             holder.tv_place.setText(bean.getPlace());
-            if(edit){
+            if (edit) {
                 holder.cb_state.setVisibility(View.VISIBLE);
-                if(selected.contains((Integer) mList.get(position).getId())){
+                if (selected.contains((Integer) mList.get(position).getId())) {
                     holder.cb_state.setChecked(true);
                 } else {
                     holder.cb_state.setChecked(false);
@@ -249,25 +258,25 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
     public void setData(List<StoreRoomBean> stores) {
         hideDialog();
         mLv.onRefreshComplete();
-        if(mList != null && page == 1){
+        if (mList != null && page == 1) {
             mList.clear();
         }
-        if(stores != null && stores.size() > 0){
-            if(page == 1){
+        if (stores != null && stores.size() > 0) {
+            if (page == 1) {
                 mList = stores;
                 mLv.setMode(PullToRefreshBase.Mode.BOTH);
             } else
                 mList.addAll(stores);
 
         } else {
-            if(mList != null && mList.size() > 0){
+            if (mList != null && mList.size() > 0) {
                 mLv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
             } else {
                 // 没有数据
                 mLv.setMode(PullToRefreshBase.Mode.DISABLED);
             }
         }
-        if(mList != null && mList.size() > 0){
+        if (mList != null && mList.size() > 0) {
             mLv.setVisibility(View.VISIBLE);
             empty.setVisibility(View.GONE);
         } else {
@@ -280,14 +289,14 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
 
     @Override
     public void onBackPressed() {
-        if(edit){
+        if (edit) {
             edit = false;
             tvEdit.setText("编辑");
             ibBack.setVisibility(View.VISIBLE);
             edit_template.setImageResource(R.mipmap.add_talk);
             adapter.notifyDataSetChanged();
         } else {
-            super.onBackPressed();
+            backOff();
         }
     }
 
@@ -301,7 +310,7 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
         //Selected集合保存的是要删除的对象
         strIds = "";
         for (int i = 0; i < selected.size(); i++) {
-            if(i == 0){
+            if (i == 0) {
                 strIds += selected.get(i);
             } else {
                 strIds += "," + selected.get(i);
@@ -314,10 +323,10 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
     public void deleteSuccess() {
         hideDialog();
         Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
-        if(mList != null && mList.size() > 0){
+        if (mList != null && mList.size() > 0) {
             int len = mList.size();
-            for(int i = 0; i < len; i++){
-                if(selected.contains(mList.get(i).getId())){
+            for (int i = 0; i < len; i++) {
+                if (selected.contains(mList.get(i).getId())) {
                     mList.remove(i);
                     i--;
                     len--;
@@ -329,7 +338,7 @@ public class StoreRoomActivity extends BaseActivity implements IStoreRoomView {
         ibBack.setVisibility(View.VISIBLE);
         edit_template.setImageResource(R.mipmap.add_talk);
         adapter.notifyDataSetChanged();
-        if(mList.size() == 0){
+        if (mList.size() == 0) {
             showDialog("正在刷新数据……");
             page = 1;
             presenter.getData();

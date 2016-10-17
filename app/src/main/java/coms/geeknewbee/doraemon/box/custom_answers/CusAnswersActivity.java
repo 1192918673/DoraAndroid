@@ -26,6 +26,7 @@ import coms.geeknewbee.doraemon.box.custom_answers.presenter.CusAnswersPresenter
 import coms.geeknewbee.doraemon.box.custom_answers.view.ICusAnswersView;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
+import coms.geeknewbee.doraemon.index.IndexActivity;
 import coms.geeknewbee.doraemon.utils.ILog;
 
 /**
@@ -98,7 +99,7 @@ public class CusAnswersActivity extends BaseActivity implements ICusAnswersView 
         ib_Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                backOff();
             }
         });
         //编辑
@@ -274,7 +275,7 @@ public class CusAnswersActivity extends BaseActivity implements ICusAnswersView 
             edit_template.setImageResource(R.mipmap.add_talk);
             adapter.notifyDataSetChanged();
         } else {
-            super.onBackPressed();
+            backOff();
         }
     }
 
@@ -356,5 +357,13 @@ public class CusAnswersActivity extends BaseActivity implements ICusAnswersView 
         TextView tv_Que;
         TextView tv_Ans;
         CheckBox cb_state;
+    }
+
+    /**
+     * 返回到IndexActivity
+     */
+    public void backOff() {
+        startActivity(new Intent(this, IndexActivity.class));
+        finish();
     }
 }

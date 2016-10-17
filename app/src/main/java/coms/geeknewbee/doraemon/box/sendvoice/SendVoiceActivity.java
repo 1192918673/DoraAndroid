@@ -286,4 +286,9 @@ public class SendVoiceActivity extends BaseActivity implements ISendVoiceView {
         btnSend.stopLoading();
         super.onDestroy();
     }
+
+    @Override
+    public void onBackPressed() {
+        backOff();
+    }
 }

@@ -46,7 +46,9 @@ public class IndexActivity extends BaseActivity implements IIndexView, View.OnCl
     /** 机器人名字 **/
     TextView dr_name;
 
-    /** 表盘容器 **/
+    /**
+     * 表盘容器
+     **/
     RelativeLayout dr_panel;
 
     /** 安防模式 **/
@@ -129,17 +131,17 @@ public class IndexActivity extends BaseActivity implements IIndexView, View.OnCl
     protected void onResume() {
         super.onResume();
         session.put(PushReceiver.ACTION_BATTERY_CHANGED, onBatteryChanged);
-        if(!hasDialog() && !session.contains("index_refresh")){
-            if(session.contains("robotBeans")){
-                List<RobotBean> robotBeans =
-                        (List<RobotBean>)session.get("robotBeans");
-                setData(robotBeans);
-                return;
-            }
+        if (!hasDialog() && !session.contains("index_refresh")) {
             showDialog("正在刷新数据……");
             loadPresenter.getRobot();
         }
-        if(!session.contains(Session.USER) || session.get(Session.USER) == null){
+        if (session.contains("robotBeans")) {
+            List<RobotBean> robotBeans =
+                    (List<RobotBean>) session.get("robotBeans");
+            setData(robotBeans);
+            return;
+        }
+        if (!session.contains(Session.USER) || session.get(Session.USER) == null) {
             loadPresenter.getUser();
         }
     }

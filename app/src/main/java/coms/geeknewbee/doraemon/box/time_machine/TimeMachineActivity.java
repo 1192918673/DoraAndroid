@@ -1,5 +1,6 @@
 package coms.geeknewbee.doraemon.box.time_machine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -26,16 +27,18 @@ import coms.geeknewbee.doraemon.box.time_machine.view.IPhotoView;
 import coms.geeknewbee.doraemon.entity.RobotPhoto;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
+import coms.geeknewbee.doraemon.index.IndexActivity;
 import coms.geeknewbee.doraemon.utils.Session;
 
 /**
  * Created by lenovo on 2016/4/21.
  * Desc:时光机
- *
  */
 public class TimeMachineActivity extends BaseActivity implements IPhotoView {
 
-    /**-----------------------布局组件----------------------**/
+    /**
+     * -----------------------布局组件----------------------
+     **/
     PullToRefreshListView mLv;
 
     TextView empty;
@@ -44,7 +47,9 @@ public class TimeMachineActivity extends BaseActivity implements IPhotoView {
 
     ListView refreshableView;
 
-    /**-----------------------数据----------------------**/
+    /**
+     * -----------------------数据----------------------
+     **/
 
     private List<String> mList = new ArrayList<>();
 
@@ -70,18 +75,18 @@ public class TimeMachineActivity extends BaseActivity implements IPhotoView {
         initListener();
     }
 
-    public void initialize(){
-        mLv = (PullToRefreshListView)findViewById(R.id.lv_list);
-        empty = (TextView)findViewById(R.id.empty);
-        ib_back = (ImageButton)findViewById(R.id.ib_back);
+    public void initialize() {
+        mLv = (PullToRefreshListView) findViewById(R.id.lv_list);
+        empty = (TextView) findViewById(R.id.empty);
+        ib_back = (ImageButton) findViewById(R.id.ib_back);
 
         mLv.setTextColor(0xffffffff);
         refreshableView = mLv.getRefreshableView();
         refreshableView.setAdapter(adapter);
 
         int width = (Integer) session.get(Session.WIDTH);
-        float d = (Float)session.get(Session.DENSITY);
-        lineHeight = new Float((width - 30 * d)  / 3).intValue();
+        float d = (Float) session.get(Session.DENSITY);
+        lineHeight = new Float((width - 30 * d) / 3).intValue();
 
         robotPk = getIntent().getStringExtra("robotPk");
 
@@ -91,12 +96,25 @@ public class TimeMachineActivity extends BaseActivity implements IPhotoView {
         presenter.getPhotos();
     }
 
-    public void initListener(){
+    @Override
+    public void onBackPressed() {
+        backOff();
+    }
+
+    /**
+     * 返回到IndexActivity
+     */
+    public void backOff() {
+        startActivity(new Intent(this, IndexActivity.class));
+        finish();
+    }
+
+    public void initListener() {
         //返回
         ib_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                backOff();
             }
         });
         mLv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -145,34 +163,34 @@ public class TimeMachineActivity extends BaseActivity implements IPhotoView {
     public void setData(Map<String, List<RobotPhoto>> photos) {
         hideDialog();
         mLv.onRefreshComplete();
-        if(page == 1){
+        if (page == 1) {
             mList.clear();
         }
-        if(photos != null && photos.keySet().size() > 0){
-            for (String key: photos.keySet()) {
-                if(!mList.contains(key))
+        if (photos != null && photos.keySet().size() > 0) {
+            for (String key : photos.keySet()) {
+                if (!mList.contains(key))
                     mList.add(key);
             }
-            if(page == 1){
+            if (page == 1) {
                 this.photos = photos;
                 mLv.setMode(PullToRefreshBase.Mode.BOTH);
             } else {
-                for (String key: photos.keySet()) {
-                    if(!this.photos.containsKey(key))
+                for (String key : photos.keySet()) {
+                    if (!this.photos.containsKey(key))
                         this.photos.put(key, photos.get(key));
                     else
                         this.photos.get(key).addAll(photos.get(key));
                 }
             }
         } else {
-            if(mList.size() > 0){
+            if (mList.size() > 0) {
                 mLv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
             } else {
                 // 没有数据
                 mLv.setMode(PullToRefreshBase.Mode.DISABLED);
             }
         }
-        if(mList != null && mList.size() > 0){
+        if (mList != null && mList.size() > 0) {
             mLv.setVisibility(View.VISIBLE);
             empty.setVisibility(View.GONE);
         } else {
@@ -188,15 +206,15 @@ public class TimeMachineActivity extends BaseActivity implements IPhotoView {
     @Override
     protected void onResume() {
         super.onResume();
-        if(session.contains("pic_refresh")){
+        if (session.contains("pic_refresh")) {
             session.remove("pic_refresh");
-            if(this.photos.keySet().size() == 0){
+            if (this.photos.keySet().size() == 0) {
                 showDialog("正在刷新数据……");
                 page = 1;
                 presenter.getPhotos();
             } else {
                 mList.clear();
-                for (String key: photos.keySet()) {
+                for (String key : photos.keySet()) {
                     mList.add(key);
                 }
                 Collections.sort(mList, comparator);
@@ -243,7 +261,7 @@ public class TimeMachineActivity extends BaseActivity implements IPhotoView {
 
         @Override
         public int getCount() {
-            if(mList == null){
+            if (mList == null) {
                 return 0;
             }
             return mList.size();
@@ -275,7 +293,7 @@ public class TimeMachineActivity extends BaseActivity implements IPhotoView {
             }
             //给viewholder里的控件设置内容
             holder.tv_date.setText(mList.get(position));
-            if(adapterMap.containsKey(mList.get(position))){
+            if (adapterMap.containsKey(mList.get(position))) {
 
             } else {
                 PicAdapter adapter = new PicAdapter(TimeMachineActivity.this,

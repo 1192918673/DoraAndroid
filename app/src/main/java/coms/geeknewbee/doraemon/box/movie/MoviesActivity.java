@@ -1,5 +1,6 @@
 package coms.geeknewbee.doraemon.box.movie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -30,6 +31,7 @@ import coms.geeknewbee.doraemon.box.movie.presenter.MoviePresenter;
 import coms.geeknewbee.doraemon.box.movie.view.IMovieView;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
+import coms.geeknewbee.doraemon.index.IndexActivity;
 import coms.geeknewbee.doraemon.index.center.bean.UserBean;
 import coms.geeknewbee.doraemon.robot.bean.RobotBean;
 import coms.geeknewbee.doraemon.utils.Session;
@@ -41,7 +43,9 @@ import coms.geeknewbee.doraemon.utils.StringHandler;
  */
 public class MoviesActivity extends BaseActivity implements IMovieView {
 
-    /**----------------------布局组件---------------------**/
+    /**
+     * ----------------------布局组件---------------------
+     **/
 
     TextView info;
     TextView tvStop;
@@ -52,7 +56,9 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
     ImageButton ib_back;
     GridView movie_list;
 
-    /**----------------------数据---------------------**/
+    /**
+     * ----------------------数据---------------------
+     **/
 
     MoviePresenter presenter;
 
@@ -79,7 +85,7 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
         robotPk = getIntent().getStringExtra("robotPk");
         presenter = new MoviePresenter(this);
 
-        if(session.contains(Session.USER) && !session.contains("EMClient.login")){
+        if (session.contains(Session.USER) && !session.contains("EMClient.login")) {
             user = (UserBean) session.get(Session.USER);
             login();
         }
@@ -87,15 +93,15 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
 
     private void initialize() {
         // TODO 布局数据
-        info = (TextView)findViewById(R.id.info);
+        info = (TextView) findViewById(R.id.info);
         clear = (ImageView) findViewById(R.id.clear);
         et_movie_name = (EditText) findViewById(R.id.et_movie_name);
-        movie_list = (GridView)findViewById(R.id.movie_list);
+        movie_list = (GridView) findViewById(R.id.movie_list);
 
         getPic = (ImageView) findViewById(R.id.get_pic);
-        ib_back = (ImageButton)findViewById(R.id.ib_back);
+        ib_back = (ImageButton) findViewById(R.id.ib_back);
         skm = new SoftKeyboardManager(et_movie_name);
-        tvStop = (TextView)findViewById(R.id.tvStop);
+        tvStop = (TextView) findViewById(R.id.tvStop);
 
         movie_list.setAdapter(adapter);
         movie_list.setOnItemClickListener(itemClickListener);
@@ -110,7 +116,7 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
     View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if(hasFocus){
+            if (hasFocus) {
                 skm.show();
             }
         }
@@ -119,9 +125,9 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.ib_back:
-                    finish();
+                    backOff();
                     break;
                 case R.id.clear:
                     et_movie_name.setText("");
@@ -134,12 +140,20 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
         }
     };
 
-    TextView.OnEditorActionListener actionListener = new TextView.OnEditorActionListener(){
+    /**
+     * 返回到IndexActivity
+     */
+    public void backOff() {
+        startActivity(new Intent(this, IndexActivity.class));
+        finish();
+    }
+
+    TextView.OnEditorActionListener actionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId,
                                       KeyEvent event) {
-            switch(actionId){
-                case  EditorInfo.IME_ACTION_SEARCH: // IME_ACTION_SEARCH 事件时提交搜索
+            switch (actionId) {
+                case EditorInfo.IME_ACTION_SEARCH: // IME_ACTION_SEARCH 事件时提交搜索
                     showDialog("正在搜索，请稍等……");
                     info.setVisibility(View.VISIBLE);
                     info.setText("哆啦A梦正在搜寻，请稍候");
@@ -184,7 +198,7 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
     public void setData(List<MovieBean> movies) {
         hideDialog();
         this.movies = movies;
-        if(movies == null || movies.size() == 0){
+        if (movies == null || movies.size() == 0) {
             movie_list.setVisibility(View.GONE);
             info.setVisibility(View.VISIBLE);
             info.setText("唔，什么都没有找到，试试换个词？");
@@ -200,7 +214,7 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
         public View getView(final int position, View convertView, ViewGroup parent) {
             Holder holder = null;
 
-            if(convertView == null){
+            if (convertView == null) {
                 LayoutInflater laInflater = (LayoutInflater) parent.getContext()
                         .getSystemService(android.app.Service.LAYOUT_INFLATER_SERVICE);
                 convertView = laInflater.inflate(R.layout.item_movie, null);
@@ -212,7 +226,7 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
                 holder.movie_looks = (TextView) convertView.findViewById(R.id.mem_delete);
                 convertView.setTag(holder);
 
-                if(picWidth == 0){
+                if (picWidth == 0) {
                     holder.movie_pic.measure(0, 0);
                     picWidth = holder.movie_pic.getMeasuredWidth();
                     picHeight = picWidth * 14 / 25;
@@ -223,7 +237,7 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
 
             holder.movie_name.setText("" + movies.get(position).getTitle());
             holder.movie_pic.setImageResource(R.mipmap.ic_movie_default);
-            if(!StringHandler.isEmpty(movies.get(position).getThumbnail())){
+            if (!StringHandler.isEmpty(movies.get(position).getThumbnail())) {
                 Picasso.with(MoviesActivity.this).load(movies.get(position).getThumbnail())
                         .resize(picWidth, picHeight).into(holder.movie_pic);
             }
@@ -233,7 +247,7 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
 
         @Override
         public int getCount() {
-            if(movies == null)
+            if (movies == null)
                 return 0;
             return movies.size();
         }
@@ -261,8 +275,8 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
         super.onDestroy();
     }
 
-    public void login(){
-        if(!session.contains("EMClient.login")){
+    public void login() {
+        if (!session.contains("EMClient.login")) {
             EMClient.getInstance().login(user.getHx_user().getUsername(),
                     user.getHx_user().getPassword(), new EMCallBack() {//回调
                         @Override
@@ -287,16 +301,16 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
         }
     }
 
-    public void sendMovie(){
-        if(session.contains("robotBeans")){
+    public void sendMovie() {
+        if (session.contains("robotBeans")) {
             List<RobotBean> robotBeans =
-                    (List<RobotBean>)session.get("robotBeans");
+                    (List<RobotBean>) session.get("robotBeans");
             RobotBean robot = robotBeans.get(0);
             String pk = spt.getString(SptConfig.ROBOT_KEY, null);
-            if(pk != null){
+            if (pk != null) {
                 int len = robotBeans.size();
-                for (int i = 0; i < len; i++){
-                    if(pk.equals(robotBeans.get(i).getId() + "")){
+                for (int i = 0; i < len; i++) {
+                    if (pk.equals(robotBeans.get(i).getId() + "")) {
                         robot = robotBeans.get(i);
                         break;
                     }
@@ -306,12 +320,17 @@ public class MoviesActivity extends BaseActivity implements IMovieView {
             cmdMsg.setReceipt(robot.getHx_username());
             cmdMsg.addBody(new EMCmdMessageBody("{\"data\":\"" + vid + "\", \"type\":3}"));
             EMClient.getInstance().chatManager().sendMessage(cmdMsg);
-            if(vid.equals("stop")){
+            if (vid.equals("stop")) {
                 showMessage("已经发送停止命令，请稍等");
             } else {
                 showMessage("已经发送给" + robot.getName() + "，请稍等");
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        backOff();
     }
 
     public static class Holder {

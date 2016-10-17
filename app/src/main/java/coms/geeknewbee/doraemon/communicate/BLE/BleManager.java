@@ -46,6 +46,10 @@ public class BleManager implements IControl {
     //  固定的
     private static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 
+    //发送秘钥相关
+    private static UUID KEY_SERVICE_UUID = UUID.fromString("0000180c-0000-1000-8000-00805f9b34fb");
+    private static UUID KEY_CHARACTERISTIC_UUID = UUID.fromString("00002a40-0000-1000-8000-00805f9b34fb");
+
     //  服务的uuid
     private static UUID SERVICE_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
     //  读charac的uuid
@@ -205,6 +209,11 @@ public class BleManager implements IControl {
             Message msg = Message.obtain();
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 ILog.e("扫描到服务");
+//                //连接成功后需要发送特定的秘钥给猫
+//                BluetoothGattCharacteristic keyCharacteristic = mBluetoothGatt.getService(KEY_SERVICE_UUID).getCharacteristic(KEY_CHARACTERISTIC_UUID);
+//                String key = "@DORA%1316";
+//                bleSender.addData(keyCharacteristic, key.getBytes());
+
                 //  获取我们需要的服务
                 BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
                 //  我需要得到的应该是一个特定的BluetoothGattCharacteristic,根据uuid获取

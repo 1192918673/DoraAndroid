@@ -23,6 +23,7 @@ import coms.geeknewbee.doraemon.box.smart_home.util.BLM;
 import coms.geeknewbee.doraemon.box.smart_home.view.ISmartView;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
+import coms.geeknewbee.doraemon.index.IndexActivity;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;
 
@@ -47,7 +48,9 @@ public class SmartHomeActivity extends BaseActivity implements ISmartView {
 
     ISmartPresenter presenter;
 
-    /**-------------------临时数据--------------------**/
+    /**
+     * -------------------临时数据--------------------
+     **/
 
     int state = 0;
 
@@ -66,10 +69,10 @@ public class SmartHomeActivity extends BaseActivity implements ISmartView {
         presenter.getInstructions();
     }
 
-    public void initViews(){
-        ibBack = (ImageButton)findViewById(R.id.ibBack);
-        llTv = (LinearLayout)findViewById(R.id.llTv);
-        llPurifier = (LinearLayout)findViewById(R.id.llPurifier);
+    public void initViews() {
+        ibBack = (ImageButton) findViewById(R.id.ibBack);
+        llTv = (LinearLayout) findViewById(R.id.llTv);
+        llPurifier = (LinearLayout) findViewById(R.id.llPurifier);
         llPlug = (LinearLayout) findViewById(R.id.llPlug);
 
         ibBack.setOnClickListener(clickListener);
@@ -78,20 +81,28 @@ public class SmartHomeActivity extends BaseActivity implements ISmartView {
         llPlug.setOnClickListener(clickListener);
     }
 
+    /**
+     * 返回到IndexActivity
+     */
+    public void backOff() {
+        startActivity(new Intent(this, IndexActivity.class));
+        finish();
+    }
+
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.ibBack:
-                    finish();
+                    backOff();
                     break;
 
                 case R.id.llTv:
                     type = 0;
-                    if(!BLM.isInitSuccess()){
+                    if (!BLM.isInitSuccess()) {
                         showDialog("正在初始化设备……");
                         BLM.broadLinkInit(handler, getApplicationContext());
-                    } else if(BLM.isSetWifi(spt)){
+                    } else if (BLM.isSetWifi(spt)) {
                         Intent intentTv = new Intent(SmartHomeActivity.this, SmartTVStudyActivity.class);
                         intentTv.putExtra("robotPk", robotPk);
                         startActivity(intentTv);
@@ -103,7 +114,7 @@ public class SmartHomeActivity extends BaseActivity implements ISmartView {
                     break;
 
                 case R.id.llPurifier:
-                    if(spt.getBoolean("jinghuaqi"+robotPk, false)){
+                    if (spt.getBoolean("jinghuaqi" + robotPk, false)) {
                         Intent intentPurifier = new Intent(SmartHomeActivity.this, SmartPurifierSuccessActivity.class);
                         intentPurifier.putExtra("type", 1);
                         intentPurifier.putExtra("robotPk", robotPk);
@@ -117,10 +128,10 @@ public class SmartHomeActivity extends BaseActivity implements ISmartView {
 
                 case R.id.llPlug:
                     type = 1;
-                    if(!BLM.isInitSuccess()){
+                    if (!BLM.isInitSuccess()) {
                         showDialog("正在初始化设备……");
                         BLM.broadLinkInit(handler, getApplicationContext());
-                    } else if(BLM.isSetSpWifi(spt)){
+                    } else if (BLM.isSetSpWifi(spt)) {
                         Intent intentPlug = new Intent(SmartHomeActivity.this, SmartPurifierSuccessActivity.class);
                         intentPlug.putExtra("type", 2);
                         intentPlug.putExtra("robotPk", robotPk);
@@ -158,9 +169,9 @@ public class SmartHomeActivity extends BaseActivity implements ISmartView {
                             // 已经联网
                             hideDialog();
                             Intent intentTv = new Intent();
-                            if(type == 0){
+                            if (type == 0) {
                                 intentTv.setClass(SmartHomeActivity.this, SmartTVStudyActivity.class);
-                            } else if(type == 1){
+                            } else if (type == 1) {
                                 intentTv.setClass(SmartHomeActivity.this, SmartPurifierSuccessActivity.class);
                                 intentTv.putExtra("type", 2);
                             }
@@ -169,11 +180,11 @@ public class SmartHomeActivity extends BaseActivity implements ISmartView {
                             finish();
                         } else {
                             hideDialog();
-                            if(BLM.isSetWifi(spt)){
+                            if (BLM.isSetWifi(spt)) {
                                 Intent intentTv = new Intent();
-                                if(type == 0){
+                                if (type == 0) {
                                     intentTv.setClass(SmartHomeActivity.this, SmartTVStudyActivity.class);
-                                } else if(type == 1){
+                                } else if (type == 1) {
                                     intentTv.setClass(SmartHomeActivity.this, SmartPurifierSuccessActivity.class);
                                     intentTv.putExtra("type", 2);
                                 }
@@ -181,9 +192,9 @@ public class SmartHomeActivity extends BaseActivity implements ISmartView {
                                 startActivity(intentTv);
                             } else {
                                 Intent intentTv = new Intent();
-                                if(type == 0){
+                                if (type == 0) {
                                     intentTv.setClass(SmartHomeActivity.this, SmartTVActivity.class);
-                                } else if(type == 1){
+                                } else if (type == 1) {
                                     intentTv.setClass(SmartHomeActivity.this, SmartPlugActivity.class);
                                 }
                                 intentTv.putExtra("robotPk", robotPk);
@@ -230,23 +241,28 @@ public class SmartHomeActivity extends BaseActivity implements ISmartView {
     @Override
     public void setSmartBeans(List<SmartBean> smartBeens) {
         this.smartBeens = smartBeens;
-        if(smartBeens != null && smartBeens.size() > 0){
+        if (smartBeens != null && smartBeens.size() > 0) {
             int len = smartBeens.size();
-            for (int i = 0; i < len; i++){
-                if("0".equals(smartBeens.get(i).getType())){
-                    spt.putBoolean("jinghuaqi"+robotPk, true);
-                } else if("1".equals(smartBeens.get(i).getType())
+            for (int i = 0; i < len; i++) {
+                if ("0".equals(smartBeens.get(i).getType())) {
+                    spt.putBoolean("jinghuaqi" + robotPk, true);
+                } else if ("1".equals(smartBeens.get(i).getType())
                         || "3".equals(smartBeens.get(i).getType())
-                        || "4".equals(smartBeens.get(i).getType())){
+                        || "4".equals(smartBeens.get(i).getType())) {
                     spt.putBoolean("blIsSetWifi", true);
                     spt.putString("blMac", smartBeens.get(i).getData().split(",")[0]);
-                } else if("2".equals(smartBeens.get(i).getType())){
+                } else if ("2".equals(smartBeens.get(i).getType())) {
                     spt.putBoolean("blIsSetSpWifi", true);
                     spt.putString("spMac", smartBeens.get(i).getData());
                     mac = smartBeens.get(i).getData();
                 }
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        backOff();
     }
 
     @Override

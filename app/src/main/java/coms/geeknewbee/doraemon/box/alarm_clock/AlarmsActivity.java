@@ -175,7 +175,7 @@ public class AlarmsActivity extends BaseActivity implements IAlarmsView {
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                backOff();
             }
         });
         //设置滑动到底部的监听
@@ -199,6 +199,14 @@ public class AlarmsActivity extends BaseActivity implements IAlarmsView {
                 presenter.getData();
             }
         });
+    }
+
+    /**
+     * 返回到IndexActivity
+     */
+    public void backOff() {
+        startActivity(new Intent(this, IndexActivity.class));
+        finish();
     }
 
     @Override
@@ -308,7 +316,7 @@ public class AlarmsActivity extends BaseActivity implements IAlarmsView {
             edit_template.setImageResource(R.mipmap.add_talk);
             adapter.notifyDataSetChanged();
         } else {
-            super.onBackPressed();
+            backOff();
         }
     }
 
