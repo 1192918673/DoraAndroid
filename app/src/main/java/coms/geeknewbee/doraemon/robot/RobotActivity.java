@@ -14,6 +14,7 @@ import java.util.List;
 import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
+import coms.geeknewbee.doraemon.index.IndexActivity;
 import coms.geeknewbee.doraemon.robot.bean.RobotBean;
 import coms.geeknewbee.doraemon.widget.RobotsView;
 
@@ -22,7 +23,9 @@ import coms.geeknewbee.doraemon.widget.RobotsView;
  */
 public class RobotActivity extends BaseActivity {
 
-    /**---------------------组件--------------------**/
+    /**
+     * ---------------------组件--------------------
+     **/
     private ImageButton ibBack;
 
     RobotsView robotsView;
@@ -41,7 +44,9 @@ public class RobotActivity extends BaseActivity {
 
     private RelativeLayout actEnterControl;
 
-    /**---------------------数据--------------------**/
+    /**
+     * ---------------------数据--------------------
+     **/
     RobotBean robot;
 
     private void assignViews() {
@@ -50,7 +55,7 @@ public class RobotActivity extends BaseActivity {
         act_msg = (RelativeLayout) findViewById(R.id.act_msg);
         act_robot = (RelativeLayout) findViewById(R.id.act_robot);
         act_member = (RelativeLayout) findViewById(R.id.act_member);
-        robotsView = (RobotsView)findViewById(R.id.robotsView);
+        robotsView = (RobotsView) findViewById(R.id.robotsView);
         actOffline = (RelativeLayout) findViewById(R.id.actOffline);
         actVoice = (RelativeLayout) findViewById(R.id.actVoice);
         actEnterControl = (RelativeLayout) findViewById(R.id.actEnterControl);
@@ -67,9 +72,9 @@ public class RobotActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(session.contains("robotBeans")){
+        if (session.contains("robotBeans")) {
             List<RobotBean> robotBeans =
-                    (List<RobotBean>)session.get("robotBeans");
+                    (List<RobotBean>) session.get("robotBeans");
             setData(robotBeans);
         } else {
             setData(null);
@@ -79,7 +84,7 @@ public class RobotActivity extends BaseActivity {
     public void setData(List<RobotBean> robotBeans) {
         robotsView.setRobots(robotBeans);
         robotsView.setRobotKey(spt.getString(SptConfig.ROBOT_KEY, null));
-        if(robotBeans == null || robotBeans.size() == 0){
+        if (robotBeans == null || robotBeans.size() == 0) {
             act_msg.setOnClickListener(null);
             act_robot.setOnClickListener(null);
             act_member.setOnClickListener(null);
@@ -102,9 +107,9 @@ public class RobotActivity extends BaseActivity {
     OnClickListener clickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.ib_back:
-                    finish();
+                    backOff();
                     break;
                 case R.id.tv_add:
                     startActivity(new Intent(RobotActivity.this, RobotWifiActivity.class));
@@ -142,6 +147,14 @@ public class RobotActivity extends BaseActivity {
         }
     };
 
+    /**
+     * 返回到IndexActivity
+     */
+    public void backOff() {
+        startActivity(new Intent(this, IndexActivity.class));
+        finish();
+    }
+
     //设置关闭动画
     @Override
     public void finish() {
@@ -150,9 +163,14 @@ public class RobotActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        backOff();
+    }
+
+    @Override
     protected void onPause() {
         robot = robotsView.getRobot();
-        if(robot != null){
+        if (robot != null) {
             spt.putString(SptConfig.ROBOT_KEY, "" + robotsView.getRobot().getId());
             session.remove("index_refresh");
         }
