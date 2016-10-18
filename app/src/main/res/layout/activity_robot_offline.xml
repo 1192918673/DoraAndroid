@@ -70,7 +70,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
             <Button
@@ -86,6 +86,18 @@
                 android:textSize="15dp" />
 
             <Button
+                android:id="@+id/olInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#00A0E8"
+                android:gravity="center"
+                android:text="自我介绍"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+            <Button
+                android:visibility="gone"
                 android:id="@+id/olHH"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -103,7 +115,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
             <Button
@@ -130,12 +142,6 @@
                 android:textSize="15dp" />
         </LinearLayout>
 
-        <View
-            android:layout_marginTop="3dp"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#ddd" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -146,6 +152,45 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/olOpen"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:background="#00A0E8"
+                android:gravity="center"
+                android:text="开始自动演示"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/olClose"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#00A0E8"
+                android:gravity="center"
+                android:text="结束自动演示"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ddd" />
+
+       <!-- <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal">
+
+            <Button
+
                 android:id="@+id/olInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -155,21 +200,24 @@
                 android:gravity="center"
                 android:text="自我介绍"
                 android:textColor="#FFFFFF"
-                android:textSize="15dp" />
+                android:textSize="15dp" />-->
 
             <Button
                 android:id="@+id/olEmoticon"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
                 android:background="#00A0E8"
                 android:gravity="center"
                 android:text="表情"
                 android:textColor="#FFFFFF"
                 android:textSize="15dp" />
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -177,7 +225,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
             <Button
@@ -227,7 +275,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
             <Button
@@ -263,7 +311,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="3dp"
             android:background="#00A0E8"
             android:gravity="center"
             android:text="人脸识别"
@@ -284,7 +332,7 @@
             android:text="测试"
             android:textColor="#FFFFFF"
             android:textSize="15dp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
     </LinearLayout>
 

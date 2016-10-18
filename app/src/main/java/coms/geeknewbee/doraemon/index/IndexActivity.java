@@ -33,17 +33,27 @@ import coms.geeknewbee.doraemon.widget.CircleView;
 public class IndexActivity extends BaseActivity implements IIndexView, View.OnClickListener {
 
     /**------------------- 控制组件 ------------------**/
-    /** 百宝箱 **/
+    /**
+     * 百宝箱
+     **/
     private Button bt_Menu;
-    /** 用户中心 **/
+    /**
+     * 用户中心
+     **/
     private ImageButton ibCenter;
-    /** 设置 **/
+    /**
+     * 设置
+     **/
     private ImageButton ibSettings;
-    /** 根布局 **/
+    /**
+     * 根布局
+     **/
     private RelativeLayout mRl;
 
     /**------------------- 机器人相关组件 ------------------**/
-    /** 机器人名字 **/
+    /**
+     * 机器人名字
+     **/
     TextView dr_name;
 
     /**
@@ -54,22 +64,34 @@ public class IndexActivity extends BaseActivity implements IIndexView, View.OnCl
     /** 安防模式 **/
     //CircleView dr_safe;
 
-    /** 电量 **/
+    /**
+     * 电量
+     **/
     CircleView dr_electric;
 
-    /** 音量 **/
+    /**
+     * 音量
+     **/
     CircleView dr_vol;
 
-    /** 机器人图标 **/
+    /**
+     * 机器人图标
+     **/
     ImageView dora;
 
-    /** 机器人说话 **/
+    /**
+     * 机器人说话
+     **/
     TextView dr_talk;
 
-    /** 添加机器人 **/
+    /**
+     * 添加机器人
+     **/
     LinearLayout dr_add;
 
-    /**------------------- 数据 ------------------**/
+    /**
+     * ------------------- 数据 ------------------
+     **/
     public static IndexActivity instance = null;
 
     IRobotsLoadPresenter loadPresenter;
@@ -92,7 +114,7 @@ public class IndexActivity extends BaseActivity implements IIndexView, View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
-        instance=this;
+        instance = this;
         initView();
     }
 
@@ -119,27 +141,19 @@ public class IndexActivity extends BaseActivity implements IIndexView, View.OnCl
         ibCenter.setOnClickListener(this);
         ibSettings.setOnClickListener(this);
         dr_add.setOnClickListener(this);
-
-        if(session.contains("robotBeans")){
-            List<RobotBean> robotBeans =
-                    (List<RobotBean>)session.get("robotBeans");
-            setData(robotBeans);
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         session.put(PushReceiver.ACTION_BATTERY_CHANGED, onBatteryChanged);
-        if (!hasDialog() && !session.contains("index_refresh")) {
-            showDialog("正在刷新数据……");
-            loadPresenter.getRobot();
-        }
         if (session.contains("robotBeans")) {
             List<RobotBean> robotBeans =
                     (List<RobotBean>) session.get("robotBeans");
             setData(robotBeans);
-            return;
+        } else if (!hasDialog()) {
+            showDialog("正在刷新数据……");
+            loadPresenter.getRobot();
         }
         if (!session.contains(Session.USER) || session.get(Session.USER) == null) {
             loadPresenter.getUser();
@@ -150,9 +164,9 @@ public class IndexActivity extends BaseActivity implements IIndexView, View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_menu:
-                if(session.contains("robotBeans")){
-                    List<RobotBean> robotBeans = (List<RobotBean>)session.get("robotBeans");
-                    if(robotBeans == null || robotBeans.size() == 0){
+                if (session.contains("robotBeans")) {
+                    List<RobotBean> robotBeans = (List<RobotBean>) session.get("robotBeans");
+                    if (robotBeans == null || robotBeans.size() == 0) {
                         showMessage("你还没有可以管理的设备。");
                     } else {
                         Intent intentBox = new Intent(IndexActivity.this, BoxActivity.class);
@@ -194,7 +208,7 @@ public class IndexActivity extends BaseActivity implements IIndexView, View.OnCl
         hideDialog();
         session.put("index_refresh", false);
         session.put("robotBeans", robotBeans);
-        if(robotBeans == null || robotBeans.size() == 0){
+        if (robotBeans == null || robotBeans.size() == 0) {
             // 没有数据
             dr_name.setText("--");
             /** 表盘容器 **/
@@ -208,10 +222,10 @@ public class IndexActivity extends BaseActivity implements IIndexView, View.OnCl
         } else {
             robot = robotBeans.get(0);
             String pk = spt.getString(SptConfig.ROBOT_KEY, null);
-            if(pk != null){
+            if (pk != null) {
                 int len = robotBeans.size();
-                for (int i = 0; i < len; i++){
-                    if(pk.equals(robotBeans.get(i).getId() + "")){
+                for (int i = 0; i < len; i++) {
+                    if (pk.equals(robotBeans.get(i).getId() + "")) {
                         robot = robotBeans.get(i);
                         break;
                     }
@@ -273,7 +287,7 @@ public class IndexActivity extends BaseActivity implements IIndexView, View.OnCl
     PushReceiver.OnBatteryChanged onBatteryChanged = new PushReceiver.OnBatteryChanged() {
         @Override
         public void onBatteryChanged(int percent) {
-            if(dr_electric != null){
+            if (dr_electric != null) {
                 dr_electric.setNum(percent);
             }
         }

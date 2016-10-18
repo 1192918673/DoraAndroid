@@ -1,9 +1,11 @@
 package coms.geeknewbee.doraemon.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by 马庆军 on 16/4/28.
  */
-public class RobotPhoto {
+public class RobotPhoto implements Serializable{
 
     /**
      * id : 55

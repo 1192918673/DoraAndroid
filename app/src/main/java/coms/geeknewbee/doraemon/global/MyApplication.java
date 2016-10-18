@@ -7,9 +7,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
-import com.igexin.sdk.PushManager;
 
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +32,9 @@ public class MyApplication extends Application {
     @SuppressLint("MissingSuperCall")
     @Override
     public void onCreate() {
+        ctx = this;
+        //初始化fresco
+        Fresco.initialize(this);
         //人脸识别所需
         screenW = DisplayUtil.getScreenWidthPixels(this);
         screenH = DisplayUtil.getScreenHeightPixels(this);
@@ -40,7 +43,6 @@ public class MyApplication extends Application {
         // 默认添加好友时，是不需要验证的，改成需要验证
         options.setAcceptInvitationAlways(false);
         //...
-        ctx = this;
         int pid = android.os.Process.myPid();
         String processAppName = getAppName(pid);
         // 如果app启用了远程的service，此application:onCreate会被调用2次
@@ -49,8 +51,6 @@ public class MyApplication extends Application {
         if (processAppName == null || !processAppName.equalsIgnoreCase(ctx.getPackageName())) {
             Log.e("HUANXIN", "enter the service process!");
             // 则此application::onCreate 是被service 调用的，直接返回
-
-
             return;
         }
         //初始化

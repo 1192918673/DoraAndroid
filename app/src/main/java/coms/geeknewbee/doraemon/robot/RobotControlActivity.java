@@ -275,6 +275,10 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         findViewById(R.id.bt_right).setOnClickListener(clickListener);
         findViewById(R.id.bt_stopFoot).setOnClickListener(clickListener);
 
+        //自动演示
+        findViewById(R.id.olOpen).setOnClickListener(clickListener);
+        findViewById(R.id.olClose).setOnClickListener(clickListener);
+
         pvHead.setName("头");
         pvHead.setBtn("上", "下", "左", "右");
         pvHead.setHandler(handler);
@@ -305,6 +309,15 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
 //                    onBackPressed();
                     toRobotActivity();
                     finish();
+                    break;
+                //自动演示
+                case R.id.olOpen:
+                    command.action = "open_auto_demonstration";
+                    sendInfo(command);
+                    break;
+                case R.id.olClose:
+                    command.action = "close_auto_demonstration";
+                    sendInfo(command);
                     break;
 
                 //呼和浩特使用
@@ -681,15 +694,15 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         BluetoothCommand command = new BluetoothCommand();
         while (!isExit) {
             if (isRudderUse) {
-                if (mSpeedV < -100) {
-                    mSpeedV = -100;
-                } else if (mSpeedV > 100) {
-                    mSpeedV = 100;
+                if (mSpeedV < -200) {
+                    mSpeedV = -200;
+                } else if (mSpeedV > 200) {
+                    mSpeedV = 200;
                 }
-                if (mSpeedW < -200) {
-                    mSpeedW = -200;
-                } else if (mSpeedW > 200) {
-                    mSpeedW = 200;
+                if (mSpeedW < -300) {
+                    mSpeedW = -300;
+                } else if (mSpeedW > 300) {
+                    mSpeedW = 300;
                 }
                 command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
                 sendInfo(command);
