@@ -125,8 +125,8 @@ public class UserNextStepActivity extends BaseActivity implements IUserNextStepV
                 timer.start();//计时器
                 skm.hide();
                 showDialog("正在发送验证码……");
-                etRegisterCodeId.setEnabled(true);
-                etRegisterCodeId.setFocusable(true);
+//                etRegisterCodeId.setEnabled(true);
+//                etRegisterCodeId.setFocusable(true);
             }
         } else {
             //输入为空
@@ -161,6 +161,8 @@ public class UserNextStepActivity extends BaseActivity implements IUserNextStepV
     @Override
     public void setCode(String code) {
         //SystemClock.sleep(2000);
+        etRegisterCodeId.setEnabled(true);
+        etRegisterCodeId.setFocusable(true);
         hideDialog();
         if (code != null && code.length() > 0)
             etRegisterCodeId.setText(code);
