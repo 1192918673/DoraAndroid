@@ -1,6 +1,7 @@
 package coms.geeknewbee.doraemon.box.time_machine;
 
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +33,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class ShowImageActivity extends BaseActivity implements IPhotoView {
 
-    //    private ImageView imageView;
-//    private int imageId;
-//    private String dateKey;
+    private int imageId;
     String robotPk;
     private Map<String, List<RobotPhoto>> photos;
     List<RobotPhoto> myPhotos;
@@ -43,27 +43,40 @@ public class ShowImageActivity extends BaseActivity implements IPhotoView {
     IPhotoPresenter presenter;
     private ViewPager vp;
 
+    public void getPhotosList() {
+        myPhotos = new ArrayList<>();
+        for (String key : photos.keySet()) {
+            myPhotos.addAll(photos.get(key));
+        }
+    }
+
+    private int getCurrentNum() {
+        for (int i = 0; i < myPhotos.size(); i++) {
+            if (myPhotos.get(i).getId() == imageId) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_show_origin_image);
         vp = (ViewPager) findViewById(R.id.vp);
-//        imageView = (ImageView) findViewById(R.id.imageView);
-
-//        String imageUrl = getIntent().getStringExtra("imageUrl");
-//        imageId = getIntent().getIntExtra("imageId", 0);
-//        dateKey = getIntent().getStringExtra("dateKey");
+        photos = (Map<String, List<RobotPhoto>>) session.get("tm_photos");
+        getPhotosList();
+        imageId = getIntent().getIntExtra("imageId", 0);
         robotPk = getIntent().getStringExtra("robotPk");
-        myPhotos = (List<RobotPhoto>) getIntent().getSerializableExtra("photos");
-        num = getIntent().getIntExtra("num", 0);
+        num = getCurrentNum();
         vp.setAdapter(new myAdapter());
         vp.setCurrentItem(num);
 
         vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
@@ -71,7 +84,8 @@ public class ShowImageActivity extends BaseActivity implements IPhotoView {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
         });
 
         presenter = new IPhotoPresenter(this);
@@ -110,8 +124,6 @@ public class ShowImageActivity extends BaseActivity implements IPhotoView {
     @Override
     public void deleteSuccess() {
         hideDialog();
-        myPhotos.remove(num);
-        photos = (Map<String, List<RobotPhoto>>) session.get("tm_photos");
         for (String key : photos.keySet()) {
             if ((myPhotos.get(num).getDate_created()).contains(key)) {
                 int len = photos.get(key).size();
@@ -175,6 +187,7 @@ public class ShowImageActivity extends BaseActivity implements IPhotoView {
             final PhotoViewAttacher mAttacher = new PhotoViewAttacher(view);
             Picasso.with(ShowImageActivity.this)
                     .load(myPhotos.get(position).getPhoto())
+                    .config(Bitmap.Config.RGB_565)
                     .into(view, new Callback() {
                         @Override
                         public void onSuccess() {

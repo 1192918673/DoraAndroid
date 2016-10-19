@@ -11,12 +11,4 @@
         android:layout_gravity="center"
         fresco:actualImageScaleType="focusCrop" />
 
-    <!--  <ImageView
-          android:id="@+id/pic"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:adjustViewBounds="true"
-          android:scaleType="fitXY"
-          android:src="@mipmap/ic_pic_default"/>-->
-
 </LinearLayout>

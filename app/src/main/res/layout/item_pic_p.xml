@@ -19,7 +19,7 @@
         android:layout_marginTop="8dp"
         android:text="2016.6.20" />
 
-    <GridView
+    <coms.geeknewbee.doraemon.UI.NestedGridView
         android:id="@+id/pic_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

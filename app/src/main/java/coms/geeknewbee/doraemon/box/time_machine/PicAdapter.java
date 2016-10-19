@@ -45,20 +45,13 @@ public class PicAdapter extends BaseAdapter {
         Holder holder = null;
 
         if (convertView == null) {
-//            LayoutInflater laInflater = (LayoutInflater) parent.getContext()
-//                    .getSystemService(android.app.Service.LAYOUT_INFLATER_SERVICE);
             convertView = View.inflate(MyApplication.getContext(), R.layout.item_pic_c, null);
             holder = new Holder();
             holder.pic = (ImageView) convertView.findViewById(R.id.pic);
             convertView.setTag(holder);
-//            if (width == 0) {
-//                holder.pic.measure(0, 0);
-//                width = holder.pic.getMeasuredWidth();
-//            }
         } else {
             holder = (Holder) convertView.getTag();
         }
-//        holder.pic.setImageResource(R.mipmap.ic_pic_default);
         if (!StringHandler.isEmpty(photos.get(position).getThumbnail())) {
             holder.pic.setImageURI(Uri.parse(photos.get(position).getThumbnail()));
         }
@@ -93,10 +86,7 @@ public class PicAdapter extends BaseAdapter {
             if (num >= 0) {
                 Intent intent = new Intent(context, ShowImageActivity.class);
                 intent.putExtra("photos", (Serializable) photos);
-                intent.putExtra("num", num);
-//                intent.putExtra("imageUrl", photos.get(num).getPhoto());
-//                intent.putExtra("imageId", photos.get(num).getId());
-//                intent.putExtra("dateKey", photos.get(num).getDate_created());
+                intent.putExtra("imageId", photos.get(num).getId());
                 intent.putExtra("robotPk", robotPk);
                 context.startActivity(intent);
             }
