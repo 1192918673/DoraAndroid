@@ -29,18 +29,18 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dip"
-        android:src="@mipmap/ic_robot_wifi"
-        android:layout_gravity="center_horizontal"/>
+        android:src="@mipmap/ic_robot_wifi" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="将机器人连接至网络"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
+        android:text="将机器人连接至网络"
         android:textColor="#FF7C7E88"
-        android:textSize="16sp"
-        android:layout_gravity="center_horizontal"/>
+        android:textSize="16sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -54,14 +54,14 @@
             android:layout_height="wrap_content"
             android:text="当前网络"
             android:textColor="#FF50525C"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/wifi_ssid"
-            android:enabled="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:enabled="false"
             android:maxLines="1"
             android:textColor="#00A0E8"
             android:textColorHint="#00A0E8"
@@ -80,8 +80,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="请输入WIFI密码"
-            android:textSize="14sp"
-            android:textColor="#FF50525C" />
+            android:textColor="#FF50525C"
+            android:textSize="14sp" />
 
 
         <EditText
@@ -89,8 +89,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:maxLines="1"
             android:inputType="textPassword"
+            android:maxLines="1"
             android:textColor="#00A0E8"
             android:textColorHint="#00A0E8"
             android:textSize="20dp" />
@@ -106,6 +106,33 @@
             android:textSize="12dp"
             android:visibility="invisible" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:paddingRight="10dp">
+
+        <CheckBox
+            android:id="@+id/rememberPsw"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="记住密码"
+            android:textColor="#FF50525C"
+            android:textSize="15dp" />
+
+        <CheckBox
+            android:id="@+id/showPsw"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="显示密码"
+            android:textColor="#FF50525C"
+            android:textSize="15dp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/wifi_ok"

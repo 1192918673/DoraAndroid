@@ -1,7 +1,10 @@
 package coms.geeknewbee.doraemon.robot;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -9,13 +12,22 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.common.cache.RemovalNotification;
+import com.lidroid.xutils.util.LogUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
 import coms.geeknewbee.doraemon.index.IndexActivity;
 import coms.geeknewbee.doraemon.robot.bean.RobotBean;
+import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.widget.RobotsView;
 
 /**
@@ -48,6 +60,7 @@ public class RobotActivity extends BaseActivity {
      * ---------------------数据--------------------
      **/
     RobotBean robot;
+    private String ip;
 
     private void assignViews() {
         ibBack = (ImageButton) findViewById(R.id.ib_back);
@@ -105,6 +118,7 @@ public class RobotActivity extends BaseActivity {
     }
 
     OnClickListener clickListener = new OnClickListener() {
+
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -139,13 +153,86 @@ public class RobotActivity extends BaseActivity {
                     startActivity(intent_voice);
                     break;
                 case R.id.actEnterControl:
-                    Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
-                    intent_wifi.putExtra("type", "control");
-                    startActivity(intent_wifi);
+                    ip = spt.getString("ip", null);
+                    if (ip != null) {
+//                        new NetPing().executeOnExecutor(Executors.newCachedThreadPool());
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+                                String s = Ping(ip);
+                                if (s != null && s.equals("success")) {
+                                    Intent intent_control = new Intent(RobotActivity.this, RobotControlActivity.class);
+                                    intent_control.putExtra("ip", ip);
+                                    startActivity(intent_control);
+                                } else {
+                                    Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
+                                    intent_wifi.putExtra("type", "control");
+                                    startActivity(intent_wifi);
+                                }
+                            }
+                        }.start();
+                    } else {
+                        Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
+                        intent_wifi.putExtra("type", "control");
+                        startActivity(intent_wifi);
+                    }
                     break;
             }
         }
     };
+
+    public String Ping(String str) {
+        String resault = "";
+        Process p;
+        try {
+
+//ping -c 3 -w 1  中  ，-c 是指ping的次数 3是指ping 3次 ，-w 1  以秒为单位指定超时间隔，是指超时时间为1秒
+            p = Runtime.getRuntime().exec("ping -c 1 -w 1 " + ip);
+            InputStream input = p.getInputStream();
+            BufferedReader in = new BufferedReader(new InputStreamReader(input));
+            StringBuffer buffer = new StringBuffer();
+            String line = "";
+            while ((line = in.readLine()) != null) {
+                buffer.append(line);
+            }
+            ILog.e("Return ============" + buffer.toString());
+
+            int status = p.waitFor();
+            if (status == 0) {
+                resault = "success";
+            } else {
+                resault = "faild";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resault;
+    }
+
+    private class NetPing extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String s = "";
+            s = Ping(ip);
+            ILog.e("ping", s);
+            return s;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s != null && s.equals("success")) {
+                Intent intent_control = new Intent(RobotActivity.this, RobotControlActivity.class);
+                intent_control.putExtra("ip", ip);
+                startActivity(intent_control);
+            } else {
+                Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
+                intent_wifi.putExtra("type", "control");
+                startActivity(intent_wifi);
+            }
+        }
+    }
 
     /**
      * 返回到IndexActivity

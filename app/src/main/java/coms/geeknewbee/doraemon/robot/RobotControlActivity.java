@@ -502,16 +502,18 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                         ILog.e("连接已断开");
                         hideDialog();
                         handler.removeCallbacks(finish);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(RobotControlActivity.this)
-                                .setTitle("温馨提示")
-                                .setMessage("连接已断开，请重新连接,点击确认关闭当前页面")
-                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        finish();
-                                    }
-                                });
-                        builder.show();
+                        if (!isExit) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(RobotControlActivity.this)
+                                    .setTitle("温馨提示")
+                                    .setMessage("连接已断开，请重新连接,点击确认关闭当前页面")
+                                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    });
+                            builder.show();
+                        }
                         break;
                     default:
                         break;

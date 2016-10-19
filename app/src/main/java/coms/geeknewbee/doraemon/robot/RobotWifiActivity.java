@@ -11,8 +11,11 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -51,6 +54,9 @@ public class RobotWifiActivity extends BaseActivity
     Button wifi_ok;
 
     ImageButton ibBack;
+
+    CheckBox rememberPsw;
+    CheckBox showPsw;
 
 
     IRobotBindPresenter bindPresenter;
@@ -119,11 +125,34 @@ public class RobotWifiActivity extends BaseActivity
     private void assignViews() {
         wifi_ssid = (EditText) findViewById(R.id.wifi_ssid);
         wifi_password = (EditText) findViewById(R.id.wifi_password);
+        rememberPsw = (CheckBox) findViewById(R.id.rememberPsw);
+        showPsw = (CheckBox) findViewById(R.id.showPsw);
         wifi_ok = (Button) findViewById(R.id.wifi_ok);
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         skm = new SoftKeyboardManager(wifi_ssid);
         bleManager = BleManager.getInstance();
         bindPresenter = new IRobotBindPresenter(this);
+
+        rememberPsw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                pwd = wifi_password.getText().toString();
+                if (!StringHandler.isEmpty(pwd) && rememberPsw.isChecked()) {
+                    spt.putString("pwd", pwd);
+                }
+            }
+        });
+
+        showPsw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (showPsw.isChecked()) {
+                    wifi_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    wifi_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+            }
+        });
 
         wifi_ok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,6 +272,8 @@ public class RobotWifiActivity extends BaseActivity
                     BTPostBackCommand.SetWIFICallBack back = command.getWifiCallBack();
                     boolean isSuccess = back.isSuccess;
                     boolean hadBind = back.hadBound;
+                    String ip = back.ipAddress;
+                    spt.putString("ip", ip);
                     //  返回的信息
                     String content = back.content;
                     if (isSuccess) {
@@ -258,7 +289,6 @@ public class RobotWifiActivity extends BaseActivity
                                 ILog.e("WIFI设置成功,进入控制界面");
                                 tt.showMessage("Wifi设置成功,进入控制界面", tt.LONG);
                                 Intent intent_control = new Intent(RobotWifiActivity.this, RobotControlActivity.class);
-                                String ip = back.ipAddress;
                                 intent_control.putExtra("ip", ip);
                                 startActivity(intent_control);
                                 finish();
@@ -302,6 +332,9 @@ public class RobotWifiActivity extends BaseActivity
         if (StringHandler.isEmpty(pwd)) {
             showMsg("系统提示", "WIFI密码不能为空");
             return;
+        }
+        if (rememberPsw.isChecked()) {
+            spt.putString("pwd", pwd);
         }
         showDialog("正在设置网络……");
         handler.postDelayed(finish, 35000);
@@ -381,6 +414,15 @@ public class RobotWifiActivity extends BaseActivity
         hideDialog();
         tt.showMessage("" + msg, tt.LONG);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String lastPsw = spt.getString("pwd", null);
+        if (lastPsw != null) {
+            wifi_password.setText(lastPsw);
+        }
     }
 
     @Override
