@@ -24,14 +24,14 @@ public interface IUserNextStepView extends IBaseView {
     void setCode(String code);
 
     /**
+     * 获取验证码失败
+     */
+    void getCodeFailed();
+
+    /**
      * 获取验证码
      */
     String getCode();
-
-    /**
-     * 获取验证码成功
-     */
-    void getCodeSuccess();
 
     /**
      * Register存在注册成功与失败的处理，我们主要看成功我们是跳转Activity，而失败可能是去给个提醒：

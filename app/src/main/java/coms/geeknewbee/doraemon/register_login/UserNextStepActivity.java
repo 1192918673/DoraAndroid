@@ -122,11 +122,11 @@ public class UserNextStepActivity extends BaseActivity implements IUserNextStepV
                 btGetcodeId.setEnabled(false);
                 btGetcodeId.setTextColor(Color.GRAY);
                 mUserRegisterPresenter.getCode();
-//                timer.start();//计时器
-//                skm.hide();
-//                showDialog("正在发送验证码……");
-//                etRegisterCodeId.setEnabled(true);
-//                etRegisterCodeId.setFocusable(true);
+                timer.start();//计时器
+                skm.hide();
+                showDialog("正在发送验证码……");
+                etRegisterCodeId.setEnabled(true);
+                etRegisterCodeId.setFocusable(true);
             }
         } else {
             //输入为空
@@ -167,19 +167,14 @@ public class UserNextStepActivity extends BaseActivity implements IUserNextStepV
     }
 
     @Override
-    public String getCode() {
-        return etRegisterCodeId.getText().toString().trim();
+    public void getCodeFailed() {
+        timer.cancel();
     }
 
     @Override
-    public void getCodeSuccess() {
-        timer.start();//计时器
-        skm.hide();
-        showDialog("正在发送验证码……");
-        etRegisterCodeId.setEnabled(true);
-        etRegisterCodeId.setFocusable(true);
+    public String getCode() {
+        return etRegisterCodeId.getText().toString().trim();
     }
-
 
     @Override
     public void toRegisterActivity(String token) {

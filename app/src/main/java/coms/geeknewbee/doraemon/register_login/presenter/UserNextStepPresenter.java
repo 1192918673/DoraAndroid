@@ -35,7 +35,6 @@ public class UserNextStepPresenter {
                     @Override
                     public void run() {
                         userRegisterView.setCode(code);
-                        userRegisterView.getCodeSuccess();
                     }
                 });
             }
@@ -43,6 +42,7 @@ public class UserNextStepPresenter {
             @Override
             public void getCOdeFailed(String msg) {
                 ILog.i("getCOdeFailed().................","Failed.....................\n"+msg);
+                userRegisterView.getCodeFailed();
                 userRegisterView.showMessage(""+msg);
             }
         });
