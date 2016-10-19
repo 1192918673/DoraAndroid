@@ -30,7 +30,9 @@ import coms.geeknewbee.doraemon.utils.StringHandler;
 
 public class RobotManagerActivity extends BaseActivity implements IManagerView {
 
-    /**-----------------------组件----------------------**/
+    /**
+     * -----------------------组件----------------------
+     **/
 
     EditText dr_name;
 
@@ -42,11 +44,15 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
 
     Button dr_remove;
 
+    Button ok;
+
     SeekBar dr_vol;
 
     ImageButton ib_back;
 
-    /**-----------------------数据----------------------**/
+    /**
+     * -----------------------数据----------------------
+     **/
 
     RobotBean robot;
 
@@ -55,6 +61,7 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
     String robotPk;
 
     UserBean user;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,7 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
         dr_wifi = (EditText) findViewById(R.id.dr_wifi);
         dr_hard = (Button) findViewById(R.id.dr_hard);
         dr_remove = (Button) findViewById(R.id.dr_remove);
+        ok = (Button) findViewById(R.id.ok);
         tv_wifi_set = (TextView) findViewById(R.id.tv_wifi_set);
         dr_vol = (SeekBar) findViewById(R.id.dr_vol);
         ib_back = (ImageButton) findViewById(R.id.ib_back);
@@ -78,10 +86,12 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
         presenter = new IRobotManagerPresenter(this);
         dr_vol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { }
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -93,8 +103,9 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
         dr_hard.setOnClickListener(clickListener);
         dr_remove.setOnClickListener(clickListener);
         tv_wifi_set.setOnClickListener(clickListener);
+        ok.setOnClickListener(clickListener);
 
-        if(session.contains(Session.USER)){
+        if (session.contains(Session.USER)) {
             user = (UserBean) session.get(Session.USER);
             login();
         }
@@ -105,7 +116,7 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
     View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if(hasFocus){
+            if (hasFocus) {
                 skm.show();
             }
         }
@@ -114,7 +125,7 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch(v.getId()){
+            switch (v.getId()) {
                 case R.id.ib_back:
                     finish();
                     break;
@@ -134,6 +145,14 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
                     intent.putExtra("type", "reLink");
                     startActivityForResult(intent, 0);
                     break;
+
+                case R.id.ok:
+                    name = dr_name.getText().toString().trim();
+                    name = name.replace(" ", "");
+                    name = name.replace("\n", "");
+                    dr_name.setText(name);
+                    presenter.modifyRobot();
+                    break;
             }
         }
     };
@@ -141,16 +160,16 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
     @Override
     protected void onResume() {
         super.onResume();
-        if(session.contains("robotBeans")){
+        if (session.contains("robotBeans")) {
             List<RobotBean> robotBeans =
-                    (List<RobotBean>)session.get("robotBeans");
-            if(robotBeans == null || robotBeans.size() == 0){
+                    (List<RobotBean>) session.get("robotBeans");
+            if (robotBeans == null || robotBeans.size() == 0) {
                 tt.showMessage("该机器人已不存在！", tt.SHORT);
                 finish();
             } else {
                 int len = robotBeans.size();
-                for (int i = 0; i < len; i++){
-                    if(("" + robotBeans.get(i).getId()).equals(robotPk)){
+                for (int i = 0; i < len; i++) {
+                    if (("" + robotBeans.get(i).getId()).equals(robotPk)) {
                         robot = robotBeans.get(i);
                         dr_name.setText("" + robot.getName());
                         dr_wifi.setText("" + robot.getSsid());
@@ -158,7 +177,7 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
                         break;
                     }
                 }
-                if(robot == null){
+                if (robot == null) {
                     tt.showMessage("该机器人已不存在！", tt.SHORT);
                     finish();
                 }
@@ -181,7 +200,7 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
 
     @Override
     public String getName() {
-        return dr_name.getText().toString();
+        return name;
     }
 
     @Override
@@ -191,18 +210,18 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
 
     @Override
     public void setRobotBean(RobotBean robot) {
-        if(StringHandler.isEmpty(presenter.getName())){
+        if (StringHandler.isEmpty(presenter.getName())) {
             hideDialog();
             session.remove("index_refresh");
             List<RobotBean> robotBeans =
-                    (List<RobotBean>)session.get("robotBeans");
-            for (RobotBean robotBean : robotBeans){
-                if(robotPk.equals("" + robotBean.getId())){
+                    (List<RobotBean>) session.get("robotBeans");
+            for (RobotBean robotBean : robotBeans) {
+                if (robotPk.equals("" + robotBean.getId())) {
                     robotBeans.remove(robotBean);
                     break;
                 }
             }
-            if(robotBeans.size() > 0){
+            if (robotBeans.size() > 0) {
                 spt.putString(SptConfig.ROBOT_KEY, "" + robotBeans.get(0).getId());
             }
             finish();
@@ -219,7 +238,6 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
 
     @Override
     protected void onPause() {
-        presenter.modifyRobot();
         super.onPause();
     }
 
@@ -232,15 +250,15 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             String ssid = data.getStringExtra("ssid");
-            if(!StringHandler.isEmpty(ssid)){
+            if (!StringHandler.isEmpty(ssid)) {
                 this.robot.setSsid(ssid);
                 dr_wifi.setText("" + ssid);
             }
         }
     }
 
-    public void login(){
-        if(!session.contains("EMClient.login")){
+    public void login() {
+        if (!session.contains("EMClient.login")) {
             EMClient.getInstance().login(user.getHx_user().getUsername(),
                     user.getHx_user().getPassword(), new EMCallBack() {//回调
                         @Override
@@ -265,16 +283,16 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
         }
     }
 
-    public void sendVolume(){
-        if(session.contains("robotBeans")){
+    public void sendVolume() {
+        if (session.contains("robotBeans")) {
             List<RobotBean> robotBeans =
-                    (List<RobotBean>)session.get("robotBeans");
+                    (List<RobotBean>) session.get("robotBeans");
             RobotBean robot = robotBeans.get(0);
             String pk = spt.getString(SptConfig.ROBOT_KEY, null);
-            if(pk != null){
+            if (pk != null) {
                 int len = robotBeans.size();
-                for (int i = 0; i < len; i++){
-                    if(pk.equals(robotBeans.get(i).getId() + "")){
+                for (int i = 0; i < len; i++) {
+                    if (pk.equals(robotBeans.get(i).getId() + "")) {
                         robot = robotBeans.get(i);
                         break;
                     }

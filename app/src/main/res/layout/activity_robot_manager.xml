@@ -151,7 +151,7 @@
                 android:layout_marginBottom="14dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="30dp"
                 android:background="#00A0E8"
                 android:gravity="center"
                 android:text="查看硬件信息"
@@ -169,6 +169,20 @@
                 android:background="#FFFC5950"
                 android:gravity="center"
                 android:text="解除绑定"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="#00A0E8"
+                android:gravity="center"
+                android:text="保存修改"
                 android:textColor="#FFFFFF"
                 android:textSize="15dp" />
 
