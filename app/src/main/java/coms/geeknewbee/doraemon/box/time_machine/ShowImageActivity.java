@@ -8,9 +8,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,6 +22,7 @@ import coms.geeknewbee.doraemon.box.time_machine.view.IPhotoView;
 import coms.geeknewbee.doraemon.entity.RobotPhoto;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.SptConfig;
+import coms.geeknewbee.doraemon.utils.ILog;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
@@ -51,8 +52,6 @@ public class ShowImageActivity extends BaseActivity implements IPhotoView {
         vp = (ViewPager) findViewById(R.id.vp);
 //        imageView = (ImageView) findViewById(R.id.imageView);
 
-//        final PhotoViewAttacher mAttacher = new PhotoViewAttacher(imageView);
-
 //        String imageUrl = getIntent().getStringExtra("imageUrl");
 //        imageId = getIntent().getIntExtra("imageId", 0);
 //        dateKey = getIntent().getStringExtra("dateKey");
@@ -64,9 +63,7 @@ public class ShowImageActivity extends BaseActivity implements IPhotoView {
 
         vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
@@ -74,31 +71,10 @@ public class ShowImageActivity extends BaseActivity implements IPhotoView {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
 
         presenter = new IPhotoPresenter(this);
-
-//        Picasso.with(this).load(imageUrl).into(imageView, new Callback() {
-//            @Override
-//            public void onSuccess() {
-//                ILog.e("test", "succ");
-//                mAttacher.update();
-//                mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-//                    @Override
-//                    public void onViewTap(View view, float v, float v1) {
-//                        finish();
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onError() {
-//                ILog.e("test", "fail");
-//            }
-//        });
 
     }
 
@@ -196,9 +172,27 @@ public class ShowImageActivity extends BaseActivity implements IPhotoView {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             ImageView view = new ImageView(ShowImageActivity.this);
+            final PhotoViewAttacher mAttacher = new PhotoViewAttacher(view);
             Picasso.with(ShowImageActivity.this)
                     .load(myPhotos.get(position).getPhoto())
-                    .into(view);
+                    .into(view, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            ILog.e("test", "succ");
+                            mAttacher.update();
+                            mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                                @Override
+                                public void onViewTap(View view, float v, float v1) {
+                                    finish();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError() {
+                            ILog.e("test", "fail");
+                        }
+                    });
             container.addView(view);
             return view;
         }
