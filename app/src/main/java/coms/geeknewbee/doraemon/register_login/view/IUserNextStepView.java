@@ -24,11 +24,6 @@ public interface IUserNextStepView extends IBaseView {
     void setCode(String code);
 
     /**
-     * 获取验证码失败
-     */
-    void getCodeFailed();
-
-    /**
      * 获取验证码
      */
     String getCode();
