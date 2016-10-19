@@ -1,5 +1,6 @@
 package coms.geeknewbee.doraemon.utils;
 
+import android.support.constraint.BuildConfig;
 import android.util.Log;
 
 public class ILog {
@@ -27,7 +28,7 @@ public class ILog {
 	/**
 	 * 是否测试阶段，正式版则屏蔽所有日志
 	 */
-	private static boolean debug = true;
+	private static boolean debug = coms.geeknewbee.doraemon.BuildConfig.isDebug;
 
 	public static void setLogPriority(int priority) {
 		mLogPriority = priority;

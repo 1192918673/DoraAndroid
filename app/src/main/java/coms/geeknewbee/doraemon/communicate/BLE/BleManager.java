@@ -15,12 +15,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import java.util.List;
 import java.util.UUID;
 
 import coms.geeknewbee.doraemon.BuildConfig;
 import coms.geeknewbee.doraemon.communicate.IControl;
-import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.utils.ILog;
 
 /**

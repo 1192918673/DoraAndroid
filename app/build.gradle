@@ -27,6 +27,7 @@ android {
         multiDexEnabled true
         ndk { abiFilters 'armeabi' }
 
+        buildConfigField "boolean", "isDebug", "true"
         buildConfigField "String", "BLUETOOTH_NAME", localProps["bluetoothName"] == null ? "Doraemon" : localProps["bluetoothName"]
         println "BLUETOOTH_NAME:" + (localProps["bluetoothName"] == null ? BLNAME : localProps["bluetoothName"])
     }
@@ -48,6 +49,7 @@ android {
             shrinkResources true // 是否去除无效的资源文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BLUETOOTH_NAME", BLNAME
+            buildConfigField "boolean", "isDebug", "false"
         }
 
         debug {
@@ -55,6 +57,7 @@ android {
             minifyEnabled false
             zipAlignEnabled true
             shrinkResources true// 是否去除无效的资源文件
+            buildConfigField "boolean", "isDebug", "true"
         }
     }
 
