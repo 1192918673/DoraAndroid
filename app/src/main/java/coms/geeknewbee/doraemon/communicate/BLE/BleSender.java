@@ -55,7 +55,10 @@ public class BleSender extends Thread {
     public void stopSend() {
         clearAllData();
         isExit = true;
-        sendThread.interrupt();
+        if (sendThread != null) {
+            sendThread.interrupt();
+        }
+
     }
 
     private void sendData(BLEData data) {

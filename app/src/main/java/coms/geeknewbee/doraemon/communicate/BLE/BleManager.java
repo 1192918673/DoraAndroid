@@ -19,6 +19,7 @@ import java.util.UUID;
 
 import coms.geeknewbee.doraemon.BuildConfig;
 import coms.geeknewbee.doraemon.communicate.IControl;
+import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.utils.ILog;
 
 /**
@@ -71,6 +72,7 @@ public class BleManager implements IControl {
     private static final int MSG_WHAT_GET_INFO = 600;
     private static final int MSG_HAS_SERVICE = 700;
     private static final int MSG_DIS_CONNET = 800;
+    private static final int MSG_CONNECT_AND_SENDMY = 801;
 
     private BleManager() {
         bleSender = new BleSender();
@@ -207,10 +209,10 @@ public class BleManager implements IControl {
             Message msg = Message.obtain();
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 ILog.e("扫描到服务");
-//                //连接成功后需要发送特定的秘钥给猫
-//                BluetoothGattCharacteristic keyCharacteristic = mBluetoothGatt.getService(KEY_SERVICE_UUID).getCharacteristic(KEY_CHARACTERISTIC_UUID);
-//                String key = "@DORA%1316";
-//                bleSender.addData(keyCharacteristic, key.getBytes());
+                //连接成功后需要发送特定的秘钥给猫
+                BluetoothGattCharacteristic keyCharacteristic = mBluetoothGatt.getService(KEY_SERVICE_UUID).getCharacteristic(KEY_CHARACTERISTIC_UUID);
+                bleSender.addData(keyCharacteristic, GlobalContants.key.getBytes());
+                ILog.e("发送秘钥");
 
                 //  获取我们需要的服务
                 BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
@@ -244,6 +246,9 @@ public class BleManager implements IControl {
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 ILog.e("回调：信息写入成功");
+                Message msg = Message.obtain();
+                msg.what =  MSG_CONNECT_AND_SENDMY;
+                handler.sendMessage(msg);
 //                bleSender.sendData(characteristic);
             } else {
                 ILog.e("回调：信息写入失败");
@@ -290,7 +295,9 @@ public class BleManager implements IControl {
 
     //  关闭通信 BluetoothGatt
     public void close() {
-        bleSender.stopSend();
+        if (bleSender != null) {
+            bleSender.stopSend();
+        }
         if (mBluetoothGatt != null) {
             ILog.e("断开蓝牙连接");
             mBluetoothGatt.disconnect();

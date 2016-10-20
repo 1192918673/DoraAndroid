@@ -15,6 +15,8 @@ public class GlobalContants {
     //发送蓝牙命令的前后缀
     public static final String COMMAND_ROBOT_PREFIX = new String(new byte[]{0x02});
     public static final String COMMAND_ROBOT_SUFFIX = new String(new byte[]{0x03});
+    //发送秘钥
+    public static final String key = "@DORA%1316";
 
     //socket传输数据的头尾标志
     public static final String COMMAND_ROBOT_PREFIX_FOR_SOCKET = "ROBOT_PREFIX";

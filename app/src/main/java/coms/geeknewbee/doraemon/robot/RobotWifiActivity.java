@@ -97,6 +97,7 @@ public class RobotWifiActivity extends BaseActivity
     private static final int MSG_WHAT_GET_INFO = 600;
     private static final int MSG_HAS_SERVICE = 700;
     private static final int MSG_DIS_CONNET = 800;
+    private static final int MSG_CONNECT_AND_SENDMY = 801;
 
     // Stops scanning after 30 seconds.
     private static final long SCAN_PERIOD = 10000;
@@ -205,6 +206,7 @@ public class RobotWifiActivity extends BaseActivity
         bleManager.startScan();
     }
 
+    private boolean isSend;
     //蓝牙调用的结果处理
     public Handler handler = new Handler() {
         @Override
@@ -251,6 +253,21 @@ public class RobotWifiActivity extends BaseActivity
                 case MSG_HAS_SERVICE:  //是否扫描到设备的服务
                     hasService = (Boolean) msg.obj;
                     if (hasService) {
+//                        //  将对象转换为json类型的字符串进行发送
+//                        BluetoothCommand bluetoothCommand = new BluetoothCommand(new BluetoothCommand.WifiInfo(3, SSID, pwd));
+//                        //  字符串是否为空可以作为是否进行过设备连接的依据
+//                        send = gson.toJson(bluetoothCommand);
+//                        String sendData = GlobalContants.COMMAND_ROBOT_PREFIX + send + GlobalContants.COMMAND_ROBOT_SUFFIX;
+//                        ILog.e("发送消息：" + sendData);
+//                        bleManager.writeInfo(sendData.getBytes(), 1);
+                    } else {
+                        tt.showMessage("未扫描到服务", tt.SHORT);
+                    }
+                    break;
+
+                case MSG_CONNECT_AND_SENDMY:    //连接成功并已发送秘钥成功
+                    if (hasService && !isSend) {
+                        isSend = true;
                         //  将对象转换为json类型的字符串进行发送
                         BluetoothCommand bluetoothCommand = new BluetoothCommand(new BluetoothCommand.WifiInfo(3, SSID, pwd));
                         //  字符串是否为空可以作为是否进行过设备连接的依据
@@ -258,8 +275,6 @@ public class RobotWifiActivity extends BaseActivity
                         String sendData = GlobalContants.COMMAND_ROBOT_PREFIX + send + GlobalContants.COMMAND_ROBOT_SUFFIX;
                         ILog.e("发送消息：" + sendData);
                         bleManager.writeInfo(sendData.getBytes(), 1);
-                    } else {
-                        tt.showMessage("未扫描到服务", tt.SHORT);
                     }
                     break;
 
