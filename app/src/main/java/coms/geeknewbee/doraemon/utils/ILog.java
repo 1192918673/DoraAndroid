@@ -28,7 +28,8 @@ public class ILog {
 	/**
 	 * 是否测试阶段，正式版则屏蔽所有日志
 	 */
-	private static boolean debug = coms.geeknewbee.doraemon.BuildConfig.isDebug;
+//	private static boolean debug = coms.geeknewbee.doraemon.BuildConfig.isDebug;
+	private static boolean debug = true;
 
 	public static void setLogPriority(int priority) {
 		mLogPriority = priority;

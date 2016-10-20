@@ -160,6 +160,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
      **/
     private final int MSG_WHAT_SOCKET_CONNECT = 1000;
     private final int MSG_WHAT_SOCKET_DISCONNECT = 1001;
+    private final int MSG_WHAT_CONNECT_FAILED = 1006;
 
     /**
      * -----------------------使用蓝牙返回的信息----------------------
@@ -200,7 +201,7 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
                 startDiscoverDevice();
             } else {
                 //  使用socket，此时进行连接
-                handler.postDelayed(finish, SOCKET_PERIOD);
+//                handler.postDelayed(finish, SOCKET_PERIOD);
                 connect();
             }
         }
@@ -453,6 +454,14 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
             super.handleMessage(msg);
             if (msg.what >= 100) {
                 switch (msg.what) {
+                    case MSG_WHAT_CONNECT_FAILED:  //socket连接失败
+                        ILog.e("socket连接失败");
+                        tt.showMessage("socket连接失败，请设置wifi", tt.LONG);
+                        Intent intent = new Intent(RobotControlActivity.this, RobotWifiActivity.class);
+                        intent.putExtra("type", "control");
+                        startActivity(intent);
+                        finish();
+                        break;
                     case MSG_WHAT_SOCKET_CONNECT:   //socket连接成功
                         hideDialog();
                         handler.removeCallbacks(finish);

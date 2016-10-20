@@ -161,6 +161,7 @@ public class RobotActivity extends BaseActivity {
                             public void run() {
                                 super.run();
                                 String s = Ping(ip);
+                                ILog.e("ping的结果：" + s);
                                 if (s != null && s.equals("success")) {
                                     Intent intent_control = new Intent(RobotActivity.this, RobotControlActivity.class);
                                     intent_control.putExtra("ip", ip);

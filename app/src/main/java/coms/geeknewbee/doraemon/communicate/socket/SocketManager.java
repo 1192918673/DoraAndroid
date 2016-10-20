@@ -7,6 +7,7 @@ import android.os.Message;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,6 +31,7 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
     private final int MSG_WHAT_ADD_FACE = 1003;
     private final int MSG_WHAT_ADD_NAME = 1004;
     private final int MSG_WHAT_ADD_PHOTO = 1005;
+    private final int MSG_WHAT_CONNECT_FAILED = 1006;
 
     private ReadInfoThread runnable;
     private Thread thread;
@@ -58,7 +60,8 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
             public void run() {
                 super.run();
                 try {
-                    socket = new Socket(ip, GlobalContants.PORT);
+                    socket = new Socket();
+                    socket.connect(new InetSocketAddress(ip, GlobalContants.PORT), 10000);
                     out = new BufferedOutputStream(socket.getOutputStream());
                     ILog.e("socket连接成功");
                     Message msg = Message.obtain();
@@ -69,8 +72,11 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
                     runnable.setOnReceiveDataListener(SocketManager.this);
                     thread = new Thread(runnable);
                     thread.start();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    Message msg = Message.obtain();
+                    msg.what = MSG_WHAT_CONNECT_FAILED;
+                    handler.sendMessage(msg);
                 }
             }
         }.start();
