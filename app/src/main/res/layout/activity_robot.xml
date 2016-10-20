@@ -63,6 +63,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_haveRobot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/up"
@@ -190,8 +191,8 @@
         <RelativeLayout
             android:id="@+id/actVoice"
             android:layout_width="match_parent"
-            android:visibility="visible"
-            android:layout_height="56dp">
+            android:layout_height="56dp"
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -209,5 +210,20 @@
                 android:textColor="#50525C"
                 android:textSize="16dp" />
         </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/up"
+        android:background="#EBEFF2"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="您还没有可管理的设备哦" />
     </LinearLayout>
 </RelativeLayout>

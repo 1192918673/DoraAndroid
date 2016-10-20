@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textColor="#ff50525c"
-                android:text="遥控器学习"
+                android:text="博联遥控学习"
                 android:textSize="22sp" />
         </RelativeLayout>
 

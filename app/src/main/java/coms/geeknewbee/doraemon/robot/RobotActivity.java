@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,6 +57,10 @@ public class RobotActivity extends BaseActivity {
 
     private RelativeLayout actEnterControl;
 
+    LinearLayout ll_haveRobot;
+
+    LinearLayout ll_null;
+
     /**
      * ---------------------数据--------------------
      **/
@@ -72,6 +77,8 @@ public class RobotActivity extends BaseActivity {
         actOffline = (RelativeLayout) findViewById(R.id.actOffline);
         actVoice = (RelativeLayout) findViewById(R.id.actVoice);
         actEnterControl = (RelativeLayout) findViewById(R.id.actEnterControl);
+        ll_haveRobot = (LinearLayout) findViewById(R.id.ll_haveRobot);
+        ll_null = (LinearLayout) findViewById(R.id.ll_null);
     }
 
     @Override
@@ -98,23 +105,25 @@ public class RobotActivity extends BaseActivity {
         robotsView.setRobots(robotBeans);
         robotsView.setRobotKey(spt.getString(SptConfig.ROBOT_KEY, null));
         if (robotBeans == null || robotBeans.size() == 0) {
-            act_msg.setOnClickListener(null);
-            act_robot.setOnClickListener(null);
-            act_member.setOnClickListener(null);
+            ll_haveRobot.setVisibility(View.GONE);
+            ll_null.setVisibility(View.VISIBLE);
         } else {
+            ll_haveRobot.setVisibility(View.VISIBLE);
+            ll_null.setVisibility(View.GONE);
             robot = robotsView.getRobot();
             act_msg.setOnClickListener(clickListener);
             act_robot.setOnClickListener(clickListener);
             act_member.setOnClickListener(clickListener);
+
+            actOffline.setOnClickListener(clickListener);
+            actEnterControl.setOnClickListener(clickListener);
+            actVoice.setOnClickListener(clickListener);
         }
     }
 
     private void initListener() {
         ibBack.setOnClickListener(clickListener);
         tvAdd.setOnClickListener(clickListener);
-        actOffline.setOnClickListener(clickListener);
-        actEnterControl.setOnClickListener(clickListener);
-        actVoice.setOnClickListener(clickListener);
     }
 
     OnClickListener clickListener = new OnClickListener() {
