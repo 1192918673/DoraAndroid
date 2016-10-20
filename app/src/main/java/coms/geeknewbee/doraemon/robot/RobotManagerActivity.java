@@ -200,6 +200,9 @@ public class RobotManagerActivity extends BaseActivity implements IManagerView {
 
     @Override
     public String getName() {
+        name = dr_name.getText().toString().trim();
+        name = name.replace(" ", "");
+        name = name.replace("\n", "");
         return name;
     }
 

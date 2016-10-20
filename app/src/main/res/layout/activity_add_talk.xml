@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
-        android:text="学说话"
+        android:text="学对话"
         android:textColor="#000000"
         android:textSize="22dp" />
 
