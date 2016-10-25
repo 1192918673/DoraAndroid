@@ -34,8 +34,10 @@ import mobile.ReadFace.YMFaceTrack;
 /**
  * Created by GYY on 2016/9/30.
  */
+
 public class AddFaceActivity extends BaseActivity implements View.OnClickListener {
 
+    private final int timeout = 10000;
     private ImageButton ibBack;
     private Button btn_open;
     private Button btn_ok;
@@ -55,9 +57,11 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
     private final int MSG_WHAT_ADD_NAME = 1004;
     private final int MSG_WHAT_ADD_PHOTO = 1005;
 
+    private boolean hasEnter;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            removeCallbacks(finish);
             hideDialog();
             String data = (String) msg.obj;
             switch (msg.what) {
@@ -70,6 +74,7 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
                     finish();
                     break;
                 case MSG_WHAT_START_ADD_FACE:   //是否可以录入人脸
+                    hasEnter = true;
                     if (data.equals("1")) {
                         ILog.e("可以录入");
                         Toast.makeText(AddFaceActivity.this, "可以开始录入人脸啦", Toast.LENGTH_SHORT).show();
@@ -104,6 +109,19 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
         }
     };
 
+    Runnable finish = new Runnable() {
+        @Override
+        public void run() {
+            hideDialog();
+            if (!hasEnter) {
+                Toast.makeText(AddFaceActivity.this, "发送超时，请重新进入", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(AddFaceActivity.this, "发送超时，请重新添加", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,16 +143,17 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
         faceTrack.setRecognitionConfidence(80);
         faceTrack.resetAlbum();
 
-        isSuccess = false;
-
-        showDialog("正在通知哆啦A梦要添加人脸");
-        //发送相机参数信息
-        ReadFaceInitParams initParams = new ReadFaceInitParams(YMFaceTrack.FACE_0, YMFaceTrack.RESIZE_WIDTH_1920, 0, 0);
-        Gson gson = new Gson();
-        String json = gson.toJson(initParams);
-        String send = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.READY_ADD_FACE
-                + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
-        socketManager.writeInfo(send.getBytes(), 2);
+        if (!hasEnter) {
+            handler.postDelayed(finish, timeout);
+            showDialog("正在通知哆啦A梦要添加人脸");
+            //发送相机参数信息
+            ReadFaceInitParams initParams = new ReadFaceInitParams(YMFaceTrack.FACE_0, YMFaceTrack.RESIZE_WIDTH_1920, 0, 0);
+            Gson gson = new Gson();
+            String json = gson.toJson(initParams);
+            String send = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.READY_ADD_FACE
+                    + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
+            socketManager.writeInfo(send.getBytes(), 2);
+        }
     }
 
     @Override
@@ -157,6 +176,7 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
                 if (!isSuccess) {
                     Toast.makeText(AddFaceActivity.this, "请先选取照片再进行添加！", Toast.LENGTH_SHORT).show();
                 } else {
+                    handler.postDelayed(finish, timeout);
                     showDialog("正在发送人名信息");
                     String data = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.NAME_DATA + name + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
                     ILog.e("发送人名信息：" + data);
@@ -170,6 +190,7 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
+            isSuccess = false;
             Uri uri = data.getData();
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
@@ -202,6 +223,7 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    handler.postDelayed(finish, timeout);
                     showDialog("正在发送照片");
                     //发送人脸信息
                     addFace(bytes);

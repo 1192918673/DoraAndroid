@@ -75,36 +75,36 @@ dependencies {
     //编译libs目录下的所有jar包
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':circleimageview')
-    //引用个推
-    compile files('libs/GetuiSDK2.8.1.0.jar')
-    compile files('libs/GetuiExt-2.0.3.jar')
-    // compile 'com.android.support:support-v4'
-    //引用环信
-    compile files('libs/hyphenatechat_3.1.2.jar')
-    //引用博联
-    compile files('libs/BLNetwork.jar')
-    //引用二维码扫描
-    compile files('libs/zxing.jar')
-    //编译extras目录下的ShimmerAndroid模块
-    //compile project(':extras:ShimmerAndroid')
-    //注解findViewbyId
-    compile files('libs/butterknife-7.0.1.jar')
+//    //引用个推
+//    compile files('libs/GetuiSDK2.8.1.0.jar')
+//    compile files('libs/GetuiExt-2.0.3.jar')
+//    // compile 'com.android.support:support-v4'
+//    //引用环信
+//    compile files('libs/hyphenatechat_3.1.2.jar')
+//    //引用博联
+//    compile files('libs/BLNetwork.jar')
+//    //引用二维码扫描
+//    compile files('libs/zxing.jar')
+//    //编译extras目录下的ShimmerAndroid模块
+//    //compile project(':extras:ShimmerAndroid')
+//    //注解findViewbyId
+//    compile files('libs/butterknife-7.0.1.jar')
     compile project(':library')
-    //引用flowlayout
-    //引用okhttp3.2
-    //引用picasso
-    //引用sugarORM，管理数据库，实现本地缓存
-    //引用xUtils
-    compile files('libs/xUtils-2.6.14.jar')
-    //引用okhttp
-    // compile 'com.squareup.okhttp:okhttp:2.4.0'
-    // compile 'com.squareup.okio:okio:1.5.0'
-    // compile 'com.squareup.okhttp3:okhttp:3.2.0'
-    //引用picasso
-    //引用rx
-    //应用retrofit
-    //  compile 'com.android.support:support-v4:23.3.0'
-    compile files('libs/zxing.jar')
+//    //引用flowlayout
+//    //引用okhttp3.2
+//    //引用picasso
+//    //引用sugarORM，管理数据库，实现本地缓存
+//    //引用xUtils
+//    compile files('libs/xUtils-2.6.14.jar')
+//    //引用okhttp
+//    // compile 'com.squareup.okhttp:okhttp:2.4.0'
+//    // compile 'com.squareup.okio:okio:1.5.0'
+//    // compile 'com.squareup.okhttp3:okhttp:3.2.0'
+//    //引用picasso
+//    //引用rx
+//    //应用retrofit
+//    //  compile 'com.android.support:support-v4:23.3.0'
+//    compile files('libs/zxing.jar')
     compile 'com.mobsandgeeks:android-saripaar:2.0.3'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.android.support:multidex:1.0.1'
@@ -123,6 +123,4 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
     testCompile 'junit:junit:4.12'
-    //友盟统计
-    compile 'com.umeng.analytics:analytics:latest.integration'
 }

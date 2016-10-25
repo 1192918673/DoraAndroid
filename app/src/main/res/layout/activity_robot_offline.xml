@@ -3,207 +3,310 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/rl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
 
-        <RelativeLayout
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="15dp"
+            android:background="#00000000"
+            android:src="@mipmap/back_blue" />
+
+        <TextView
+            android:id="@+id/tv_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="蓝牙控制"
+            android:textSize="22dp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_below="@id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/ibBack"
-                android:layout_width="40dp"
-                android:layout_height="35dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
                 android:layout_marginLeft="15dp"
-                android:background="#00000000"
-                android:src="@mipmap/back_blue" />
-
-            <TextView
-                android:id="@+id/tv_control"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="蓝牙控制"
-                android:textSize="22dp" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/olCanDo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="我可以做的"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/olHowToTeach"
-                android:layout_width="0dp"
+                <Button
+                    android:id="@+id/olCanDo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="我可以做的"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/olHowToTeach"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="怎样教英语"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="怎样教英语"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/olForOld"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="去老人院做的"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/olInfo"
-                android:layout_width="0dp"
+                <Button
+                    android:id="@+id/olForOld"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="去老人院做的"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/olInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="自我介绍"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/olHH"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="呼和浩特"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="自我介绍"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
-
-            <Button
-                android:visibility="gone"
-                android:id="@+id/olHH"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="呼和浩特"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/olSayhi"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="打招呼"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/olEnd_say"
-                android:layout_width="0dp"
+                <Button
+                    android:id="@+id/olSayhi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="打招呼"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/olEnd_say"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="结束语"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="结束语"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/olOpen"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="开始自动演示"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/olClose"
-                android:layout_width="0dp"
+                <Button
+                    android:id="@+id/olOpen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="开始自动演示"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/olClose"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="结束自动演示"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ddd" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="结束自动演示"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#ddd" />
-
-       <!-- <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal">
-
-            <Button
-
-                android:id="@+id/olInfo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="自我介绍"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />-->
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <Button
+
+                    android:id="@+id/welcome"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="欢迎"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/olEmoticon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="表情"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/olDance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="跳舞"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/olMovie"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="放电影"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/olAct"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="动作控制"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/olSleep"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="休眠"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/olStop"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="#00A0E8"
+                    android:gravity="center"
+                    android:text="停止"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/olEmoticon"
+                android:id="@+id/olReadFace"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -213,128 +316,28 @@
                 android:layout_marginTop="3dp"
                 android:background="#00A0E8"
                 android:gravity="center"
-                android:text="表情"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
-
-        <!--</LinearLayout>-->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/olDance"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="跳舞"
+                android:text="人脸识别"
                 android:textColor="#FFFFFF"
                 android:textSize="15dp" />
 
             <Button
-                android:id="@+id/olMovie"
+                android:id="@+id/olTest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="14dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="6dp"
                 android:background="#00A0E8"
                 android:gravity="center"
-                android:text="放电影"
+                android:text="测试"
                 android:textColor="#FFFFFF"
                 android:textSize="15dp"
                 android:visibility="gone" />
 
-            <Button
-                android:id="@+id/olAct"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="动作控制"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/olSleep"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="休眠"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
-
-            <Button
-                android:id="@+id/olStop"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:background="#00A0E8"
-                android:gravity="center"
-                android:text="停止"
-                android:textColor="#FFFFFF"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/olReadFace"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:background="#00A0E8"
-            android:gravity="center"
-            android:text="人脸识别"
-            android:textColor="#FFFFFF"
-            android:textSize="15dp" />
-
-        <Button
-            android:id="@+id/olTest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="6dp"
-            android:background="#00A0E8"
-            android:gravity="center"
-            android:text="测试"
-            android:textColor="#FFFFFF"
-            android:textSize="15dp"
-            android:visibility="gone" />
-
-    </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/rlAct"
