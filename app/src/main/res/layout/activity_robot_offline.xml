@@ -28,9 +28,9 @@
     </RelativeLayout>
 
     <ScrollView
-        android:layout_below="@id/rl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -186,40 +186,21 @@
                 android:layout_height="1dp"
                 android:background="#ddd" />
 
-            <LinearLayout
+
+            <Button
+                android:id="@+id/olEmoticon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="14dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="3dp"
-                android:orientation="horizontal">
-
-                <Button
-
-                    android:id="@+id/welcome"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
-                    android:layout_weight="1"
-                    android:background="#00A0E8"
-                    android:gravity="center"
-                    android:text="欢迎"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15dp" />
-
-                <Button
-                    android:id="@+id/olEmoticon"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#00A0E8"
-                    android:gravity="center"
-                    android:text="表情"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
+                android:background="#00A0E8"
+                android:gravity="center"
+                android:text="表情"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
