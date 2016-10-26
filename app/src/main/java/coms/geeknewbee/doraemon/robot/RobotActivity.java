@@ -162,7 +162,8 @@ public class RobotActivity extends BaseActivity {
                     startActivity(intent_voice);
                     break;
                 case R.id.actEnterControl:
-                    ip = spt.getString("ip", null);
+                    final int id = robotsView.getRobot().getId();
+                    ip = spt.getString("ip_" + id, null);
                     if (ip != null) {
 //                        new NetPing().executeOnExecutor(Executors.newCachedThreadPool());
                         new Thread() {
@@ -178,6 +179,7 @@ public class RobotActivity extends BaseActivity {
                                 } else {
                                     Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
                                     intent_wifi.putExtra("type", "control");
+                                    intent_wifi.putExtra("id", id);
                                     startActivity(intent_wifi);
                                 }
                             }
@@ -185,6 +187,7 @@ public class RobotActivity extends BaseActivity {
                     } else {
                         Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
                         intent_wifi.putExtra("type", "control");
+                        intent_wifi.putExtra("id", id);
                         startActivity(intent_wifi);
                     }
                     break;

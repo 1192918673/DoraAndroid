@@ -244,6 +244,7 @@ public class RobotWifiActivity extends BaseActivity
 
                 case MSG_DIS_CONNET:    //连接已断开
                     if (!isMuchTime) {
+                        isSend = false;
                         hideDialog();
                         removeCallbacks(finish);
                         tt.showMessage("连接已断开，请重新设置wifi进行连接", tt.LONG);
@@ -288,7 +289,10 @@ public class RobotWifiActivity extends BaseActivity
                     boolean isSuccess = back.isSuccess;
                     boolean hadBind = back.hadBound;
                     String ip = back.ipAddress;
-                    spt.putString("ip", ip);
+                    int id = getIntent().getIntExtra("id", -1);
+                    if (id != -1) {
+                        spt.putString("ip_" + id, ip);
+                    }
                     //  返回的信息
                     String content = back.content;
                     if (isSuccess) {
