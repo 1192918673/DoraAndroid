@@ -705,15 +705,15 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         BluetoothCommand command = new BluetoothCommand();
         while (!isExit) {
             if (isRudderUse) {
-                if (mSpeedV < -200) {
-                    mSpeedV = -200;
-                } else if (mSpeedV > 200) {
-                    mSpeedV = 200;
+                if (mSpeedV < -300) {
+                    mSpeedV = -300;
+                } else if (mSpeedV > 300) {
+                    mSpeedV = 300;
                 }
-                if (mSpeedW < -300) {
-                    mSpeedW = -300;
-                } else if (mSpeedW > 300) {
-                    mSpeedW = 300;
+                if (mSpeedW < -400) {
+                    mSpeedW = -400;
+                } else if (mSpeedW > 400) {
+                    mSpeedW = 400;
                 }
                 command.setBluetoothFootCommand(new BluetoothCommand.FootCommand((int) mSpeedV, (int) mSpeedW));
                 sendInfo(command);

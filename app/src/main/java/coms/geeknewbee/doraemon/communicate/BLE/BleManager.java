@@ -209,10 +209,10 @@ public class BleManager implements IControl {
             Message msg = Message.obtain();
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 ILog.e("扫描到服务");
-                //连接成功后需要发送特定的秘钥给猫
-                BluetoothGattCharacteristic keyCharacteristic = mBluetoothGatt.getService(KEY_SERVICE_UUID).getCharacteristic(KEY_CHARACTERISTIC_UUID);
-                bleSender.addData(keyCharacteristic, GlobalContants.key.getBytes());
-                ILog.e("发送秘钥");
+//                //连接成功后需要发送特定的秘钥给猫
+//                BluetoothGattCharacteristic keyCharacteristic = mBluetoothGatt.getService(KEY_SERVICE_UUID).getCharacteristic(KEY_CHARACTERISTIC_UUID);
+//                bleSender.addData(keyCharacteristic, GlobalContants.key.getBytes());
+//                ILog.e("发送秘钥");
 
                 //  获取我们需要的服务
                 BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
