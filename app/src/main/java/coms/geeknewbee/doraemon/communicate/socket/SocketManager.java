@@ -112,8 +112,10 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
                 ILog.e("关闭socket");
                 socket.close();
                 socket = null;
-                runnable.stopThread();
-                thread.interrupted();
+                if (runnable != null && thread != null) {
+                    runnable.stopThread();
+                    thread.interrupted();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
