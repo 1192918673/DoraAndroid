@@ -350,7 +350,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
         switch (addCount) {
             case 0:
                 if (isAdd1(faces)) {
-                    tipSetText("点击页面底部按钮 - 添加正脸");
+                    tipSetText("添加正脸");
                     if (!isSending) {
                         tipSetText("正在添加第一张人脸");
                         showDialog("正在添加第一张人脸");
@@ -364,7 +364,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
                 break;
             case 1:
                 if (isAdd2(faces)) {
-                    tipSetText("点击页面底部按钮 - 添加侧脸数据");
+                    tipSetText("添加侧脸数据");
                     if (!isSending) {
                         tipSetText("正在添加第二张人脸");
                         showDialog("正在添加第二张人脸");
@@ -379,7 +379,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
                 break;
             case 2:
                 if (isAdd3(faces)) {
-                    tipSetText("点击页面底部按钮 - 添加抬头数据");
+                    tipSetText("添加抬头数据");
                     if (!isSending) {
                         tipSetText("正在添加第三张人脸");
                         showDialog("正在添加第三张人脸");
@@ -393,7 +393,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
                 break;
             case 3:
                 if (isAdd4(faces)) {
-                    tipSetText("点击页面底部按钮 - 添加低头数据");
+                    tipSetText("添加低头数据");
                     if (!isSending) {
                         tipSetText("正在添加第四张人脸");
                         showDialog("正在添加第四张人脸");
