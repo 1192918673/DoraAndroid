@@ -273,9 +273,7 @@ public class RobotWifiActivity extends BaseActivity
                         BluetoothCommand bluetoothCommand = new BluetoothCommand(new BluetoothCommand.WifiInfo(3, SSID, pwd));
                         //  字符串是否为空可以作为是否进行过设备连接的依据
                         send = gson.toJson(bluetoothCommand);
-                        String sendData = GlobalContants.COMMAND_ROBOT_PREFIX + send + GlobalContants.COMMAND_ROBOT_SUFFIX;
-                        ILog.e("发送消息：" + sendData);
-                        bleManager.writeInfo(sendData.getBytes(), 1);
+                        bleManager.writeInfo(send.getBytes(), 1);
                     }
                     break;
 

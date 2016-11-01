@@ -112,12 +112,10 @@ public class TestActivity extends Activity implements View.OnClickListener, Runn
         String json = gson.toJson(command);
         String jsonCommand = "";
         if (ip == null) {
-            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
+            jsonCommand = json;
         } else {
-            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.SEND_SOCKET_CONTROL
-                    + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
+            jsonCommand = GlobalContants.SEND_SOCKET_CONTROL + json;
         }
-        ILog.e("向设备发送数据：" + jsonCommand);
         iControl.writeInfo(jsonCommand.getBytes(), 2);
     }
 }

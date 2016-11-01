@@ -150,9 +150,8 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
             ReadFaceInitParams initParams = new ReadFaceInitParams(YMFaceTrack.FACE_0, YMFaceTrack.RESIZE_WIDTH_1920, 0, 0);
             Gson gson = new Gson();
             String json = gson.toJson(initParams);
-            String send = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.READY_ADD_FACE
-                    + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
-            socketManager.writeInfo(send.getBytes(), 2);
+            String data = GlobalContants.READY_ADD_FACE + json;
+            socketManager.writeInfo(data.getBytes(), 2);
         }
     }
 
@@ -178,7 +177,7 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
                 } else {
                     handler.postDelayed(finish, timeout);
                     showDialog("正在发送人名信息");
-                    String data = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.NAME_DATA + name + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
+                    String data = GlobalContants.NAME_DATA + name;
                     ILog.e("发送人名信息：" + data);
                     socketManager.writeInfo(data.getBytes(), 2);
                 }
@@ -240,16 +239,10 @@ public class AddFaceActivity extends BaseActivity implements View.OnClickListene
      * @param bytes 照片字节数组
      */
     private void addFace(byte[] bytes) {
-        byte[] prefix = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET.getBytes();
-        byte[] suffix = GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET.getBytes();
         byte[] code = new byte[]{0x35};
-
-        byte[] faceInfo = new byte[prefix.length + suffix.length + code.length + bytes.length];
-        System.arraycopy(prefix, 0, faceInfo, 0, prefix.length);
-        System.arraycopy(code, 0, faceInfo, prefix.length, code.length);
-        System.arraycopy(bytes, 0, faceInfo, prefix.length + code.length, bytes.length);
-        System.arraycopy(suffix, 0, faceInfo, prefix.length + code.length + bytes.length, suffix.length);
-        ILog.e("发送人脸信息：" + faceInfo);
-        socketManager.writeInfo(faceInfo, 2);
+        byte[] send = new byte[code.length + bytes.length];
+        System.arraycopy(code, 0, send, 0, code.length);
+        System.arraycopy(bytes, 0, send, code.length, bytes.length);
+        socketManager.writeInfo(send, 2);
     }
 }

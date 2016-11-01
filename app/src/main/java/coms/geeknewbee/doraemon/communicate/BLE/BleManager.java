@@ -280,6 +280,14 @@ public class BleManager implements IControl {
      */
     @Override
     public void writeInfo(byte[] data, int type) {
+        byte[] prefix = GlobalContants.COMMAND_ROBOT_PREFIX.getBytes();
+        byte[] suffix = GlobalContants.COMMAND_ROBOT_SUFFIX.getBytes();
+        byte[] sendData = new byte[prefix.length + data.length + suffix.length];
+        System.arraycopy(prefix, 0, sendData, 0, prefix.length);
+        System.arraycopy(data, 0, sendData, prefix.length, data.length);
+        System.arraycopy(suffix, 0, sendData, prefix.length + data.length, suffix.length);
+
+        ILog.e("发送消息：");
         UUID characWriteUuid = null;
         if (type == 1) {
             characWriteUuid = wifiWriteUUID;
@@ -290,7 +298,7 @@ public class BleManager implements IControl {
         BluetoothGattService service = mBluetoothGatt.getService(SERVICE_UUID);
         //  我需要得到的应该是一个特定的BluetoothGattCharacteristic,根据uuid获取
         BluetoothGattCharacteristic characteristic = service.getCharacteristic(characWriteUuid);
-        bleSender.addData(characteristic, data);
+        bleSender.addData(characteristic, sendData);
     }
 
     //  关闭通信 BluetoothGatt

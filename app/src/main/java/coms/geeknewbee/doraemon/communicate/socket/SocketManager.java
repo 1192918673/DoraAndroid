@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 
 import coms.geeknewbee.doraemon.communicate.IControl;
 import coms.geeknewbee.doraemon.global.GlobalContants;
+import coms.geeknewbee.doraemon.utils.I2BUtils;
 import coms.geeknewbee.doraemon.utils.ILog;
 
 /**
@@ -83,7 +84,16 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
     }
 
     @Override
-    public void writeInfo(final byte[] data, int type) {
+    public void writeInfo(byte[] data, int type) {
+        byte[] length = I2BUtils.int2bytes(data.length);
+        byte[] prefix = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET.getBytes();
+        byte[] suffix = GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET.getBytes();
+        final byte[] sendData = new byte[prefix.length + data.length + suffix.length];
+        System.arraycopy(prefix, 0, sendData, 0, prefix.length);
+        System.arraycopy(data, 0, sendData, prefix.length, data.length);
+        System.arraycopy(suffix, 0, sendData, prefix.length + data.length, suffix.length);
+
+        ILog.e("发送信息：");
         singleThreadExecutor.submit(new Runnable() {
             @Override
             public void run() {
@@ -91,7 +101,7 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
                     if (!socket.isClosed() && socket.isConnected() && !socket.isOutputShutdown()) {
                         ILog.e("向流中写数据");
                         //  将数据写入流中并向服务器端发送
-                        out.write(data);
+                        out.write(sendData);
                         out.flush();
                         ILog.e("写入成功");
                     }

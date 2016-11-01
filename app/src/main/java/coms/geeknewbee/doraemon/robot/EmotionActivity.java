@@ -142,10 +142,9 @@ public class EmotionActivity extends BaseActivity implements AdapterView.OnItemC
         String jsonCommand = "";
         //根据使用的控制方式决定前后缀及功能码
         if (ip == null) {
-            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX + json + GlobalContants.COMMAND_ROBOT_SUFFIX;
+            jsonCommand = json;
         } else {
-            jsonCommand = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.SEND_SOCKET_CONTROL
-                    + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
+            jsonCommand = GlobalContants.SEND_SOCKET_CONTROL + json;
         }
         ILog.e("发送数据：" + jsonCommand);
         tt.showMessage("正在发送命令", tt.LONG);

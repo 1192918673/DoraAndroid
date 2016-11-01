@@ -183,6 +183,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
                 finish();
             } else {
                 Toast.makeText(InsertFaceActivity.this, "发送超时，请重新添加", Toast.LENGTH_SHORT).show();
+                isSending = false;
             }
         }
     };
@@ -235,9 +236,8 @@ public class InsertFaceActivity extends FaceBaseActivity {
         ReadFaceInitParams initParams = new ReadFaceInitParams(orientation, YMFaceTrack.RESIZE_WIDTH_640, iw, ih);
         Gson gson = new Gson();
         String json = gson.toJson(initParams);
-        String send = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.READY_ADD_FACE
-                + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
-        socketManager.writeInfo(send.getBytes(), 2);
+        String data = GlobalContants.READY_ADD_FACE + json;
+        socketManager.writeInfo(data.getBytes(), 2);
     }
 
     void tipSetText(final String string) {
@@ -253,53 +253,14 @@ public class InsertFaceActivity extends FaceBaseActivity {
 
     private void addFace(byte[] bytes) {
         isSending = true;
-        byte[] prefix = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET.getBytes();
-        byte[] suffix = GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET.getBytes();
         byte[] code = new byte[]{0x35};
-
-//        ByteArrayOutputStream outstr = new ByteArrayOutputStream();
-//        YuvImage yuvimage = new YuvImage(bytes, ImageFormat.NV21, 640, 480, null);
-//        yuvimage.compressToJpeg(new Rect(0, 0, yuvimage.getWidth(), yuvimage.getHeight()), 100, outstr);
-//        Bitmap bmp = BitmapFactory.decodeByteArray(outstr.toByteArray(), 0, outstr.size());
-//        List<YMFace> ymFaces = faceTrack.trackMulti(bmp);
-
-        byte[] send = new byte[prefix.length + suffix.length + code.length + bytes.length];
-        System.arraycopy(prefix, 0, send, 0, prefix.length);
-        System.arraycopy(code, 0, send, prefix.length, code.length);
-        System.arraycopy(bytes, 0, send, prefix.length + code.length, bytes.length);
-        System.arraycopy(suffix, 0, send, prefix.length + code.length + bytes.length, suffix.length);
-//        String send = GlobalContants.COMMAND_ROBOT_PREFIX + 2 + new String(bytes) + GlobalContants.COMMAND_ROBOT_SUFFIX;
-        ILog.e("发送添加人脸信息：" + send);
+        byte[] send = new byte[code.length + bytes.length];
+        System.arraycopy(code, 0, send, 0, code.length);
+        System.arraycopy(bytes, 0, send, code.length, bytes.length);
         socketManager.writeInfo(send, 2);
     }
 
     private void cut(byte[] data, float[] rect) {
-        //转为图片，裁剪后存入流中
-//        YuvImage image = new YuvImage(data, ImageFormat.NV21, ih, iw, null);
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        image.compressToJpeg(new Rect(0, 0, image.getWidth(), image.getHeight()), 90, baos);
-//        try {
-//            image.compressToJpeg(new Rect((int) Math.ceil(rect[0] * scale_bit), (int) Math.floor(rect[1] * scale_bit),
-//                    (int) Math.ceil((rect[0] + rect[2]) * scale_bit), (int) Math.ceil((rect[1] + rect[3]) * scale_bit)), 90, baos);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        byte[] bytes = baos.toByteArray();
-//        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, baos.size());
-//        List<YMFace> ymFaces = faceTrack.detectMultiBitmap(bmp);
-//        if (ymFaces != null && ymFaces.size() > 0) {
-//            ILog.e("剪裁后识别到人脸");
-//            addFace(bytes);
-//        } else {
-//            ILog.e("剪裁后识别不到人脸");
-//        }
-//        //  将byte[]转为bitmap
-//        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-        //  对图片进行裁剪
-//        Bitmap newBitmap = Bitmap.createBitmap(bitmap, (int) Math.ceil(rect[0]), (int) Math.floor(rect[1]),
-//                (int) Math.ceil(rect[2]), (int) Math.ceil(rect[3]));
-
         //  将byte[]转为bitmap
         ByteArrayOutputStream outstr = new ByteArrayOutputStream();
         Rect rect1 = new Rect(0, 0, iw, ih);
@@ -351,7 +312,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
             case 0:
                 if (isAdd1(faces)) {
                     tipSetText("添加正脸");
-                    if (!isSending) {
+                    if (!isSending && !isEnter) {
                         tipSetText("正在添加第一张人脸");
                         showDialog("正在添加第一张人脸");
                         handler.postDelayed(finish, OVERTIME);
@@ -544,10 +505,9 @@ public class InsertFaceActivity extends FaceBaseActivity {
                         dialog.dismiss();
                         //  将人名信息发送
                         showDialog("正在发送人名信息");
-                        String send = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.NAME_DATA + name + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
+                        String data = GlobalContants.NAME_DATA + name;
                         handler.postDelayed(finish, OVERTIME);
-                        ILog.e("发送人名信息：" + send);
-                        socketManager.writeInfo(send.getBytes(), 2);
+                        socketManager.writeInfo(data.getBytes(), 2);
                     }
                 });
         dialog = builder.create();

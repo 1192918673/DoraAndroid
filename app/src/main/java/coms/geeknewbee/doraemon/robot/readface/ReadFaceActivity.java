@@ -64,9 +64,8 @@ public class ReadFaceActivity extends BaseActivity implements View.OnClickListen
                 ReadFaceInitParams initParams = new ReadFaceInitParams(YMFaceTrack.FACE_0, YMFaceTrack.RESIZE_WIDTH_1920, 0, 0);
                 Gson gson = new Gson();
                 String json = gson.toJson(initParams);
-                String send = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET + GlobalContants.DELETE_ALL_FACE
-                        + json + GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET;
-                socketManager.writeInfo(send.getBytes(), 2);
+                String data = GlobalContants.DELETE_ALL_FACE + json;
+                socketManager.writeInfo(data.getBytes(), 2);
                 break;
         }
     }

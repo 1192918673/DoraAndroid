@@ -315,7 +315,7 @@
                 android:text="测试"
                 android:textColor="#FFFFFF"
                 android:textSize="15dp"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </LinearLayout>
     </ScrollView>
