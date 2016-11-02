@@ -46,7 +46,7 @@ import mobile.ReadFace.YMFaceTrack;
  */
 public class InsertFaceActivity extends FaceBaseActivity {
 
-    int addCount = 0;
+    int addCount = -1;
 
     private TextView tips, tips_load;
     private View show_image;
@@ -89,6 +89,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
                 case MSG_WHAT_START_ADD_FACE:   //是否可以录入人脸
                     isEnter = false;
                     if (data.equals("1")) {
+                        addCount++;
                         ILog.e("可以录入");
                         Toast.makeText(InsertFaceActivity.this, "可以开始录入人脸啦", Toast.LENGTH_SHORT).show();
                     } else {
@@ -252,7 +253,6 @@ public class InsertFaceActivity extends FaceBaseActivity {
     }
 
     private void addFace(byte[] bytes) {
-        isSending = true;
         byte[] code = new byte[]{0x35};
         byte[] send = new byte[code.length + bytes.length];
         System.arraycopy(code, 0, send, 0, code.length);
@@ -261,6 +261,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
     }
 
     private void cut(byte[] data, float[] rect) {
+        isSending = true;
         //  将byte[]转为bitmap
         ByteArrayOutputStream outstr = new ByteArrayOutputStream();
         Rect rect1 = new Rect(0, 0, iw, ih);
@@ -312,7 +313,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
             case 0:
                 if (isAdd1(faces)) {
                     tipSetText("添加正脸");
-                    if (!isSending && !isEnter) {
+                    if (!isSending) {
                         tipSetText("正在添加第一张人脸");
                         showDialog("正在添加第一张人脸");
                         handler.postDelayed(finish, OVERTIME);
