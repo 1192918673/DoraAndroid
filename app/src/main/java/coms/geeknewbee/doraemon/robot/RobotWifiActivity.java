@@ -287,12 +287,10 @@ public class RobotWifiActivity extends BaseActivity
                     boolean isSuccess = back.isSuccess;
                     boolean hadBind = back.hadBound;
                     String ip = back.ipAddress;
-                    int id = getIntent().getIntExtra("id", -1);
-                    if (id != -1) {
-                        spt.putString("ip_" + id, ip);
-                    }
-                    //  返回的信息
                     String content = back.content;
+                    serialNo = content.substring(content.indexOf("qr/") + 3);
+                    spt.putString("ip_" + serialNo, ip);
+                    //  返回的信息
                     if (isSuccess) {
                         if (type != null) {
                             if (type.equals("reLink")) {
@@ -328,11 +326,8 @@ public class RobotWifiActivity extends BaseActivity
                         ILog.e("WIFI设置成功");
                         tt.showMessage("Wifi设置成功", tt.LONG);
                         // 绑定机器人
-                        String code = content.substring(content.indexOf("qr/") + 3);
-                        serialNo = code;
                         bindPresenter.bindRobot();
                         showDialog("正在绑定机器人……");
-
                     } else {
                         showMsg("系统提示", "Wifi设置失败");
                     }

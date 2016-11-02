@@ -57,7 +57,6 @@ public class RobotActivity extends BaseActivity {
      * ---------------------数据--------------------
      **/
     RobotBean robot;
-    private String ip;
 
     private void assignViews() {
         ibBack = (ImageButton) findViewById(R.id.ib_back);
@@ -122,6 +121,7 @@ public class RobotActivity extends BaseActivity {
 
         @Override
         public void onClick(View v) {
+            final String serial_no = robotsView.getRobot().getSerial_no();
             switch (v.getId()) {
                 case R.id.ib_back:
                     backOff();
@@ -154,10 +154,8 @@ public class RobotActivity extends BaseActivity {
                     startActivity(intent_voice);
                     break;
                 case R.id.actEnterControl:
-                    final int id = robotsView.getRobot().getId();
-                    ip = spt.getString("ip_" + id, null);
+                    final String ip = spt.getString("ip_" + serial_no, null);
                     if (ip != null) {
-//                        new NetPing().executeOnExecutor(Executors.newCachedThreadPool());
                         new Thread() {
                             @Override
                             public void run() {
@@ -171,7 +169,6 @@ public class RobotActivity extends BaseActivity {
                                 } else {
                                     Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
                                     intent_wifi.putExtra("type", "control");
-                                    intent_wifi.putExtra("id", id);
                                     startActivity(intent_wifi);
                                 }
                             }
@@ -179,7 +176,6 @@ public class RobotActivity extends BaseActivity {
                     } else {
                         Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
                         intent_wifi.putExtra("type", "control");
-                        intent_wifi.putExtra("id", id);
                         startActivity(intent_wifi);
                     }
                     break;
@@ -191,9 +187,8 @@ public class RobotActivity extends BaseActivity {
         String resault = "";
         Process p;
         try {
-
-//ping -c 3 -w 1  中  ，-c 是指ping的次数 3是指ping 3次 ，-w 1  以秒为单位指定超时间隔，是指超时时间为1秒
-            p = Runtime.getRuntime().exec("ping -c 1 -w 1 " + ip);
+            //ping -c 3 -w 1  中  ，-c 是指ping的次数 3是指ping 3次 ，-w 1  以秒为单位指定超时间隔，是指超时时间为1秒
+            p = Runtime.getRuntime().exec("ping -c 1 -w 1 " + str);
             InputStream input = p.getInputStream();
             BufferedReader in = new BufferedReader(new InputStreamReader(input));
             StringBuffer buffer = new StringBuffer();
@@ -213,30 +208,6 @@ public class RobotActivity extends BaseActivity {
             e.printStackTrace();
         }
         return resault;
-    }
-
-    private class NetPing extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String s = "";
-            s = Ping(ip);
-            ILog.e("ping", s);
-            return s;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (s != null && s.equals("success")) {
-                Intent intent_control = new Intent(RobotActivity.this, RobotControlActivity.class);
-                intent_control.putExtra("ip", ip);
-                startActivity(intent_control);
-            } else {
-                Intent intent_wifi = new Intent(RobotActivity.this, RobotWifiActivity.class);
-                intent_wifi.putExtra("type", "control");
-                startActivity(intent_wifi);
-            }
-        }
     }
 
     /**

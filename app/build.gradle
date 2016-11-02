@@ -23,7 +23,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 22
         versionCode 1
-        versionName "1.2.0.19"
+        versionName "1.2.0.20"
         multiDexEnabled true
         ndk { abiFilters 'armeabi' }
 

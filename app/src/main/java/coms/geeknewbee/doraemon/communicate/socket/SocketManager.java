@@ -88,10 +88,11 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
         byte[] length = I2BUtils.int2bytes(data.length);
         byte[] prefix = GlobalContants.COMMAND_ROBOT_PREFIX_FOR_SOCKET.getBytes();
         byte[] suffix = GlobalContants.COMMAND_ROBOT_SUFFIX_FOR_SOCKET.getBytes();
-        final byte[] sendData = new byte[prefix.length + data.length + suffix.length];
+        final byte[] sendData = new byte[prefix.length + length.length + data.length + suffix.length];
         System.arraycopy(prefix, 0, sendData, 0, prefix.length);
-        System.arraycopy(data, 0, sendData, prefix.length, data.length);
-        System.arraycopy(suffix, 0, sendData, prefix.length + data.length, suffix.length);
+        System.arraycopy(length, 0, sendData, prefix.length, length.length);
+        System.arraycopy(data, 0, sendData, prefix.length + length.length, data.length);
+        System.arraycopy(suffix, 0, sendData, prefix.length + length.length + data.length, suffix.length);
 
         ILog.e("发送信息：");
         singleThreadExecutor.submit(new Runnable() {
