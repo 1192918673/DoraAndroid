@@ -121,7 +121,6 @@ public class RobotActivity extends BaseActivity {
 
         @Override
         public void onClick(View v) {
-            final String serial_no = robotsView.getRobot().getSerial_no();
             switch (v.getId()) {
                 case R.id.ib_back:
                     backOff();
@@ -154,6 +153,7 @@ public class RobotActivity extends BaseActivity {
                     startActivity(intent_voice);
                     break;
                 case R.id.actEnterControl:
+                    String serial_no = robotsView.getRobot().getSerial_no();
                     final String ip = spt.getString("ip_" + serial_no, null);
                     if (ip != null) {
                         new Thread() {

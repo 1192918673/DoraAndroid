@@ -65,13 +65,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#EBEFF2"
         android:layout_below="@+id/up">
 
         <LinearLayout
             android:id="@+id/ll_haveRobot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#EBEFF2"
             android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
@@ -80,7 +80,7 @@
             <RelativeLayout
                 android:id="@+id/act_msg"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="56dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -96,13 +96,13 @@
                     android:layout_marginLeft="40dp"
                     android:text="消息通知"
                     android:textColor="#50525C"
-                    android:textSize="16dp" />
+                    android:textSize="18sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/act_robot"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="56dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -118,13 +118,13 @@
                     android:layout_marginLeft="40dp"
                     android:text="机器人管理"
                     android:textColor="#50525C"
-                    android:textSize="16dp" />
+                    android:textSize="18sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/act_member"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="56dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -140,7 +140,7 @@
                     android:layout_marginLeft="40dp"
                     android:text="成员管理"
                     android:textColor="#50525C"
-                    android:textSize="16dp" />
+                    android:textSize="18sp" />
             </RelativeLayout>
 
             <View
@@ -151,7 +151,7 @@
             <RelativeLayout
                 android:id="@+id/actOffline"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="56dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -167,13 +167,13 @@
                     android:layout_marginLeft="40dp"
                     android:text="蓝牙控制"
                     android:textColor="#50525C"
-                    android:textSize="16dp" />
+                    android:textSize="18sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/actEnterControl"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="56dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -189,13 +189,13 @@
                     android:layout_marginLeft="40dp"
                     android:text="WIFI控制"
                     android:textColor="#50525C"
-                    android:textSize="16dp" />
+                    android:textSize="18sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/actVoice"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="56dp"
                 android:visibility="visible">
 
                 <ImageView
@@ -212,7 +212,7 @@
                     android:layout_marginLeft="40dp"
                     android:text="语音控制"
                     android:textColor="#50525C"
-                    android:textSize="16dp" />
+                    android:textSize="18sp" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

@@ -35,15 +35,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="14dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -73,10 +73,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="3dp"
+                android:layout_marginBottom="14dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -119,8 +117,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
@@ -151,9 +147,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
@@ -186,16 +180,13 @@
                 android:layout_height="1dp"
                 android:background="#ddd" />
 
-
             <Button
                 android:id="@+id/olEmoticon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="14dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="10dp"
                 android:background="#00A0E8"
                 android:gravity="center"
                 android:text="表情"
@@ -206,8 +197,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
@@ -256,8 +245,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
@@ -292,8 +279,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="14dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="3dp"
                 android:background="#00A0E8"
                 android:gravity="center"
@@ -307,8 +292,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="14dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="6dp"
                 android:background="#00A0E8"
                 android:gravity="center"
