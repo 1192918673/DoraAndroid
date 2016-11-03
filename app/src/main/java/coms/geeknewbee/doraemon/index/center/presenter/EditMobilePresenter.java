@@ -1,14 +1,12 @@
 package coms.geeknewbee.doraemon.index.center.presenter;
 
 import android.os.Handler;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
-import coms.geeknewbee.doraemon.global.MyApplication;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.index.center.bean.UserBean;
 import coms.geeknewbee.doraemon.index.center.biz.IMobileBiz;
 import coms.geeknewbee.doraemon.index.center.view.IEditMobileView;

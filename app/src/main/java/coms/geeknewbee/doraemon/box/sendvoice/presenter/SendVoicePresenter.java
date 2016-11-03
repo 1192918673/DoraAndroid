@@ -3,7 +3,7 @@ package coms.geeknewbee.doraemon.box.sendvoice.presenter;
 import coms.geeknewbee.doraemon.box.sendvoice.biz.ISendVoiceBiz;
 import coms.geeknewbee.doraemon.box.sendvoice.view.ISendVoiceView;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;
 import retrofit2.Call;

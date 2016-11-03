@@ -6,7 +6,7 @@ import coms.geeknewbee.doraemon.box.learnen.bean.LearnEnBean;
 import coms.geeknewbee.doraemon.box.learnen.biz.ILearnEnBiz;
 import coms.geeknewbee.doraemon.box.learnen.view.ILearnEnView;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;
 import retrofit2.Call;

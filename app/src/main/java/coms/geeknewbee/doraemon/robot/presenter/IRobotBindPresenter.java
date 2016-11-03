@@ -1,23 +1,12 @@
 package coms.geeknewbee.doraemon.robot.presenter;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.AsyncTask;
-
-import java.io.OutputStream;
-import java.util.Set;
-import java.util.UUID;
-
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.robot.bean.RobotBean;
 import coms.geeknewbee.doraemon.robot.biz.IRobotBiz;
 import coms.geeknewbee.doraemon.robot.view.IBindView;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;
-import coms.geeknewbee.doraemon.utils.ToastTool;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;

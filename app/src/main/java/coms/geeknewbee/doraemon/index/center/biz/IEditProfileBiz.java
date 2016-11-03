@@ -1,9 +1,8 @@
 package coms.geeknewbee.doraemon.index.center.biz;
 
-import java.io.File;
 import java.util.Map;
 
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.index.center.bean.UserBean;
 import okhttp3.RequestBody;
 import retrofit2.Call;

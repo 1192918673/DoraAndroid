@@ -93,18 +93,20 @@ public class SocketManager implements IControl, ReadInfoThread.onReceiveDataList
         System.arraycopy(length, 0, sendData, prefix.length, length.length);
         System.arraycopy(data, 0, sendData, prefix.length + length.length, data.length);
         System.arraycopy(suffix, 0, sendData, prefix.length + length.length + data.length, suffix.length);
-
-        ILog.e("发送信息：");
+        if (type != 3) {
+            ILog.e("发送信息：" + new String(sendData));
+        } else {
+            ILog.e("发送照片");
+        }
         singleThreadExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 try {
                     if (!socket.isClosed() && socket.isConnected() && !socket.isOutputShutdown()) {
-                        ILog.e("向流中写数据");
                         //  将数据写入流中并向服务器端发送
                         out.write(sendData);
                         out.flush();
-                        ILog.e("写入成功");
+                        ILog.e("向流中写入成功");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -247,7 +247,7 @@ public class BleManager implements IControl {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 ILog.e("回调：信息写入成功");
                 Message msg = Message.obtain();
-                msg.what =  MSG_CONNECT_AND_SENDMY;
+                msg.what = MSG_CONNECT_AND_SENDMY;
                 handler.sendMessage(msg);
 //                bleSender.sendData(characteristic);
             } else {
@@ -287,7 +287,7 @@ public class BleManager implements IControl {
         System.arraycopy(data, 0, sendData, prefix.length, data.length);
         System.arraycopy(suffix, 0, sendData, prefix.length + data.length, suffix.length);
 
-        ILog.e("发送消息：");
+        ILog.e("发送消息：" + new String(sendData));
         UUID characWriteUuid = null;
         if (type == 1) {
             characWriteUuid = wifiWriteUUID;

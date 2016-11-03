@@ -31,7 +31,7 @@ import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.robot.readface.ReadFaceActivity;
-import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
+import coms.geeknewbee.doraemon.robot.bean.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.widget.PanelView;
 import coms.geeknewbee.doraemon.widget.Rudder;
@@ -595,7 +595,6 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         } else {
             jsonCommand = GlobalContants.SEND_SOCKET_CONTROL + json;
         }
-        ILog.e("发送数据：" + jsonCommand);
         control.writeInfo(jsonCommand.getBytes(), 2);
     }
 

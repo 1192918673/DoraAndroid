@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import coms.geeknewbee.doraemon.entity.RobotPhoto;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;

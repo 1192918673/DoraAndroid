@@ -3,8 +3,7 @@ package coms.geeknewbee.doraemon.box.custom_answers.biz;
 import java.util.List;
 
 import coms.geeknewbee.doraemon.box.custom_answers.bean.CusAnswersBean;
-import coms.geeknewbee.doraemon.global.HttpBean;
-import coms.geeknewbee.doraemon.robot.bean.MsgBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;

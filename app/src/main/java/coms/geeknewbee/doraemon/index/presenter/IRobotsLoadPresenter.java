@@ -3,7 +3,7 @@ package coms.geeknewbee.doraemon.index.presenter;
 import java.util.List;
 
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.index.center.bean.UserBean;
 import coms.geeknewbee.doraemon.index.view.IIndexView;
 import coms.geeknewbee.doraemon.robot.bean.RobotBean;

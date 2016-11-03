@@ -3,7 +3,7 @@ package coms.geeknewbee.doraemon.box.custom_answers.presenter;
 import coms.geeknewbee.doraemon.box.custom_answers.biz.ICABiz;
 import coms.geeknewbee.doraemon.box.custom_answers.view.ICusAnswerAddView;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;
 import retrofit2.Call;

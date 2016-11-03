@@ -3,12 +3,9 @@ package coms.geeknewbee.doraemon.robot.presenter;
 import java.util.List;
 
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.robot.bean.MsgBean;
-import coms.geeknewbee.doraemon.robot.bean.RobotBean;
 import coms.geeknewbee.doraemon.robot.biz.IMsgBiz;
-import coms.geeknewbee.doraemon.robot.biz.IRobotBiz;
-import coms.geeknewbee.doraemon.robot.view.IBindView;
 import coms.geeknewbee.doraemon.robot.view.IMsgView;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;

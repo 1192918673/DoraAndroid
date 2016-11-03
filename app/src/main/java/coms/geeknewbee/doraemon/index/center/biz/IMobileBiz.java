@@ -2,7 +2,7 @@ package coms.geeknewbee.doraemon.index.center.biz;
 
 import java.util.Map;
 
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.index.center.bean.UserBean;
 import coms.geeknewbee.doraemon.register_login.bean.GetTokenBean;
 import okhttp3.RequestBody;

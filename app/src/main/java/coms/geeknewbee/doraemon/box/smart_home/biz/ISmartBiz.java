@@ -3,7 +3,7 @@ package coms.geeknewbee.doraemon.box.smart_home.biz;
 import java.util.List;
 
 import coms.geeknewbee.doraemon.box.smart_home.bean.SmartBean;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

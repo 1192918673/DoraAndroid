@@ -10,9 +10,8 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.index.center.biz.IUpdatePwd2Biz;
-import coms.geeknewbee.doraemon.register_login.bean.GetCodeBean;
 import coms.geeknewbee.doraemon.register_login.bean.GetTokenBean;
 
 /**

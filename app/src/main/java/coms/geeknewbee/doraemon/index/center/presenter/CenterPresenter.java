@@ -2,7 +2,6 @@ package coms.geeknewbee.doraemon.index.center.presenter;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -12,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.global.MyApplication;
 import coms.geeknewbee.doraemon.index.center.bean.APPBean;
 import coms.geeknewbee.doraemon.index.center.bean.UserBean;

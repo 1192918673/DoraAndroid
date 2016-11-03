@@ -6,7 +6,7 @@ import coms.geeknewbee.doraemon.box.alarm_clock.bean.AlarmsBean;
 import coms.geeknewbee.doraemon.box.alarm_clock.biz.IAlarmsBiz;
 import coms.geeknewbee.doraemon.box.alarm_clock.view.IAlarmsView;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;
 import retrofit2.Call;

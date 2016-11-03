@@ -1,9 +1,8 @@
-package coms.geeknewbee.doraemon.global;
+package coms.geeknewbee.doraemon.entity;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import coms.geeknewbee.doraemon.register_login.bean.GetCodeBean;
 import coms.geeknewbee.doraemon.utils.ILog;
 
 /**

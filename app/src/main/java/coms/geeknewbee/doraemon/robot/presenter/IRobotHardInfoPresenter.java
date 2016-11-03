@@ -1,7 +1,7 @@
 package coms.geeknewbee.doraemon.robot.presenter;
 
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.robot.bean.HardInfoBean;
 import coms.geeknewbee.doraemon.robot.biz.IRobotBiz;
 import coms.geeknewbee.doraemon.robot.view.IHardInfoView;

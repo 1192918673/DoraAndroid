@@ -7,7 +7,7 @@ import coms.geeknewbee.doraemon.box.time_machine.biz.IPhotoBiz;
 import coms.geeknewbee.doraemon.box.time_machine.view.IPhotoView;
 import coms.geeknewbee.doraemon.entity.RobotPhoto;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;
 import retrofit2.Call;

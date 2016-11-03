@@ -23,16 +23,14 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import coms.geeknewbee.doraemon.R;
 import coms.geeknewbee.doraemon.global.BaseActivity;
-import coms.geeknewbee.doraemon.global.GlobalContants;
 import coms.geeknewbee.doraemon.global.SptConfig;
 import coms.geeknewbee.doraemon.robot.bean.BTPostBackCommand;
 import coms.geeknewbee.doraemon.robot.bean.RobotBean;
 import coms.geeknewbee.doraemon.robot.presenter.IRobotBindPresenter;
-import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
+import coms.geeknewbee.doraemon.robot.bean.BluetoothCommand;
 import coms.geeknewbee.doraemon.robot.utils.NetworkStateReceiver;
 import coms.geeknewbee.doraemon.robot.view.IBindView;
 import coms.geeknewbee.doraemon.communicate.BLE.BleManager;

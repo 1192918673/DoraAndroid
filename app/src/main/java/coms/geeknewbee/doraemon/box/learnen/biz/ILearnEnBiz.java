@@ -2,9 +2,8 @@ package coms.geeknewbee.doraemon.box.learnen.biz;
 
 import java.util.List;
 
-import coms.geeknewbee.doraemon.box.custom_answers.bean.CusAnswersBean;
 import coms.geeknewbee.doraemon.box.learnen.bean.LearnEnBean;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

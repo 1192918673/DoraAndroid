@@ -1,6 +1,5 @@
 package coms.geeknewbee.doraemon.register_login.biz.impl;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -10,8 +9,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
-import coms.geeknewbee.doraemon.register_login.bean.GetCodeBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.register_login.bean.GetTokenBean;
 import coms.geeknewbee.doraemon.register_login.biz.IResetPwd2Biz;
 

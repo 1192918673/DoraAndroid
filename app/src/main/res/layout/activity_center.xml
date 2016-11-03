@@ -70,7 +70,7 @@
             android:background="@mipmap/avatar_oval"
             android:gravity="center">
 
-            <coms.geeknewbee.doraemon.UI.CircleImageView
+            <coms.geeknewbee.doraemon.widget.CircleImageView
                 android:id="@+id/ib_avatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

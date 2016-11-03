@@ -257,7 +257,7 @@ public class InsertFaceActivity extends FaceBaseActivity {
         byte[] send = new byte[code.length + bytes.length];
         System.arraycopy(code, 0, send, 0, code.length);
         System.arraycopy(bytes, 0, send, code.length, bytes.length);
-        socketManager.writeInfo(send, 2);
+        socketManager.writeInfo(send, 3);
     }
 
     private void cut(byte[] data, float[] rect) {

@@ -2,7 +2,7 @@ package coms.geeknewbee.doraemon.robot.biz;
 
 import java.util.List;
 
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.index.center.bean.UserBean;
 import retrofit2.Call;
 import retrofit2.http.DELETE;

@@ -1,4 +1,4 @@
-package coms.geeknewbee.doraemon.robot.utils;
+package coms.geeknewbee.doraemon.robot.bean;
 
 import java.util.List;
 

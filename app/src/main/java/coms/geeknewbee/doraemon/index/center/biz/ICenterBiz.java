@@ -1,6 +1,6 @@
 package coms.geeknewbee.doraemon.index.center.biz;
 
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.index.center.bean.APPBean;
 import coms.geeknewbee.doraemon.index.center.bean.UserBean;
 import okhttp3.ResponseBody;

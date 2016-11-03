@@ -6,7 +6,7 @@ import coms.geeknewbee.doraemon.box.smart_home.bean.SmartBean;
 import coms.geeknewbee.doraemon.box.smart_home.biz.ISmartBiz;
 import coms.geeknewbee.doraemon.box.smart_home.view.ISmartView;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;
 import retrofit2.Call;

@@ -62,155 +62,160 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_haveRobot"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/up"
-        android:background="#EBEFF2"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="12dp">
+        android:layout_below="@+id/up">
 
-        <RelativeLayout
-            android:id="@+id/act_msg"
+        <LinearLayout
+            android:id="@+id/ll_haveRobot"
             android:layout_width="match_parent"
-            android:layout_height="56dp">
+            android:layout_height="match_parent"
+            android:background="#EBEFF2"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="12dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:background="@mipmap/ic_robot_notification" />
+            <RelativeLayout
+                android:id="@+id/act_msg"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
-                android:text="消息通知"
-                android:textColor="#50525C"
-                android:textSize="16dp" />
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@mipmap/ic_robot_notification" />
 
-        <RelativeLayout
-            android:id="@+id/act_robot"
-            android:layout_width="match_parent"
-            android:layout_height="56dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="消息通知"
+                    android:textColor="#50525C"
+                    android:textSize="16dp" />
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:background="@mipmap/ic_robot_config" />
+            <RelativeLayout
+                android:id="@+id/act_robot"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
-                android:text="机器人管理"
-                android:textColor="#50525C"
-                android:textSize="16dp" />
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@mipmap/ic_robot_config" />
 
-        <RelativeLayout
-            android:id="@+id/act_member"
-            android:layout_width="match_parent"
-            android:layout_height="56dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="机器人管理"
+                    android:textColor="#50525C"
+                    android:textSize="16dp" />
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:background="@mipmap/ic_robot_member" />
+            <RelativeLayout
+                android:id="@+id/act_member"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
-                android:text="成员管理"
-                android:textColor="#50525C"
-                android:textSize="16dp" />
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@mipmap/ic_robot_member" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#FFDDDDDD" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="成员管理"
+                    android:textColor="#50525C"
+                    android:textSize="16dp" />
+            </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/actOffline"
-            android:layout_width="match_parent"
-            android:layout_height="56dp">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FFDDDDDD" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:background="@mipmap/ic_robot_bluetooth" />
+            <RelativeLayout
+                android:id="@+id/actOffline"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
-                android:text="蓝牙控制"
-                android:textColor="#50525C"
-                android:textSize="16dp" />
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@mipmap/ic_robot_bluetooth" />
 
-        <RelativeLayout
-            android:id="@+id/actEnterControl"
-            android:layout_width="match_parent"
-            android:layout_height="56dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="蓝牙控制"
+                    android:textColor="#50525C"
+                    android:textSize="16dp" />
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:background="@mipmap/ic_robot_bluetooth" />
+            <RelativeLayout
+                android:id="@+id/actEnterControl"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
-                android:text="WIFI控制"
-                android:textColor="#50525C"
-                android:textSize="16dp" />
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@mipmap/ic_robot_bluetooth" />
 
-        <RelativeLayout
-            android:id="@+id/actVoice"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:visibility="visible">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="WIFI控制"
+                    android:textColor="#50525C"
+                    android:textSize="16dp" />
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:background="@mipmap/ic_robot_voice" />
+            <RelativeLayout
+                android:id="@+id/actVoice"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="visible">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="40dp"
-                android:text="语音控制"
-                android:textColor="#50525C"
-                android:textSize="16dp" />
-        </RelativeLayout>
-    </LinearLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@mipmap/ic_robot_voice" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="语音控制"
+                    android:textColor="#50525C"
+                    android:textSize="16dp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/ll_null"

@@ -1,11 +1,7 @@
 package coms.geeknewbee.doraemon.robot;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +13,6 @@ import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +25,7 @@ import coms.geeknewbee.doraemon.communicate.IControl;
 import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.BaseActivity;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
+import coms.geeknewbee.doraemon.robot.bean.BluetoothCommand;
 import coms.geeknewbee.doraemon.utils.ILog;
 
 public class EmotionActivity extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -146,7 +141,6 @@ public class EmotionActivity extends BaseActivity implements AdapterView.OnItemC
         } else {
             jsonCommand = GlobalContants.SEND_SOCKET_CONTROL + json;
         }
-        ILog.e("发送数据：" + jsonCommand);
         tt.showMessage("正在发送命令", tt.LONG);
         iControl.writeInfo(jsonCommand.getBytes(), 2);
     }

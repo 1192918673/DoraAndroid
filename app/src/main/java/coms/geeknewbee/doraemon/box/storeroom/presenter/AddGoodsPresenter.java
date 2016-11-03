@@ -3,7 +3,7 @@ package coms.geeknewbee.doraemon.box.storeroom.presenter;
 import coms.geeknewbee.doraemon.box.storeroom.biz.IStoreRoomBiz;
 import coms.geeknewbee.doraemon.box.storeroom.view.IAddGoodsView;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.utils.ILog;
 import coms.geeknewbee.doraemon.utils.StringHandler;
 import retrofit2.Call;

@@ -1,6 +1,6 @@
 package coms.geeknewbee.doraemon.box.sendvoice.biz;
 
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

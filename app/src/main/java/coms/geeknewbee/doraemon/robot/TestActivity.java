@@ -13,8 +13,7 @@ import coms.geeknewbee.doraemon.communicate.BLE.BleManager;
 import coms.geeknewbee.doraemon.communicate.IControl;
 import coms.geeknewbee.doraemon.communicate.socket.SocketManager;
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.robot.utils.BluetoothCommand;
-import coms.geeknewbee.doraemon.utils.ILog;
+import coms.geeknewbee.doraemon.robot.bean.BluetoothCommand;
 
 /**
  * Created by GYY on 2016/9/20.

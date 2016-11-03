@@ -1,4 +1,4 @@
-package coms.geeknewbee.doraemon.UI;
+package coms.geeknewbee.doraemon.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

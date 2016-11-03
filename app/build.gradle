@@ -105,10 +105,13 @@ dependencies {
 //    //应用retrofit
 //    //  compile 'com.android.support:support-v4:23.3.0'
 //    compile files('libs/zxing.jar')
-    compile 'com.mobsandgeeks:android-saripaar:2.0.3'
+
+    //UI规则表单验证，没用到
+//    compile 'com.mobsandgeeks:android-saripaar:2.0.3'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.zhy:flowlayout-lib:1.0.1'
+    //流式布局没用到
+//    compile 'com.zhy:flowlayout-lib:1.0.1'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.facebook.fresco:fresco:0.12.0'

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import coms.geeknewbee.doraemon.global.GlobalContants;
-import coms.geeknewbee.doraemon.global.HttpBean;
+import coms.geeknewbee.doraemon.entity.HttpBean;
 import coms.geeknewbee.doraemon.global.MyApplication;
 import coms.geeknewbee.doraemon.index.center.bean.UserBean;
 import coms.geeknewbee.doraemon.index.center.biz.IEditProfileBiz;
