@@ -40,13 +40,13 @@ public class GlobalContants {
     //控制所用
     public static String[] img = {null, null, null, null, null, null, "wei_xiao", null, null, null,
             null, null, null, null, null, null, null, null, null, null,
-            "wei_xiao", "wei_xiao", "de_yi", "wei_xiao", "wei_xiao", "ke_lian_meng", null, null};
+            "wei_xiao", "wei_xiao", "de_yi", "wei_xiao", "wei_xiao", "ke_lian_meng"};
     public static String[] word = {null, null, null, null, null, null, "我叫哆啦a梦，来自22世纪。如果你们以为我只有颜值那可就错啦，我上知天文，下懂地理，数学计算，语文国学，唱歌跳舞，这些都难不倒我。", null, null, null,
             null, null, null, null, null, null, null, null, null, null,
-            "大家好", "谢谢大家，期待越来越多的朋友帮我变得更聪明", "我可以在幼儿园教小朋友们学习英语，明年我还要去台湾的老人院帮忙照看老人，听说还有很多品牌邀请我去商场超市做推广呐", "我可以辅助老师，完成专业教育机构的英语课程，我可是有专业级的英语发音呢。", "我可以带老人家做早操，提醒老人吃药，还可以给大家读报，和家人互动。", "这是我第一次来呼和浩特，这里风景优美，人民能歌善舞，真希望可以在这里常住哦。", null, null};
+            "大家好", "谢谢大家，期待越来越多的朋友帮我变得更聪明", "我可以在幼儿园教小朋友们学习英语，明年我还要去台湾的老人院帮忙照看老人，听说还有很多品牌邀请我去商场超市做推广呐", "我可以辅助老师，完成专业教育机构的英语课程，我可是有专业级的英语发音呢。", "我可以带老人家做早操，提醒老人吃药，还可以给大家读报，和家人互动。", "这是我第一次来呼和浩特，这里风景优美，人民能歌善舞，真希望可以在这里常住哦。"};
     public static int[] act = {-1, R.raw.action_foot_forward, R.raw.action_foot_backward, R.raw.action_foot_left, R.raw.action_foot_right, -1, R.raw.action_arm_up_down_move_self, R.raw.action_head_left, R.raw.action_head_right, R.raw.action_head_up,
             R.raw.action_head_down, R.raw.action_l_arm_front, R.raw.action_l_arm_end, R.raw.action_l_arm_up, R.raw.action_l_arm_down, R.raw.action_r_arm_front, R.raw.action_r_arm_end, R.raw.action_r_arm_up, R.raw.action_r_arm_down, R.raw.action_head_front,
-            R.raw.action_arm_up_down_move, R.raw.action_arm_up_down_move, R.raw.action_head_up_down, R.raw.action_arm_up_down_move_self, R.raw.action_take_exercises, R.raw.action_head_hug, R.raw.action_l_arm_reset, R.raw.action_r_arm_reset};
+            R.raw.action_arm_up_down_move, R.raw.action_arm_up_down_move, R.raw.action_head_up_down, R.raw.action_arm_up_down_move_self, R.raw.action_take_exercises, R.raw.action_head_hug};
 
     // 表情gif名称
     public static String[] emotion = {"wei_xiao", "dai", "wei_xiao", "ji_dong", "yi_wen", "yun", "se", "dai", "hai_xiu", "ku",

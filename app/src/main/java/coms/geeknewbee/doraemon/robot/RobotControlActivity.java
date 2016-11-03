@@ -96,8 +96,6 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
     private static final int ACT_HOW_TO_TEACH = 23;
     private static final int ACT_FOR_OLD = 24;
     private static final int ACT_HH = 25;
-    private static final int ACT_ARM_LRESET = 26;
-    private static final int ACT_ARM_RRESET = 27;
 
     /**
      * -----------------------组件----------------------
@@ -290,12 +288,12 @@ public class RobotControlActivity extends BaseActivity implements Runnable {
         pvLarm.setName("左手");
         pvLarm.setBtn("上", "下", "前", "后");
         pvLarm.setHandler(handler);
-        pvLarm.setIndex(ACT_ARM_LUP, ACT_ARM_LDOWN, ACT_ARM_LFRONT, ACT_ARM_LEND, ACT_ARM_LRESET);
+        pvLarm.setIndex(ACT_ARM_LUP, ACT_ARM_LDOWN, ACT_ARM_LFRONT, ACT_ARM_LEND, ACT_ARM_LDOWN);
 
         pvRarm.setName("右手");
         pvRarm.setBtn("上", "下", "前", "后");
         pvRarm.setHandler(handler);
-        pvRarm.setIndex(ACT_ARM_RUP, ACT_ARM_RDOWN, ACT_ARM_RFRONT, ACT_ARM_REND, ACT_ARM_RRESET);
+        pvRarm.setIndex(ACT_ARM_RUP, ACT_ARM_RDOWN, ACT_ARM_RFRONT, ACT_ARM_REND, ACT_ARM_RDOWN);
 
         /*pvFoot.setName("脚");
         pvFoot.setBtn("前", "后", "左", "右");
